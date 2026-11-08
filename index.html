@@ -223,6 +223,8 @@ body.bedtime #moonOrb{opacity:1}
 .primary{background:#7b3fd1;color:#fff}
 .secondary{background:#efe9f8;color:#4a2a6e}
 #grown .small{font-size:13px;color:#6a5f80;margin-top:6px;line-height:1.4}
+#grown #voiceStatus{color:#4a2a6e;margin-top:8px;word-break:break-word}
+#grown #voiceStatus:empty{display:none}
 #grown .range{display:flex;align-items:center;gap:10px}
 #grown .range input{flex:1}
 #gate .q{font-size:30px;font-weight:700;text-align:center;margin:12px 0}
@@ -562,6 +564,7 @@ body.bedtime #moonOrb{opacity:1}
       <div class="small">Each picture uses credits on your OpenRouter account. Set to 0 to turn off pictures.</div>
 
       <div class="btns"><button class="secondary" id="testVoice">🔊 Test voice</button><button class="secondary" id="resetStars">Reset stars</button></div>
+      <div class="small" id="voiceStatus" role="status" aria-live="polite"></div>
       <div class="btns"><button class="secondary" id="clearGallery">🗑️ Clear picture gallery</button><button class="secondary" id="clearStory">Forget saved story</button></div>
       <div class="btns"><button class="secondary" id="sCancel">Cancel</button><button class="primary" id="sSave">Save</button></div>
     </div>
@@ -640,7 +643,23 @@ for (let i=0;i<5;i++){
 
 /* ================= sounds ================= */
 let actx=null;
-function audio(){ if(!actx){ try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){} try{ actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } if(actx&&actx.state==="suspended") actx.resume(); return actx; }
+// Ask iPhone and iPad Safari to treat the app's sound as media, so it plays even when the ring switch is silent.
+function playbackSession(){ try{ if(navigator.audioSession && navigator.audioSession.type!=="playback") navigator.audioSession.type="playback"; }catch(e){} }
+// Safari can leave the sound system "suspended" or "interrupted" (after the microphone, a call, or switching apps).
+// Wake it from either state, and from a closed state make a new one.
+function audio(){
+  if(actx && actx.state==="closed") actx=null;
+  if(!actx){ playbackSession(); try{ actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  if(actx && actx.state!=="running"){ try{ const p=actx.resume(); if(p && p.catch) p.catch(()=>{}); }catch(e){} }
+  return actx;
+}
+// Wait briefly for the sound system to wake up. Returns true when it's ready to play.
+async function ensureRunning(a, ms=800){
+  if(!a) return false;
+  if(a.state==="running") return true;
+  try{ await Promise.race([a.resume(), new Promise(r=>setTimeout(r,ms))]); }catch(e){}
+  return a.state==="running";
+}
 function chime(notes=[880,1108,1318,1760], gap=0.08, vol=0.12){
   if(muted) return;
   const a=audio(); if(!a) return;
@@ -736,11 +755,77 @@ const voiceStyle = () => bedtime
   ? "You are "+botName()+", a sweet young unicorn talking softly to a sleepy six-year-old at bedtime. Speak slowly, gently, and quietly, like a cozy lullaby."
   : "You are "+botName()+", a sweet, cheerful, giggly young unicorn talking to a six-year-old child. Speak warmly and brightly, full of wonder and smiles, at a gentle, clear pace. Giggle softly where it fits.";
 let speechToken=0, currentSrc=null, lastAudio={key:"",buf:null};
+let currentUtter=null, lastCancel=0, talkTimer=null;
+
+/* ---- Safari sound unlock ----
+   Safari only lets a page start sound during a tap. Speech often starts later, after a network wait,
+   so each tap does the unlocking ahead of time:
+   - wakes the Web Audio sound system and plays a tiny silent sound,
+   - plays a tiny silent clip on a reusable <audio> player (a backup path for the AI voice),
+   - starts an empty phone-voice utterance once, which permits later phone speech. */
+let audioPrimed=false, speechPrimed=false, voiceEl=null, voiceElPrimed=false, voiceElURL=null;
+function wavBlob(samples, rate){
+  const n=samples.length, dv=new DataView(new ArrayBuffer(44+n*2));
+  const str=(o,s)=>{ for(let i=0;i<s.length;i++) dv.setUint8(o+i,s.charCodeAt(i)); };
+  str(0,"RIFF"); dv.setUint32(4,36+n*2,true); str(8,"WAVE"); str(12,"fmt ");
+  dv.setUint32(16,16,true); dv.setUint16(20,1,true); dv.setUint16(22,1,true);
+  dv.setUint32(24,rate,true); dv.setUint32(28,rate*2,true); dv.setUint16(32,2,true); dv.setUint16(34,16,true);
+  str(36,"data"); dv.setUint32(40,n*2,true);
+  for(let i=0;i<n;i++){ const s=Math.max(-1,Math.min(1,samples[i])); dv.setInt16(44+i*2, s<0?s*32768:s*32767, true); }
+  return new Blob([dv.buffer],{type:"audio/wav"});
+}
+let silentURL=null;
+function getVoiceEl(){
+  if(!voiceEl){
+    voiceEl=new Audio(); voiceEl.preload="auto";
+    voiceEl.setAttribute("playsinline",""); voiceEl.setAttribute("webkit-playsinline","");
+  }
+  return voiceEl;
+}
+function unlockAudio(){
+  playbackSession();
+  const a=audio();
+  if(a && !audioPrimed){
+    try{ const b=a.createBuffer(1,1,22050), s=a.createBufferSource(); s.buffer=b; s.connect(a.destination); s.start(0); audioPrimed=true; }catch(e){}
+  }
+  if(!voiceElPrimed && !currentSrc){
+    try{
+      const el=getVoiceEl();
+      if(el.paused){
+        if(!silentURL) silentURL=URL.createObjectURL(wavBlob(new Float32Array(480),24000));
+        el.src=silentURL;
+        const p=el.play();
+        if(p && p.then) p.then(()=>{ voiceElPrimed=true; try{ el.pause(); }catch(e){} }).catch(()=>{});
+      }
+    }catch(e){}
+  }
+  if(synth && !speechPrimed && !synth.speaking && !synth.pending){
+    try{ const u=new SpeechSynthesisUtterance(""); u.volume=0; synth.speak(u); speechPrimed=true; }catch(e){}
+  }
+}
+["touchend","click","keydown"].forEach(ev=>document.addEventListener(ev, unlockAudio, {capture:true, passive:true}));
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden && actx && actx.state!=="running"){ try{ const p=actx.resume(); if(p&&p.catch) p.catch(()=>{}); }catch(e){} } });
+
 function stopSpeech(){
   speechToken++;
+  clearTimeout(talkTimer);
   if(currentSrc){ try{ currentSrc.onended=null; currentSrc.stop(); }catch(e){} currentSrc=null; }
-  if(synth) synth.cancel();
+  if(voiceEl && !voiceEl.paused){ try{ voiceEl.onended=null; voiceEl.onerror=null; voiceEl.pause(); }catch(e){} }
+  // Safari can drop speech that starts right after cancel(), so cancel only when something is actually queued.
+  if(synth && (currentUtter || synth.speaking || synth.pending)){ try{ synth.cancel(); }catch(e){} lastCancel=Date.now(); currentUtter=null; }
   setState("talking",false);
+}
+// Turn an OpenRouter error body into one short line for the grown-up status message.
+function errLine(status, text){
+  let m=String(text||"").trim();
+  try{ const j=JSON.parse(m); const e=j && j.error; m = (e && (e.message || (typeof e==="string" ? e : ""))) || j.message || m; }catch(e){}
+  m=String(m).replace(/\s+/g," ").trim().slice(0,160);
+  return (status?status+" ":"")+(m||"no details");
+}
+function decodeFile(a, bytes){
+  return new Promise((res,rej)=>{
+    try{ const p=a.decodeAudioData(bytes,res,rej); if(p && p.then) p.then(res,rej); }catch(e){ rej(e); }
+  });
 }
 async function fetchVoice(text){
   const tag = bedtime ? "[softly, sleepily] " : "[sweetly, cheerfully] ";
@@ -752,12 +837,22 @@ async function fetchVoice(text){
       /^elevenlabs\//.test(S.ttsModel) ? {input:tag+text} : {input:text, instructions:voiceStyle()}
     ))
   });
-  if(!res.ok) throw new Error(res.status+" "+(await res.text().catch(()=> "")).slice(0,200));
+  if(!res.ok) throw new Error(errLine(res.status, await res.text().catch(()=> "")));
   const type=(res.headers.get("content-type")||"").toLowerCase();
+  if(type.includes("json") || type.startsWith("text/")){
+    throw new Error(errLine("", await res.text().catch(()=> "")));
+  }
   const bytes=await res.arrayBuffer();
-  const a=audio(); if(!a) throw new Error("no audio");
-  if(type.includes("mpeg")||type.includes("mp3")||type.includes("wav")||type.includes("ogg")){
-    return await a.decodeAudioData(bytes);
+  if(!bytes.byteLength) throw new Error("the voice came back empty");
+  const a=audio(); if(!a) throw new Error("this browser has no Web Audio");
+  // Use the content type first; if it's missing or unclear, look at the first bytes.
+  const h=new Uint8Array(bytes,0,Math.min(4,bytes.byteLength));
+  const sig=String.fromCharCode.apply(null,h);
+  const raw = type.includes("pcm") || type.includes("l16");
+  const file = !raw && (/mpeg|mp3|wav|ogg|aac|mp4|webm|flac/.test(type) || sig==="RIFF" || sig==="OggS" || sig.startsWith("ID3") || sig==="fLaC" || (h[0]===0xFF && (h[1]&0xE0)===0xE0));
+  if(file){
+    try{ return await decodeFile(a, bytes); }
+    catch(e){ throw new Error("the browser couldn't read the voice audio ("+(type||"unknown type")+")"); }
   }
   // raw PCM: 16-bit signed little-endian, mono
   const m=type.match(/rate=(\d+)/); const rate=m?+m[1]:24000;
@@ -766,44 +861,104 @@ async function fetchVoice(text){
   for(let i=0;i<n;i++) ch[i]=dv.getInt16(i*2,true)/32768;
   return buf;
 }
-function playBuffer(buf, onEnd){
-  const a=audio(); const src=a.createBufferSource(); src.buffer=buf;
-  if(bedtime){ const g=a.createGain(); g.gain.value=0.7; src.connect(g).connect(a.destination); } else src.connect(a.destination);
-  currentSrc=src; setState("talking",true);
-  src.onended=()=>{ if(currentSrc===src) currentSrc=null; setState("talking",false); onEnd&&onEnd(); };
-  src.start();
+function endTalk(){ clearTimeout(talkTimer); setState("talking",false); }
+// Play the AI voice. Uses Web Audio when Safari lets it run; otherwise the <audio> player unlocked by an earlier tap.
+// Throws when neither can play, so the caller can switch to the phone voice.
+async function playVoice(buf, onEnd, onBegin, my){
+  const a=audio();
+  const running = await ensureRunning(a);
+  if(my!==speechToken) return;
+  const finish=()=>{ endTalk(); onEnd&&onEnd(); };
+  if(running){
+    const src=a.createBufferSource(); src.buffer=buf;
+    if(bedtime){ const g=a.createGain(); g.gain.value=0.7; src.connect(g).connect(a.destination); } else src.connect(a.destination);
+    currentSrc=src;
+    src.onended=()=>{ if(currentSrc!==src) return; currentSrc=null; finish(); };
+    onBegin(); setState("talking",true);
+    src.start();
+    // In case the "ended" signal never arrives, stop the talking animation after the clip's length.
+    clearTimeout(talkTimer); talkTimer=setTimeout(()=>{ if(currentSrc===src){ currentSrc=null; finish(); } }, buf.duration*1000+1500);
+    return;
+  }
+  const el=getVoiceEl();
+  if(voiceElURL){ URL.revokeObjectURL(voiceElURL); voiceElURL=null; }
+  voiceElURL=URL.createObjectURL(wavBlob(buf.getChannelData(0), buf.sampleRate));
+  el.onended=null; el.onerror=null;
+  el.src=voiceElURL; el.volume=bedtime?0.7:1;
+  try{ await el.play(); }
+  catch(e){ throw new Error("the browser kept the sound paused ("+(a?a.state:"no audio")+", "+((e&&e.name)||"blocked")+")"); }
+  if(my!==speechToken){ try{ el.pause(); }catch(e){} return; }
+  el.onended=()=>{ el.onended=null; finish(); };
+  el.onerror=()=>{ el.onerror=null; finish(); };
+  onBegin(); setState("talking",true);
 }
 // Speak with the AI voice when it's set up; otherwise, or on any error, use the phone's voice.
 // onStart runs when the sound begins (or right away when muted), so the words and voice arrive together.
+// Returns what happened, for the grown-up "Test voice" status: {via:"ai"|"phone"|"none"|"stopped", why, phone}.
 async function speak(text, onEnd, onStart){
   stopSpeech(); const my=speechToken;
   lastSpoken=text;
   const clean=stripEmoji(text);
   const started=()=>{ if(my===speechToken && onStart) onStart(); };
-  if(muted || !clean){ started(); onEnd&&onEnd(); return; }
-  if(S.key && S.ttsModel){
+  if(muted || !clean){ started(); onEnd&&onEnd(); return {via:"none", why: muted ? "Sound is turned off." : ""}; }
+  let why="";
+  if(!S.key) why="No OpenRouter key is saved, so the phone voice is used.";
+  else if(!S.ttsModel) why="The voice model is empty, so the phone voice is used.";
+  else{
     const guard=setTimeout(started, 7000); // if the voice is slow, show the words anyway
     try{
       const key=clean+(bedtime?"|bed":"");
       const buf = (lastAudio.key===key && lastAudio.buf) ? lastAudio.buf : await fetchVoice(clean);
       lastAudio={key, buf};
+      if(my!==speechToken){ clearTimeout(guard); return {via:"stopped"}; }
+      await playVoice(buf, onEnd, ()=>{ clearTimeout(guard); started(); }, my);
       clearTimeout(guard);
-      if(my!==speechToken) return;
-      started(); playBuffer(buf, onEnd); return;
-    }catch(e){ clearTimeout(guard); console.warn("voice",e); if(my!==speechToken) return; }
+      return {via: my===speechToken ? "ai" : "stopped"};
+    }catch(e){
+      clearTimeout(guard); console.warn("voice",e);
+      if(my!==speechToken) return {via:"stopped"};
+      why="AI voice failed: "+String((e && e.message) || e).replace(/[.\s]+$/,"")+", using phone voice.";
+    }
   }
-  started(); phoneSpeak(clean, onEnd);
+  started();
+  const phone=phoneSpeak(clean, onEnd, my);
+  return {via:"phone", why, phone};
 }
-function phoneSpeak(text, onEnd){
-  if(!synth){ onEnd&&onEnd(); return; }
-  synth.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  const v=pickVoice(); if(v){ u.voice=v; u.lang=v.lang; }
-  u.pitch=+S.pitch*(bedtime?0.95:1); u.rate=+S.rate*(bedtime?0.85:1); u.volume=bedtime?0.7:1;
-  u.onstart=()=>setState("talking",true);
-  const done=()=>{ setState("talking",false); onEnd&&onEnd(); };
-  u.onend=done; u.onerror=done;
-  synth.speak(u);
+// The phone's built-in voice. Resolves to {ok, why} once it starts, fails, or doesn't start in time.
+function phoneSpeak(text, onEnd, my=speechToken){
+  return new Promise(resolve=>{
+    let reported=false;
+    const report=(ok,why)=>{ if(reported) return; reported=true; resolve({ok, why:why||""}); };
+    if(!synth){ report(false,"this browser has no built-in voice"); onEnd&&onEnd(); return; }
+    // Read the settings now, while the right ones are in place.
+    const u=new SpeechSynthesisUtterance(text);
+    const v=pickVoice(); if(v){ u.voice=v; u.lang=v.lang; } else u.lang="en-US";
+    u.pitch=+S.pitch*(bedtime?0.95:1); u.rate=+S.rate*(bedtime?0.85:1); u.volume=bedtime?0.7:1;
+    let watchdog=null;
+    const done=()=>{
+      clearTimeout(watchdog);
+      if(currentUtter===u) currentUtter=null;
+      if(my===speechToken){ setState("talking",false); onEnd&&onEnd(); }
+    };
+    u.onstart=()=>{ clearTimeout(watchdog); speechPrimed=true; report(true); if(my===speechToken) setState("talking",true); };
+    u.onend=()=>{ report(true); done(); };
+    u.onerror=e=>{
+      const err=(e && e.error) || "error";
+      if(err==="interrupted" || err==="canceled") report(true);
+      else{ if(err==="not-allowed") speechPrimed=false; report(false, err==="not-allowed" ? "the browser blocked it until the next tap" : err); }
+      done();
+    };
+    const go=()=>{
+      if(my!==speechToken){ report(true); return; }
+      currentUtter=u; // keeping a reference stops Safari from losing the utterance before it finishes
+      try{ if(synth.paused) synth.resume(); synth.speak(u); }
+      catch(e){ report(false, String((e && e.message) || e)); done(); return; }
+      watchdog=setTimeout(()=>{ if(!reported){ speechPrimed=false; report(false,"it didn't start, so the browser may be blocking it"); } }, 6000);
+    };
+    // Give Safari a short pause after cancel() before speaking again.
+    const wait=Math.max(0, 300-(Date.now()-lastCancel));
+    if(wait) setTimeout(go, wait); else go();
+  });
 }
 function showThinking(){
   bubble.classList.remove("hidden");
@@ -863,6 +1018,8 @@ function startListening(){
   };
   rec.onend=()=>{
     listening=false; mic.classList.remove("on"); setState("listening",false);
+    // The microphone switches Safari's sound into recording mode; switch it back and wake the sound system.
+    playbackSession(); audio();
     const text=(finalText||heard).trim();
     if(text) send(text);
     else if(bubble.textContent.startsWith("👂")) say("I didn't hear anything! Tap the microphone and talk to me.");
@@ -1347,8 +1504,8 @@ $("pDrawn").onclick=async()=>{ await idb.del("portrait"); showPortrait(null); $(
 /* ================= wake ================= */
 $("wakeBtn").onclick=()=>{
   audio(); chime([523,659,784,1046,1318],0.1,0.13);
-  // unlock speech on iOS with a user gesture
-  if(synth){ const u=new SpeechSynthesisUtterance(" "); u.volume=0; synth.speak(u); loadVoices(); }
+  // unlock Safari's sound and speech with this tap
+  unlockAudio(); loadVoices();
   $("wake").style.transition="opacity .6s"; $("wake").style.opacity="0";
   setTimeout(()=>{ $("wake").remove();
     say(greeting(), {onShow:()=>{ mood("excited"); sparkle(14); }});
@@ -1495,6 +1652,7 @@ function openSettings(){
   loadVoices();
   $("sKey").value=S.key; $("sBotName").value=botName(); $("sAllowRename").checked=S.allowRename!==false; $("sTtsModel").value=S.ttsModel; $("sTtsVoice").value=S.ttsVoice; $("sPortraitModel").value=S.portraitModel; $("sName").value=S.name;
   $("sVoice").value=S.voice||""; $("sPitch").value=S.pitch; $("sRate").value=S.rate; $("sPics").value=S.picsPerDay;
+  $("voiceStatus").textContent="";
   loadModels();
   $("settings").classList.remove("hide");
 }
@@ -1508,7 +1666,23 @@ function readSettings(){
 }
 $("sSave").onclick=()=>{ S=readSettings(); store.set("settings",S); applyName(); $("grown").classList.add("hide"); goHome(false); say(S.key ? "Yay! My magic is all charged up!" : "I still need a magic key from a grown-up."); };
 $("sCancel").onclick=()=>$("grown").classList.add("hide");
-$("testVoice").onclick=async()=>{ audio(); const keep=S, keepMute=muted; S=readSettings(); muted=false; lastAudio={key:"",buf:null}; const btn=$("testVoice"); btn.textContent="🔊 Loading…"; await speak("Hiiii! It's me, "+botName()+"! A little kindness makes a lot of magic!"); btn.textContent="🔊 Test voice"; S=keep; muted=keepMute; };
+// Test the voice and show the grown-up a plain status line, including why the AI voice failed.
+$("testVoice").onclick=async()=>{
+  audio(); unlockAudio();
+  const keep=S, keepMute=muted; S=readSettings(); muted=false; lastAudio={key:"",buf:null};
+  const btn=$("testVoice"), st=$("voiceStatus");
+  btn.textContent="🔊 Loading…"; st.textContent="";
+  let info=null;
+  try{ info=await speak("Hiiii! It's me, "+botName()+"! A little kindness makes a lot of magic!"); }
+  catch(e){ info={via:"error", why:"The voice test failed: "+String((e && e.message) || e)}; }
+  finally{ btn.textContent="🔊 Test voice"; S=keep; muted=keepMute; }
+  if(!info || info.via==="stopped") return;
+  if(info.via==="ai"){ st.textContent="AI voice is working."; return; }
+  if(info.via!=="phone"){ st.textContent=info.why||""; return; }
+  st.textContent=info.why;
+  const p=await info.phone;
+  st.textContent = info.why + (p.ok ? "" : " The phone voice didn't play either: "+p.why+".");
+};
 $("resetStars").onclick=()=>{ stars=0; store.set("stars",0); $("starCount").textContent="0"; $("resetStars").textContent="Stars reset"; };
 $("clearGallery").onclick=async()=>{ if(confirm("Delete all the pictures saved in the gallery on this phone?")){ await idb.del("gallery"); $("clearGallery").textContent="Gallery cleared"; } };
 $("clearStory").onclick=()=>{ clearStory(); $("clearStory").textContent="Story forgotten"; };
