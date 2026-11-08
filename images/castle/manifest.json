@@ -1,13 +1,33 @@
 {
  "feature": "Enchanted Castle",
  "format": "WebP q85",
- "count": 330,
+ "count": 346,
  "assets": [
   {
    "id": "bg01-castle-exterior",
    "file": "backgrounds/bg01-castle-exterior.webp",
    "shows": "Recreate this exact castle scene from the reference image as a tall portrait background, matching it closely: pink and cream sparkly castle with many towers, gl",
    "state": "exterior",
+   "width": 1024,
+   "height": 1536,
+   "transparent": false,
+   "code_notes": "Locked-room glow/all-unlocked = ui13 badges + CSS glow overlays on room hotspots"
+  },
+  {
+   "id": "bg01-castle-map-locked",
+   "file": "backgrounds/bg01-castle-map-locked.webp",
+   "shows": "Exactly the same scene, composition and art style as the reference image, change only this: the upper-right book-window library room and the top rainbow turret ",
+   "state": "map-locked",
+   "width": 1024,
+   "height": 1536,
+   "transparent": false,
+   "code_notes": "Locked-room glow/all-unlocked = ui13 badges + CSS glow overlays on room hotspots"
+  },
+  {
+   "id": "bg01-castle-map-unlocked",
+   "file": "backgrounds/bg01-castle-map-unlocked.webp",
+   "shows": "Derived locally (free) from bg01-castle-map: brightened + warm golden tint (generated retries changed the layout)",
+   "state": "map-unlocked",
    "width": 1024,
    "height": 1536,
    "transparent": false,
@@ -92,6 +112,16 @@
    "height": 1536,
    "transparent": false,
    "code_notes": ""
+  },
+  {
+   "id": "bg06-library-dimmed",
+   "file": "backgrounds/bg06-library-dimmed.webp",
+   "shows": "Derived locally (free) from bg06-library: brightness 68% + warm amber tint (generated retries changed the room)",
+   "state": "dimmed",
+   "width": 1024,
+   "height": 1536,
+   "transparent": false,
+   "code_notes": "Cozy dimmed = CSS brightness/warm overlay"
   },
   {
    "id": "bg06-library",
@@ -954,6 +984,16 @@
    "code_notes": "Sizes/variants via scale, hue, opacity in code"
   },
   {
+   "id": "fx07-tap-bounce",
+   "file": "fx/fx07-tap-bounce.webp",
+   "shows": "a soft pastel tap-feedback ring: concentric squishy pink-lavender circles rippling outward with tiny sparkles, empty center.",
+   "state": "bounce",
+   "width": 256,
+   "height": 253,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
    "id": "fx07-tap-glow",
    "file": "fx/fx07-tap-glow.webp",
    "shows": "Derived locally (free) from fx01-sparkle: copy of sparkle as glow",
@@ -1634,6 +1674,26 @@
    "code_notes": ""
   },
   {
+   "id": "lb07-page-left",
+   "file": "rooms/library/lb07-page-left.webp",
+   "shows": "the same storybook page curling and turning toward the LEFT, mid-motion with soft motion sparkle (no text).",
+   "state": "left",
+   "width": 384,
+   "height": 341,
+   "transparent": true,
+   "code_notes": "Left/right motion = CSS 3D flip"
+  },
+  {
+   "id": "lb07-page-right",
+   "file": "rooms/library/lb07-page-right.webp",
+   "shows": "the same storybook page curling and turning toward the RIGHT, mid-motion with soft motion sparkle (no text).",
+   "state": "right",
+   "width": 384,
+   "height": 319,
+   "transparent": true,
+   "code_notes": "Left/right motion = CSS 3D flip"
+  },
+  {
    "id": "lb07-page",
    "file": "rooms/library/lb07-page.webp",
    "shows": "a single curling cream storybook page, mid-turn (no text).",
@@ -1894,6 +1954,16 @@
    "code_notes": "Tilted = rotate; tw01-scope-view ring frames bg08"
   },
   {
+   "id": "tw01-telescope-tilted",
+   "file": "rooms/tower/tw01-telescope-tilted.webp",
+   "shows": "the same telescope on its tripod tilted steeply upward toward the sky.",
+   "state": "tilted",
+   "width": 255,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Tilted = rotate; tw01-scope-view ring frames bg08"
+  },
+  {
    "id": "tw01-telescope",
    "file": "rooms/tower/tw01-telescope.webp",
    "shows": "a cute brass and periwinkle telescope on a tripod, pointed up at an angle.",
@@ -1994,6 +2064,16 @@
    "code_notes": "Dim/selected/glowing = filter in code"
   },
   {
+   "id": "tw05-crystal-blue-selected",
+   "file": "rooms/tower/tw05-crystal-blue-selected.webp",
+   "shows": "the same blue crystal lifted with a soft gold selection ring under it and a few sparkles.",
+   "state": "blue-selected",
+   "width": 301,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Dim/selected/glowing = filter in code"
+  },
+  {
    "id": "tw05-crystal-blue",
    "file": "rooms/tower/tw05-crystal-blue.webp",
    "shows": "a single faceted sky-blue magic crystal.",
@@ -2024,6 +2104,16 @@
    "code_notes": "Dim/selected/glowing = filter in code"
   },
   {
+   "id": "tw05-crystal-pink-selected",
+   "file": "rooms/tower/tw05-crystal-pink-selected.webp",
+   "shows": "the same pink crystal lifted with a soft gold selection ring under it and a few sparkles (less glow than fully glowing).",
+   "state": "pink-selected",
+   "width": 290,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Dim/selected/glowing = filter in code"
+  },
+  {
    "id": "tw05-crystal-pink",
    "file": "rooms/tower/tw05-crystal-pink.webp",
    "shows": "a single faceted pink magic crystal.",
@@ -2049,6 +2139,16 @@
    "shows": "the same yellow magic crystal glowing brightly with a soft halo and sparkles.",
    "state": "yellow-glowing",
    "width": 316,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Dim/selected/glowing = filter in code"
+  },
+  {
+   "id": "tw05-crystal-yellow-selected",
+   "file": "rooms/tower/tw05-crystal-yellow-selected.webp",
+   "shows": "the same yellow crystal lifted with a soft gold selection ring under it and a few sparkles.",
+   "state": "yellow-selected",
+   "width": 294,
    "height": 384,
    "transparent": true,
    "code_notes": "Dim/selected/glowing = filter in code"
@@ -2324,6 +2424,26 @@
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
   },
   {
+   "id": "ui02-room-library-locked",
+   "file": "ui/ui02-room-library-locked.webp",
+   "shows": "Derived locally (free) from ui02-room-library + ui13-lock: desaturated/dimmed + gold padlock composited bottom-right",
+   "state": "library-locked",
+   "width": 127,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui02-room-library-locked@2x",
+   "file": "ui/ui02-room-library-locked@2x.webp",
+   "shows": "Derived locally (free) from ui02-room-library + ui13-lock: desaturated/dimmed + gold padlock composited bottom-right",
+   "state": "library-locked",
+   "width": 254,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
    "id": "ui02-room-library-pressed",
    "file": "ui/ui02-room-library-pressed.webp",
    "shows": "Derived locally (free) from ui02-room-library: darkened 15% + scaled 92% (pressed)",
@@ -2398,6 +2518,26 @@
    "file": "ui/ui02-room-throne@2x.webp",
    "shows": "big friendly round app icon button, chunky soft 3D, simple and bold, readable at small size, no letters: a golden crown on a round blush-pink button.",
    "state": "throne",
+   "width": 256,
+   "height": 255,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui02-room-tower-locked",
+   "file": "ui/ui02-room-tower-locked.webp",
+   "shows": "Derived locally (free) from ui02-room-tower + ui13-lock: desaturated/dimmed + gold padlock composited bottom-right",
+   "state": "tower-locked",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui02-room-tower-locked@2x",
+   "file": "ui/ui02-room-tower-locked@2x.webp",
+   "shows": "Derived locally (free) from ui02-room-tower + ui13-lock: desaturated/dimmed + gold padlock composited bottom-right",
+   "state": "tower-locked",
    "width": 256,
    "height": 255,
    "transparent": true,
@@ -3069,6 +3209,26 @@
    "shows": "a cute chunky golden padlock with a heart keyhole, closed.",
    "state": "normal",
    "width": 224,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui13-open",
+   "file": "ui/ui13-open.webp",
+   "shows": "the same padlock fully open and unlocked with the shackle swung aside, happy sparkles and a little heart.",
+   "state": "normal",
+   "width": 102,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui13-open@2x",
+   "file": "ui/ui13-open@2x.webp",
+   "shows": "the same padlock fully open and unlocked with the shackle swung aside, happy sparkles and a little heart.",
+   "state": "normal",
+   "width": 204,
    "height": 256,
    "transparent": true,
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
