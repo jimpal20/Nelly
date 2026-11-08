@@ -1,7 +1,7 @@
 {
  "feature": "Enchanted Castle",
  "format": "WebP q85",
- "count": 198,
+ "count": 330,
  "assets": [
   {
    "id": "bg01-castle-exterior",
@@ -124,6 +124,16 @@
    "code_notes": ""
   },
   {
+   "id": "bg08-sky-constellation",
+   "file": "backgrounds/bg08-sky-constellation.webp",
+   "shows": "The same night sky as the reference, now with a softly glowing gold constellation in the center connecting five bright stars into a little heart shape, magical.",
+   "state": "constellation",
+   "width": 1024,
+   "height": 1536,
+   "transparent": false,
+   "code_notes": "Constellation completed = tw02/tw03 overlays"
+  },
+  {
    "id": "bg08-sky-view",
    "file": "backgrounds/bg08-sky-view.webp",
    "shows": "Use the reference only for the art style and palette, do not draw the unicorn. Portrait mobile game room background, interior scene, empty of characters. Keep t",
@@ -132,6 +142,16 @@
    "height": 1536,
    "transparent": false,
    "code_notes": "Constellation completed = tw02/tw03 overlays"
+  },
+  {
+   "id": "bg09-story-panel",
+   "file": "backgrounds/bg09-story-panel.webp",
+   "shows": "A portrait story selection panel background: a soft lavender and cream storybook-style panel with three large empty rounded rectangle frames stacked vertically ",
+   "state": "panel",
+   "width": 1024,
+   "height": 1536,
+   "transparent": false,
+   "code_notes": ""
   },
   {
    "id": "bg10-globe-candy-clouds",
@@ -184,6 +204,16 @@
    "code_notes": ""
   },
   {
+   "id": "bg11-confetti-overlay",
+   "file": "backgrounds/bg11-confetti-overlay.webp",
+   "shows": "a scattered overlay of soft pastel confetti, stars and hearts spread evenly across the whole frame with lots of space between pieces.",
+   "state": "overlay",
+   "width": 1024,
+   "height": 1024,
+   "transparent": false,
+   "code_notes": ""
+  },
+  {
    "id": "bg12-banner",
    "file": "rooms/decor/bg12-banner.webp",
    "shows": "a pastel bunting banner of triangular flags in pink, lavender and mint hanging on a string (no letters).",
@@ -212,6 +242,16 @@
    "height": 384,
    "transparent": true,
    "code_notes": "Placement overlays positioned in code"
+  },
+  {
+   "id": "br01-cloud-bed-bounce",
+   "file": "rooms/bedroom/br01-cloud-bed-bounce.webp",
+   "shows": "the same fluffy cloud bed squashed down flat and wide mid-bounce, with little puff lines.",
+   "state": "bed-bounce",
+   "width": 512,
+   "height": 254,
+   "transparent": true,
+   "code_notes": "Compressed bounce = CSS scaleY squash"
   },
   {
    "id": "br01-cloud-bed",
@@ -262,6 +302,26 @@
    "height": 166,
    "transparent": true,
    "code_notes": ""
+  },
+  {
+   "id": "br04-star-placed",
+   "file": "rooms/bedroom/br04-star-placed.webp",
+   "shows": "the same golden plush star with a happy closed-eye smile and tiny burst of sparkles, settled.",
+   "state": "placed",
+   "width": 384,
+   "height": 366,
+   "transparent": true,
+   "code_notes": "Idle/selected/placed = glow, scale, position in code"
+  },
+  {
+   "id": "br04-star-selected",
+   "file": "rooms/bedroom/br04-star-selected.webp",
+   "shows": "the same golden plush star glowing brightly with a soft white halo ring and sparkles, lifted.",
+   "state": "selected",
+   "width": 384,
+   "height": 344,
+   "transparent": true,
+   "code_notes": "Idle/selected/placed = glow, scale, position in code"
   },
   {
    "id": "br04-star",
@@ -454,6 +514,16 @@
    "code_notes": ""
   },
   {
+   "id": "ch02-pippa-smiling",
+   "file": "characters/ch02-pippa-smiling.webp",
+   "shows": "Draw exactly this character from the reference image: Princess Pippa, a cream BUNNY with long pink-lined ears, tiny golden crown, lavender bow, lavender princes",
+   "state": "smiling",
+   "width": 581,
+   "height": 768,
+   "transparent": true,
+   "code_notes": ""
+  },
+  {
    "id": "ch02-pippa-talking",
    "file": "characters/ch02-pippa-talking.webp",
    "shows": "The exact same character as the reference image, identical design, colors, outfit and proportions. New pose: mouth open mid-word, cheerful, talking. Full body.",
@@ -479,6 +549,16 @@
    "shows": "A new character in exactly the same art style as the reference unicorn (only use the reference for style, do not draw the unicorn): Mochi, a round fluffy white ",
    "state": "idle",
    "width": 614,
+   "height": 768,
+   "transparent": true,
+   "code_notes": ""
+  },
+  {
+   "id": "ch03-mochi-smiling",
+   "file": "characters/ch03-mochi-smiling.webp",
+   "shows": "Draw exactly this character from the reference image: Mochi, a round fluffy white cloud BEAR with pale blue paws, rosy cheeks, powder-blue sleeping cap with sta",
+   "state": "smiling",
+   "width": 611,
    "height": 768,
    "transparent": true,
    "code_notes": ""
@@ -534,6 +614,16 @@
    "code_notes": ""
   },
   {
+   "id": "ch04-biscuit-smiling",
+   "file": "characters/ch04-biscuit-smiling.webp",
+   "shows": "Draw exactly this character from the reference image: Biscuit, a tiny caramel MOUSE with mint-green apron, oversized white chef hat, sprinkle whisk. Identical d",
+   "state": "smiling",
+   "width": 602,
+   "height": 768,
+   "transparent": true,
+   "code_notes": ""
+  },
+  {
    "id": "ch04-biscuit-talking",
    "file": "characters/ch04-biscuit-talking.webp",
    "shows": "The exact same character as the reference image, identical design, colors, outfit and proportions. New pose: mouth open mid-word, enthusiastic, talking. Full bo",
@@ -564,11 +654,31 @@
    "code_notes": ""
   },
   {
+   "id": "ch05-lulu-hovering",
+   "file": "characters/ch05-lulu-hovering.webp",
+   "shows": "Draw exactly this character from the reference image: Lulu, a tiny butterfly fairy with lavender butterfly wings, daisy crown, mint-green dress and BROWN wavy h",
+   "state": "hovering",
+   "width": 767,
+   "height": 768,
+   "transparent": true,
+   "code_notes": ""
+  },
+  {
    "id": "ch05-lulu-idle",
    "file": "characters/ch05-lulu-idle.webp",
-   "shows": "A new character in exactly the same art style as the reference unicorn (only use the reference for style, do not draw the unicorn): Lulu, a tiny butterfly fairy",
+   "shows": "Draw exactly this character from the reference image: Lulu, a tiny butterfly fairy with lavender butterfly wings, daisy crown, mint-green dress and BROWN wavy h",
    "state": "idle",
-   "width": 749,
+   "width": 759,
+   "height": 768,
+   "transparent": true,
+   "code_notes": ""
+  },
+  {
+   "id": "ch05-lulu-smiling",
+   "file": "characters/ch05-lulu-smiling.webp",
+   "shows": "Draw exactly this character from the reference image: Lulu, a tiny butterfly fairy with lavender butterfly wings, daisy crown, mint-green dress and BROWN wavy h",
+   "state": "smiling",
+   "width": 681,
    "height": 768,
    "transparent": true,
    "code_notes": ""
@@ -614,6 +724,16 @@
    "code_notes": ""
   },
   {
+   "id": "ch06-twinkle-smiling",
+   "file": "characters/ch06-twinkle-smiling.webp",
+   "shows": "Draw exactly this character from the reference image: Professor Twinkle, a small round lavender OWL with big round gold glasses, starry navy scarf, NO hat. Iden",
+   "state": "smiling",
+   "width": 661,
+   "height": 768,
+   "transparent": true,
+   "code_notes": ""
+  },
+  {
    "id": "ch06-twinkle-talking",
    "file": "characters/ch06-twinkle-talking.webp",
    "shows": "The exact same character as the reference image, identical design, colors, outfit and proportions. New pose: beak open mid-word, friendly, talking. Full body.",
@@ -634,11 +754,131 @@
    "code_notes": ""
   },
   {
+   "id": "fx01-sparkle-large",
+   "file": "fx/fx01-sparkle-large.webp",
+   "shows": "Derived locally (free) from fx01-sparkle: scale 1.0",
+   "state": "large",
+   "width": 241,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
+   "id": "fx01-sparkle-medium",
+   "file": "fx/fx01-sparkle-medium.webp",
+   "shows": "Derived locally (free) from fx01-sparkle: scale 0.7",
+   "state": "medium",
+   "width": 241,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
+   "id": "fx01-sparkle-small",
+   "file": "fx/fx01-sparkle-small.webp",
+   "shows": "Derived locally (free) from fx01-sparkle: scale 0.4",
+   "state": "small",
+   "width": 241,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
    "id": "fx01-sparkle",
    "file": "fx/fx01-sparkle.webp",
    "shows": "a single four-point pastel white-gold twinkle sparkle with soft glow.",
    "state": "normal",
    "width": 241,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
+   "id": "fx02-star-appearing",
+   "file": "fx/fx02-star-appearing.webp",
+   "shows": "Derived locally (free) from ui08-star: scale 0.5 (appearing)",
+   "state": "appearing",
+   "width": 256,
+   "height": 247,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
+   "id": "fx02-star-collected",
+   "file": "fx/fx02-star-collected.webp",
+   "shows": "a golden star dissolving into a happy burst of tiny sparkles.",
+   "state": "collected",
+   "width": 256,
+   "height": 212,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
+   "id": "fx02-star-flying",
+   "file": "fx/fx02-star-flying.webp",
+   "shows": "a golden plush star flying with a soft sparkly comet trail.",
+   "state": "flying",
+   "width": 256,
+   "height": 220,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
+   "id": "fx03-rainbow-complete",
+   "file": "fx/fx03-rainbow-complete.webp",
+   "shows": "Derived locally (free) from tw08-rainbow: copy (complete)",
+   "state": "complete",
+   "width": 256,
+   "height": 173,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
+   "id": "fx03-rainbow-growing",
+   "file": "fx/fx03-rainbow-growing.webp",
+   "shows": "a pastel rainbow halfway grown, arc only partly drawn from left with sparkles at its tip.",
+   "state": "growing",
+   "width": 256,
+   "height": 214,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
+   "id": "fx03-rainbow-hidden",
+   "file": "fx/fx03-rainbow-hidden.webp",
+   "shows": "Derived locally (free) from tw08-rainbow: 15% opacity (hidden)",
+   "state": "hidden",
+   "width": 256,
+   "height": 173,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
+   "id": "fx04-confetti-a",
+   "file": "fx/fx04-confetti-a.webp",
+   "shows": "Derived locally (free) from fx04-confetti: hue 0",
+   "state": "a",
+   "width": 240,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
+   "id": "fx04-confetti-b",
+   "file": "fx/fx04-confetti-b.webp",
+   "shows": "Derived locally (free) from fx04-confetti: hue 120",
+   "state": "b",
+   "width": 240,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
+   "id": "fx04-confetti-c",
+   "file": "fx/fx04-confetti-c.webp",
+   "shows": "Derived locally (free) from fx04-confetti: hue 240",
+   "state": "c",
+   "width": 240,
    "height": 256,
    "transparent": true,
    "code_notes": "Sizes/variants via scale, hue, opacity in code"
@@ -654,6 +894,26 @@
    "code_notes": "Sizes/variants via scale, hue, opacity in code"
   },
   {
+   "id": "fx05-doorway-fading",
+   "file": "fx/fx05-doorway-fading.webp",
+   "shows": "the same magical doorway fading away into soft sparkles and light.",
+   "state": "fading",
+   "width": 231,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
+   "id": "fx05-doorway-opening",
+   "file": "fx/fx05-doorway-opening.webp",
+   "shows": "the same magical doorway half-open, swirls brightening, light spilling out.",
+   "state": "opening",
+   "width": 230,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
    "id": "fx05-doorway",
    "file": "fx/fx05-doorway.webp",
    "shows": "an arched magical doorway made of swirling pastel sparkles and light, open portal.",
@@ -664,12 +924,42 @@
    "code_notes": "Sizes/variants via scale, hue, opacity in code"
   },
   {
+   "id": "fx06-speech-idle",
+   "file": "fx/fx06-speech-idle.webp",
+   "shows": "Derived locally (free) from fx06-speech: copy",
+   "state": "idle",
+   "width": 256,
+   "height": 231,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
+   "id": "fx06-speech-pulsing",
+   "file": "fx/fx06-speech-pulsing.webp",
+   "shows": "Derived locally (free) from fx06-speech: brightened (pulse peak; animate scale in CSS)",
+   "state": "pulsing",
+   "width": 256,
+   "height": 231,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
    "id": "fx06-speech",
    "file": "fx/fx06-speech.webp",
    "shows": "a soft round pastel speech bubble with three dots inside.",
    "state": "normal",
    "width": 256,
    "height": 231,
+   "transparent": true,
+   "code_notes": "Sizes/variants via scale, hue, opacity in code"
+  },
+  {
+   "id": "fx07-tap-glow",
+   "file": "fx/fx07-tap-glow.webp",
+   "shows": "Derived locally (free) from fx01-sparkle: copy of sparkle as glow",
+   "state": "glow",
+   "width": 241,
+   "height": 256,
    "transparent": true,
    "code_notes": "Sizes/variants via scale, hue, opacity in code"
   },
@@ -804,6 +1094,16 @@
    "code_notes": "3 palettes generated as separate files"
   },
   {
+   "id": "gd06-watering-can-pouring",
+   "file": "rooms/garden/gd06-watering-can-pouring.webp",
+   "shows": "the same watering can tilted forward pouring a gentle stream of sparkly water.",
+   "state": "can-pouring",
+   "width": 384,
+   "height": 368,
+   "transparent": true,
+   "code_notes": "Tilted/pouring = CSS rotate + gd08 droplets"
+  },
+  {
    "id": "gd06-watering-can",
    "file": "rooms/garden/gd06-watering-can.webp",
    "shows": "a cute pastel aqua watering can with a flower decal, resting upright, side view.",
@@ -884,6 +1184,36 @@
    "code_notes": "Spinning = CSS rotate"
   },
   {
+   "id": "kt01-bowl-spinning",
+   "file": "rooms/kitchen/kt01-bowl-spinning.webp",
+   "shows": "the same mixing bowl with batter, tilted with swirling motion lines and a whirl of sprinkles around it.",
+   "state": "spinning",
+   "width": 380,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Spinning = CSS rotate"
+  },
+  {
+   "id": "kt02-egg-selected",
+   "file": "rooms/kitchen/kt02-egg-selected.webp",
+   "shows": "the same plush cream egg glowing with a soft golden halo and sparkles.",
+   "state": "selected",
+   "width": 332,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Floating/selected/dropped = motion + glow in code"
+  },
+  {
+   "id": "kt02-ingredient-dropped",
+   "file": "rooms/kitchen/kt02-ingredient-dropped.webp",
+   "shows": "a soft pastel splash of pink batter with a little puff of sugar sparkles, as if an ingredient just dropped in.",
+   "state": "dropped",
+   "width": 384,
+   "height": 383,
+   "transparent": true,
+   "code_notes": "Floating/selected/dropped = motion + glow in code"
+  },
+  {
    "id": "kt02-ingredient-egg",
    "file": "rooms/kitchen/kt02-ingredient-egg.webp",
    "shows": "a cute plush cream egg with a smile.",
@@ -914,11 +1244,51 @@
    "code_notes": "Floating/selected/dropped = motion + glow in code"
   },
   {
+   "id": "kt02-ingredients-floating",
+   "file": "rooms/kitchen/kt02-ingredients-floating.webp",
+   "shows": "the three cute ingredients - plush strawberry, cream egg and pink sugar bag - floating apart with sparkle trails.",
+   "state": "floating",
+   "width": 381,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Floating/selected/dropped = motion + glow in code"
+  },
+  {
+   "id": "kt02-strawberry-selected",
+   "file": "rooms/kitchen/kt02-strawberry-selected.webp",
+   "shows": "the same plush strawberry glowing with a soft golden halo and sparkles.",
+   "state": "selected",
+   "width": 354,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Floating/selected/dropped = motion + glow in code"
+  },
+  {
+   "id": "kt02-sugar-selected",
+   "file": "rooms/kitchen/kt02-sugar-selected.webp",
+   "shows": "the same pink sugar bag glowing with a soft golden halo and sparkles.",
+   "state": "selected",
+   "width": 327,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Floating/selected/dropped = motion + glow in code"
+  },
+  {
    "id": "kt03-oven-closed",
    "file": "rooms/kitchen/kt03-oven-closed.webp",
    "shows": "a tiny cute rounded peach toy oven with a round window door, closed, no flames.",
    "state": "closed",
    "width": 483,
+   "height": 512,
+   "transparent": true,
+   "code_notes": ""
+  },
+  {
+   "id": "kt03-oven-open",
+   "file": "rooms/kitchen/kt03-oven-open.webp",
+   "shows": "the same toy oven with its door open, empty inside with warm soft glow, no flames.",
+   "state": "open",
+   "width": 416,
    "height": 512,
    "transparent": true,
    "code_notes": ""
@@ -974,6 +1344,16 @@
    "code_notes": ""
   },
   {
+   "id": "kt05-jar-blue-pouring",
+   "file": "rooms/kitchen/kt05-jar-blue-pouring.webp",
+   "shows": "the same sprinkle jar tilted sideways pouring a stream of blue sprinkles.",
+   "state": "blue-pouring",
+   "width": 384,
+   "height": 371,
+   "transparent": true,
+   "code_notes": "Pouring = tilt + fx sprinkles in code"
+  },
+  {
    "id": "kt05-jar-blue",
    "file": "rooms/kitchen/kt05-jar-blue.webp",
    "shows": "a glass sprinkle shaker jar full of blue sprinkles, round lid.",
@@ -984,11 +1364,31 @@
    "code_notes": "Pouring = tilt + fx sprinkles in code"
   },
   {
+   "id": "kt05-jar-pink-pouring",
+   "file": "rooms/kitchen/kt05-jar-pink-pouring.webp",
+   "shows": "the same sprinkle jar tilted sideways pouring a stream of pink sprinkles.",
+   "state": "pink-pouring",
+   "width": 349,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Pouring = tilt + fx sprinkles in code"
+  },
+  {
    "id": "kt05-jar-pink",
    "file": "rooms/kitchen/kt05-jar-pink.webp",
    "shows": "a glass sprinkle shaker jar full of pink sprinkles, round lid.",
    "state": "pink",
    "width": 285,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Pouring = tilt + fx sprinkles in code"
+  },
+  {
+   "id": "kt05-jar-yellow-pouring",
+   "file": "rooms/kitchen/kt05-jar-yellow-pouring.webp",
+   "shows": "the same sprinkle jar tilted sideways pouring a stream of yellow sprinkles.",
+   "state": "yellow-pouring",
+   "width": 337,
    "height": 384,
    "transparent": true,
    "code_notes": "Pouring = tilt + fx sprinkles in code"
@@ -1050,6 +1450,26 @@
    "state": "star",
    "width": 384,
    "height": 377,
+   "transparent": true,
+   "code_notes": ""
+  },
+  {
+   "id": "kt08-puff-large",
+   "file": "rooms/kitchen/kt08-puff-large.webp",
+   "shows": "a large soft pastel pink-cream baking puff cloud bursting with sparkles and sprinkles.",
+   "state": "large",
+   "width": 384,
+   "height": 381,
+   "transparent": true,
+   "code_notes": ""
+  },
+  {
+   "id": "kt08-puff-small",
+   "file": "rooms/kitchen/kt08-puff-small.webp",
+   "shows": "a small soft pastel pink-cream baking puff of flour cloud with a few sparkles.",
+   "state": "small",
+   "width": 384,
+   "height": 310,
    "transparent": true,
    "code_notes": ""
   },
@@ -1134,6 +1554,26 @@
    "code_notes": "Selected/shelved = glow + position in code"
   },
   {
+   "id": "lb03-books-shelved",
+   "file": "rooms/library/lb03-books-shelved.webp",
+   "shows": "the same bookshelf segment with the gap filled by three books: pink, blue and yellow, neatly shelved with a sparkle (no letters).",
+   "state": "shelved",
+   "width": 359,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Selected/shelved = glow + position in code"
+  },
+  {
+   "id": "lb04-shelf-occupied",
+   "file": "rooms/library/lb04-shelf-occupied.webp",
+   "shows": "the same bookshelf segment with the empty gap now filled by one pink book, sparkle (no letters).",
+   "state": "occupied",
+   "width": 384,
+   "height": 317,
+   "transparent": true,
+   "code_notes": "Occupied = place lb03 book in slot"
+  },
+  {
    "id": "lb04-shelf-slot",
    "file": "rooms/library/lb04-shelf-slot.webp",
    "shows": "a short wooden bookshelf segment with one empty gap in the middle between books, front view (no letters).",
@@ -1142,6 +1582,26 @@
    "height": 264,
    "transparent": true,
    "code_notes": "Occupied = place lb03 book in slot"
+  },
+  {
+   "id": "lb05-globe-glowing",
+   "file": "rooms/library/lb05-globe-glowing.webp",
+   "shows": "the same magic globe glowing brightly with a soft pastel halo and sparkles.",
+   "state": "glowing",
+   "width": 338,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Spinning/glowing = CSS rotate/filter"
+  },
+  {
+   "id": "lb05-globe-spinning",
+   "file": "rooms/library/lb05-globe-spinning.webp",
+   "shows": "the same magic globe spinning, with swirling motion trails around it.",
+   "state": "spinning",
+   "width": 361,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Spinning/glowing = CSS rotate/filter"
   },
   {
    "id": "lb05-globe",
@@ -1394,12 +1854,42 @@
    "code_notes": ""
   },
   {
+   "id": "tr06-sparkle-large",
+   "file": "rooms/throne/tr06-sparkle-large.webp",
+   "shows": "a large royal sparkle burst: many golden and pink twinkles and glitter radiating outward.",
+   "state": "large",
+   "width": 384,
+   "height": 383,
+   "transparent": true,
+   "code_notes": ""
+  },
+  {
+   "id": "tr06-sparkle-small",
+   "file": "rooms/throne/tr06-sparkle-small.webp",
+   "shows": "a small royal sparkle burst: a few golden and pink twinkles with a tiny crown-shaped glint.",
+   "state": "small",
+   "width": 324,
+   "height": 384,
+   "transparent": true,
+   "code_notes": ""
+  },
+  {
    "id": "tw01-scope-view",
    "file": "rooms/tower/tw01-scope-view.webp",
    "shows": "a round telescope eyepiece view frame: a soft gold circular ring border, with transparent center (only the ring).",
    "state": "view",
    "width": 384,
    "height": 381,
+   "transparent": true,
+   "code_notes": "Tilted = rotate; tw01-scope-view ring frames bg08"
+  },
+  {
+   "id": "tw01-telescope-nelly",
+   "file": "rooms/tower/tw01-telescope-nelly.webp",
+   "shows": "Nelly She is looking through the brass and periwinkle telescope on a tripod from the second reference image, eye to the eyepiece, happy. Full body plus telescop",
+   "state": "nelly",
+   "width": 384,
+   "height": 384,
    "transparent": true,
    "code_notes": "Tilted = rotate; tw01-scope-view ring frames bg08"
   },
@@ -1414,6 +1904,16 @@
    "code_notes": "Tilted = rotate; tw01-scope-view ring frames bg08"
   },
   {
+   "id": "tw02-star-glowing",
+   "file": "rooms/tower/tw02-star-glowing.webp",
+   "shows": "the same star point glowing brightly with a larger soft golden halo.",
+   "state": "glowing",
+   "width": 255,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Dim/glow/selected = opacity + glow"
+  },
+  {
    "id": "tw02-star-point",
    "file": "rooms/tower/tw02-star-point.webp",
    "shows": "a small glowing pastel yellow twinkle star point.",
@@ -1422,6 +1922,36 @@
    "height": 256,
    "transparent": true,
    "code_notes": "Dim/glow/selected = opacity + glow"
+  },
+  {
+   "id": "tw02-star-selected",
+   "file": "rooms/tower/tw02-star-selected.webp",
+   "shows": "the same star point with a pink sparkly ring around it, selected, glowing.",
+   "state": "selected",
+   "width": 256,
+   "height": 221,
+   "transparent": true,
+   "code_notes": "Dim/glow/selected = opacity + glow"
+  },
+  {
+   "id": "tw03-lines-complete",
+   "file": "rooms/tower/tw03-lines-complete.webp",
+   "shows": "a completed simple constellation: five small glowing pastel stars connected by soft glowing gold lines forming a little heart shape.",
+   "state": "complete",
+   "width": 384,
+   "height": 348,
+   "transparent": true,
+   "code_notes": "Constellation lines drawn as SVG/canvas between tw02 points"
+  },
+  {
+   "id": "tw03-lines-drawing",
+   "file": "rooms/tower/tw03-lines-drawing.webp",
+   "shows": "a constellation in progress: three small glowing pastel stars with a dotted glowing gold line connecting only the first two, partly drawn.",
+   "state": "drawing",
+   "width": 384,
+   "height": 339,
+   "transparent": true,
+   "code_notes": "Constellation lines drawn as SVG/canvas between tw02 points"
   },
   {
    "id": "tw04-rainbow-maker-on",
@@ -1444,11 +1974,51 @@
    "code_notes": ""
   },
   {
+   "id": "tw05-crystal-blue-dim",
+   "file": "rooms/tower/tw05-crystal-blue-dim.webp",
+   "shows": "Derived locally (free) from tw05-crystal-blue: grayscale dim",
+   "state": "blue-dim",
+   "width": 288,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Dim/selected/glowing = filter in code"
+  },
+  {
+   "id": "tw05-crystal-blue-glowing",
+   "file": "rooms/tower/tw05-crystal-blue-glowing.webp",
+   "shows": "the same blue magic crystal glowing brightly with a soft halo and sparkles.",
+   "state": "blue-glowing",
+   "width": 296,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Dim/selected/glowing = filter in code"
+  },
+  {
    "id": "tw05-crystal-blue",
    "file": "rooms/tower/tw05-crystal-blue.webp",
    "shows": "a single faceted sky-blue magic crystal.",
    "state": "blue",
    "width": 288,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Dim/selected/glowing = filter in code"
+  },
+  {
+   "id": "tw05-crystal-pink-dim",
+   "file": "rooms/tower/tw05-crystal-pink-dim.webp",
+   "shows": "Derived locally (free) from tw05-crystal-pink: grayscale dim",
+   "state": "pink-dim",
+   "width": 261,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Dim/selected/glowing = filter in code"
+  },
+  {
+   "id": "tw05-crystal-pink-glowing",
+   "file": "rooms/tower/tw05-crystal-pink-glowing.webp",
+   "shows": "the same pink magic crystal glowing brightly with a soft halo and sparkles.",
+   "state": "pink-glowing",
+   "width": 340,
    "height": 384,
    "transparent": true,
    "code_notes": "Dim/selected/glowing = filter in code"
@@ -1464,6 +2034,26 @@
    "code_notes": "Dim/selected/glowing = filter in code"
   },
   {
+   "id": "tw05-crystal-yellow-dim",
+   "file": "rooms/tower/tw05-crystal-yellow-dim.webp",
+   "shows": "Derived locally (free) from tw05-crystal-yellow: grayscale dim",
+   "state": "yellow-dim",
+   "width": 283,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Dim/selected/glowing = filter in code"
+  },
+  {
+   "id": "tw05-crystal-yellow-glowing",
+   "file": "rooms/tower/tw05-crystal-yellow-glowing.webp",
+   "shows": "the same yellow magic crystal glowing brightly with a soft halo and sparkles.",
+   "state": "yellow-glowing",
+   "width": 316,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Dim/selected/glowing = filter in code"
+  },
+  {
    "id": "tw05-crystal-yellow",
    "file": "rooms/tower/tw05-crystal-yellow.webp",
    "shows": "a single faceted pale gold magic crystal.",
@@ -1472,6 +2062,36 @@
    "height": 384,
    "transparent": true,
    "code_notes": "Dim/selected/glowing = filter in code"
+  },
+  {
+   "id": "tw06-chandelier-pattern1",
+   "file": "rooms/tower/tw06-chandelier-pattern1.webp",
+   "shows": "the same star chandelier, lit with sparkle pattern 1: gentle twinkling tiny sparkles around the edges.",
+   "state": "pattern1",
+   "width": 366,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Three sparkle patterns = fx01 instances in code"
+  },
+  {
+   "id": "tw06-chandelier-pattern2",
+   "file": "rooms/tower/tw06-chandelier-pattern2.webp",
+   "shows": "the same star chandelier, lit with sparkle pattern 2: a soft ring of pastel rainbow light glowing around it.",
+   "state": "pattern2",
+   "width": 372,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Three sparkle patterns = fx01 instances in code"
+  },
+  {
+   "id": "tw06-chandelier-pattern3",
+   "file": "rooms/tower/tw06-chandelier-pattern3.webp",
+   "shows": "the same star chandelier, lit with sparkle pattern 3: star-shaped sparkles raining gently downward.",
+   "state": "pattern3",
+   "width": 285,
+   "height": 384,
+   "transparent": true,
+   "code_notes": "Three sparkle patterns = fx01 instances in code"
   },
   {
    "id": "tw06-chandelier",
@@ -1544,6 +2164,26 @@
    "code_notes": "Occupied = overlay ch06-twinkle-idle"
   },
   {
+   "id": "ui01-castle-button-pressed",
+   "file": "ui/ui01-castle-button-pressed.webp",
+   "shows": "Derived locally (free) from ui01-castle-button: darkened 15% + scaled 92% (pressed)",
+   "state": "button-pressed",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui01-castle-button-pressed@2x",
+   "file": "ui/ui01-castle-button-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui01-castle-button: darkened 15% + scaled 92% (pressed)",
+   "state": "button-pressed",
+   "width": 255,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
    "id": "ui01-castle-button",
    "file": "ui/ui01-castle-button.webp",
    "shows": "big friendly round app icon button, chunky soft 3D, simple and bold, readable at small size, no letters: a cute pastel pink castle with a rainbow turret on a ro",
@@ -1559,6 +2199,26 @@
    "shows": "big friendly round app icon button, chunky soft 3D, simple and bold, readable at small size, no letters: a cute pastel pink castle with a rainbow turret on a ro",
    "state": "button",
    "width": 255,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui02-room-bedroom-pressed",
+   "file": "ui/ui02-room-bedroom-pressed.webp",
+   "shows": "Derived locally (free) from ui02-room-bedroom: darkened 15% + scaled 92% (pressed)",
+   "state": "bedroom-pressed",
+   "width": 126,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui02-room-bedroom-pressed@2x",
+   "file": "ui/ui02-room-bedroom-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui02-room-bedroom: darkened 15% + scaled 92% (pressed)",
+   "state": "bedroom-pressed",
+   "width": 253,
    "height": 256,
    "transparent": true,
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
@@ -1584,6 +2244,26 @@
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
   },
   {
+   "id": "ui02-room-garden-pressed",
+   "file": "ui/ui02-room-garden-pressed.webp",
+   "shows": "Derived locally (free) from ui02-room-garden: darkened 15% + scaled 92% (pressed)",
+   "state": "garden-pressed",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui02-room-garden-pressed@2x",
+   "file": "ui/ui02-room-garden-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui02-room-garden: darkened 15% + scaled 92% (pressed)",
+   "state": "garden-pressed",
+   "width": 255,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
    "id": "ui02-room-garden",
    "file": "ui/ui02-room-garden.webp",
    "shows": "big friendly round app icon button, chunky soft 3D, simple and bold, readable at small size, no letters: a tulip flower on a round sage-green button.",
@@ -1599,6 +2279,26 @@
    "shows": "big friendly round app icon button, chunky soft 3D, simple and bold, readable at small size, no letters: a tulip flower on a round sage-green button.",
    "state": "garden",
    "width": 255,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui02-room-kitchen-pressed",
+   "file": "ui/ui02-room-kitchen-pressed.webp",
+   "shows": "Derived locally (free) from ui02-room-kitchen: darkened 15% + scaled 92% (pressed)",
+   "state": "kitchen-pressed",
+   "width": 126,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui02-room-kitchen-pressed@2x",
+   "file": "ui/ui02-room-kitchen-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui02-room-kitchen: darkened 15% + scaled 92% (pressed)",
+   "state": "kitchen-pressed",
+   "width": 252,
    "height": 256,
    "transparent": true,
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
@@ -1624,6 +2324,26 @@
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
   },
   {
+   "id": "ui02-room-library-pressed",
+   "file": "ui/ui02-room-library-pressed.webp",
+   "shows": "Derived locally (free) from ui02-room-library: darkened 15% + scaled 92% (pressed)",
+   "state": "library-pressed",
+   "width": 127,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui02-room-library-pressed@2x",
+   "file": "ui/ui02-room-library-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui02-room-library: darkened 15% + scaled 92% (pressed)",
+   "state": "library-pressed",
+   "width": 254,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
    "id": "ui02-room-library",
    "file": "ui/ui02-room-library.webp",
    "shows": "big friendly round app icon button, chunky soft 3D, simple and bold, readable at small size, no letters: an open book on a round lavender button.",
@@ -1644,6 +2364,26 @@
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
   },
   {
+   "id": "ui02-room-throne-pressed",
+   "file": "ui/ui02-room-throne-pressed.webp",
+   "shows": "Derived locally (free) from ui02-room-throne: darkened 15% + scaled 92% (pressed)",
+   "state": "throne-pressed",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui02-room-throne-pressed@2x",
+   "file": "ui/ui02-room-throne-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui02-room-throne: darkened 15% + scaled 92% (pressed)",
+   "state": "throne-pressed",
+   "width": 256,
+   "height": 255,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
    "id": "ui02-room-throne",
    "file": "ui/ui02-room-throne.webp",
    "shows": "big friendly round app icon button, chunky soft 3D, simple and bold, readable at small size, no letters: a golden crown on a round blush-pink button.",
@@ -1658,6 +2398,26 @@
    "file": "ui/ui02-room-throne@2x.webp",
    "shows": "big friendly round app icon button, chunky soft 3D, simple and bold, readable at small size, no letters: a golden crown on a round blush-pink button.",
    "state": "throne",
+   "width": 256,
+   "height": 255,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui02-room-tower-pressed",
+   "file": "ui/ui02-room-tower-pressed.webp",
+   "shows": "Derived locally (free) from ui02-room-tower: darkened 15% + scaled 92% (pressed)",
+   "state": "tower-pressed",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui02-room-tower-pressed@2x",
+   "file": "ui/ui02-room-tower-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui02-room-tower: darkened 15% + scaled 92% (pressed)",
+   "state": "tower-pressed",
    "width": 256,
    "height": 255,
    "transparent": true,
@@ -1684,6 +2444,26 @@
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
   },
   {
+   "id": "ui03-home-pressed",
+   "file": "ui/ui03-home-pressed.webp",
+   "shows": "Derived locally (free) from ui03-home: darkened 15% + scaled 92% (pressed)",
+   "state": "pressed",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui03-home-pressed@2x",
+   "file": "ui/ui03-home-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui03-home: darkened 15% + scaled 92% (pressed)",
+   "state": "pressed",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
    "id": "ui03-home",
    "file": "ui/ui03-home.webp",
    "shows": "big friendly round app icon button, chunky soft 3D, simple and bold, readable at small size, no letters: a cute little house on a round mint button.",
@@ -1699,6 +2479,26 @@
    "shows": "big friendly round app icon button, chunky soft 3D, simple and bold, readable at small size, no letters: a cute little house on a round mint button.",
    "state": "normal",
    "width": 256,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui04-back-pressed",
+   "file": "ui/ui04-back-pressed.webp",
+   "shows": "Derived locally (free) from ui04-back: darkened 15% + scaled 92% (pressed)",
+   "state": "pressed",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui04-back-pressed@2x",
+   "file": "ui/ui04-back-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui04-back: darkened 15% + scaled 92% (pressed)",
+   "state": "pressed",
+   "width": 255,
    "height": 256,
    "transparent": true,
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
@@ -1724,6 +2524,26 @@
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
   },
   {
+   "id": "ui05-map-pressed",
+   "file": "ui/ui05-map-pressed.webp",
+   "shows": "Derived locally (free) from ui05-map: darkened 15% + scaled 92% (pressed)",
+   "state": "pressed",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui05-map-pressed@2x",
+   "file": "ui/ui05-map-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui05-map: darkened 15% + scaled 92% (pressed)",
+   "state": "pressed",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
    "id": "ui05-map",
    "file": "ui/ui05-map.webp",
    "shows": "big friendly round app icon button, chunky soft 3D, simple and bold, readable at small size, no letters: a tiny castle on a round butter-yellow button.",
@@ -1742,6 +2562,86 @@
    "height": 256,
    "transparent": true,
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui06-mic-listening",
+   "file": "ui/ui06-mic-listening.webp",
+   "shows": "same round app icon button design as the reference, with glowing pastel sound rings pulsing around the microphone, listening.",
+   "state": "listening",
+   "width": 127,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Listening/speaking = pulsing glow; unavailable = grayscale"
+  },
+  {
+   "id": "ui06-mic-listening@2x",
+   "file": "ui/ui06-mic-listening@2x.webp",
+   "shows": "same round app icon button design as the reference, with glowing pastel sound rings pulsing around the microphone, listening.",
+   "state": "listening",
+   "width": 255,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Listening/speaking = pulsing glow; unavailable = grayscale"
+  },
+  {
+   "id": "ui06-mic-pressed",
+   "file": "ui/ui06-mic-pressed.webp",
+   "shows": "Derived locally (free) from ui06-mic: darkened 15% + scaled 92% (pressed)",
+   "state": "pressed",
+   "width": 127,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Listening/speaking = pulsing glow; unavailable = grayscale"
+  },
+  {
+   "id": "ui06-mic-pressed@2x",
+   "file": "ui/ui06-mic-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui06-mic: darkened 15% + scaled 92% (pressed)",
+   "state": "pressed",
+   "width": 254,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Listening/speaking = pulsing glow; unavailable = grayscale"
+  },
+  {
+   "id": "ui06-mic-speaking",
+   "file": "ui/ui06-mic-speaking.webp",
+   "shows": "same round app icon button design as the reference, with little colorful music-like sound waves and sparkles coming from it, speaking.",
+   "state": "speaking",
+   "width": 128,
+   "height": 111,
+   "transparent": true,
+   "code_notes": "Listening/speaking = pulsing glow; unavailable = grayscale"
+  },
+  {
+   "id": "ui06-mic-speaking@2x",
+   "file": "ui/ui06-mic-speaking@2x.webp",
+   "shows": "same round app icon button design as the reference, with little colorful music-like sound waves and sparkles coming from it, speaking.",
+   "state": "speaking",
+   "width": 256,
+   "height": 222,
+   "transparent": true,
+   "code_notes": "Listening/speaking = pulsing glow; unavailable = grayscale"
+  },
+  {
+   "id": "ui06-mic-unavailable",
+   "file": "ui/ui06-mic-unavailable.webp",
+   "shows": "Derived locally (free) from ui06-mic: grayscale (unavailable)",
+   "state": "unavailable",
+   "width": 127,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Listening/speaking = pulsing glow; unavailable = grayscale"
+  },
+  {
+   "id": "ui06-mic-unavailable@2x",
+   "file": "ui/ui06-mic-unavailable@2x.webp",
+   "shows": "Derived locally (free) from ui06-mic: grayscale (unavailable)",
+   "state": "unavailable",
+   "width": 255,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Listening/speaking = pulsing glow; unavailable = grayscale"
   },
   {
    "id": "ui06-mic",
@@ -1764,6 +2664,26 @@
    "code_notes": "Listening/speaking = pulsing glow; unavailable = grayscale"
   },
   {
+   "id": "ui07-sticker-book-pressed",
+   "file": "ui/ui07-sticker-book-pressed.webp",
+   "shows": "Derived locally (free) from ui07-sticker-book: darkened 15% + scaled 92% (pressed)",
+   "state": "book-pressed",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui07-sticker-book-pressed@2x",
+   "file": "ui/ui07-sticker-book-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui07-sticker-book: darkened 15% + scaled 92% (pressed)",
+   "state": "book-pressed",
+   "width": 255,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
    "id": "ui07-sticker-book",
    "file": "ui/ui07-sticker-book.webp",
    "shows": "big friendly round app icon button, chunky soft 3D, simple and bold, readable at small size, no letters: a sticker book with a star on its cover on a round yell",
@@ -1782,6 +2702,66 @@
    "height": 256,
    "transparent": true,
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui08-star-counting",
+   "file": "ui/ui08-star-counting.webp",
+   "shows": "the same golden star with little +1 sparkles bouncing upward, counting.",
+   "state": "counting",
+   "width": 101,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Also used for FX02 star flight, UI14 milestones (unfilled = grayscale/outline)"
+  },
+  {
+   "id": "ui08-star-counting@2x",
+   "file": "ui/ui08-star-counting@2x.webp",
+   "shows": "the same golden star with little +1 sparkles bouncing upward, counting.",
+   "state": "counting",
+   "width": 202,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Also used for FX02 star flight, UI14 milestones (unfilled = grayscale/outline)"
+  },
+  {
+   "id": "ui08-star-empty",
+   "file": "ui/ui08-star-empty.webp",
+   "shows": "Derived locally (free) from ui08-star: grayscale (empty)",
+   "state": "empty",
+   "width": 128,
+   "height": 123,
+   "transparent": true,
+   "code_notes": "Also used for FX02 star flight, UI14 milestones (unfilled = grayscale/outline)"
+  },
+  {
+   "id": "ui08-star-empty@2x",
+   "file": "ui/ui08-star-empty@2x.webp",
+   "shows": "Derived locally (free) from ui08-star: grayscale (empty)",
+   "state": "empty",
+   "width": 256,
+   "height": 246,
+   "transparent": true,
+   "code_notes": "Also used for FX02 star flight, UI14 milestones (unfilled = grayscale/outline)"
+  },
+  {
+   "id": "ui08-star-rewarded",
+   "file": "ui/ui08-star-rewarded.webp",
+   "shows": "the same golden star with a big happy smile, a ribbon and burst of confetti, rewarded.",
+   "state": "rewarded",
+   "width": 123,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Also used for FX02 star flight, UI14 milestones (unfilled = grayscale/outline)"
+  },
+  {
+   "id": "ui08-star-rewarded@2x",
+   "file": "ui/ui08-star-rewarded@2x.webp",
+   "shows": "the same golden star with a big happy smile, a ribbon and burst of confetti, rewarded.",
+   "state": "rewarded",
+   "width": 245,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Also used for FX02 star flight, UI14 milestones (unfilled = grayscale/outline)"
   },
   {
    "id": "ui08-star",
@@ -1804,6 +2784,26 @@
    "code_notes": "Also used for FX02 star flight, UI14 milestones (unfilled = grayscale/outline)"
   },
   {
+   "id": "ui09-bedtime-pressed",
+   "file": "ui/ui09-bedtime-pressed.webp",
+   "shows": "Derived locally (free) from ui09-bedtime: darkened 15% + scaled 92% (pressed)",
+   "state": "pressed",
+   "width": 126,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui09-bedtime-pressed@2x",
+   "file": "ui/ui09-bedtime-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui09-bedtime: darkened 15% + scaled 92% (pressed)",
+   "state": "pressed",
+   "width": 251,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
    "id": "ui09-bedtime",
    "file": "ui/ui09-bedtime.webp",
    "shows": "big friendly round app icon button, chunky soft 3D, simple and bold, readable at small size, no letters: a sleeping crescent moon with stars on a round indigo-l",
@@ -1824,6 +2824,26 @@
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
   },
   {
+   "id": "ui09-day-pressed",
+   "file": "ui/ui09-day-pressed.webp",
+   "shows": "Derived locally (free) from ui09-day: darkened 15% + scaled 92% (pressed)",
+   "state": "pressed",
+   "width": 127,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui09-day-pressed@2x",
+   "file": "ui/ui09-day-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui09-day: darkened 15% + scaled 92% (pressed)",
+   "state": "pressed",
+   "width": 254,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
    "id": "ui09-day",
    "file": "ui/ui09-day.webp",
    "shows": "big friendly round app icon button, chunky soft 3D, simple and bold, readable at small size, no letters: a smiling sun on a round sky-blue button.",
@@ -1838,6 +2858,26 @@
    "file": "ui/ui09-day@2x.webp",
    "shows": "big friendly round app icon button, chunky soft 3D, simple and bold, readable at small size, no letters: a smiling sun on a round sky-blue button.",
    "state": "normal",
+   "width": 255,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui10-sound-off-pressed",
+   "file": "ui/ui10-sound-off-pressed.webp",
+   "shows": "Derived locally (free) from ui10-sound-off: darkened 15% + scaled 92% (pressed)",
+   "state": "off-pressed",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui10-sound-off-pressed@2x",
+   "file": "ui/ui10-sound-off-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui10-sound-off: darkened 15% + scaled 92% (pressed)",
+   "state": "off-pressed",
    "width": 255,
    "height": 256,
    "transparent": true,
@@ -1864,6 +2904,26 @@
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
   },
   {
+   "id": "ui10-sound-on-pressed",
+   "file": "ui/ui10-sound-on-pressed.webp",
+   "shows": "Derived locally (free) from ui10-sound-on: darkened 15% + scaled 92% (pressed)",
+   "state": "on-pressed",
+   "width": 127,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui10-sound-on-pressed@2x",
+   "file": "ui/ui10-sound-on-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui10-sound-on: darkened 15% + scaled 92% (pressed)",
+   "state": "on-pressed",
+   "width": 255,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
    "id": "ui10-sound-on",
    "file": "ui/ui10-sound-on.webp",
    "shows": "big friendly round app icon button, chunky soft 3D, simple and bold, readable at small size, no letters: a cute speaker with sound waves on a round mint button.",
@@ -1879,6 +2939,26 @@
    "shows": "big friendly round app icon button, chunky soft 3D, simple and bold, readable at small size, no letters: a cute speaker with sound waves on a round mint button.",
    "state": "on",
    "width": 255,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui11-replay-pressed",
+   "file": "ui/ui11-replay-pressed.webp",
+   "shows": "Derived locally (free) from ui11-replay: darkened 15% + scaled 92% (pressed)",
+   "state": "pressed",
+   "width": 126,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui11-replay-pressed@2x",
+   "file": "ui/ui11-replay-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui11-replay: darkened 15% + scaled 92% (pressed)",
+   "state": "pressed",
+   "width": 253,
    "height": 256,
    "transparent": true,
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
@@ -1904,20 +2984,70 @@
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
   },
   {
-   "id": "ui12-choice-button",
-   "file": "ui/ui12-choice-button.webp",
-   "shows": "a large blank rounded pastel pink pill-shaped button, glossy soft 3D, empty, no symbol.",
-   "state": "button",
-   "width": 128,
-   "height": 68,
+   "id": "ui12-choice-blue-selected",
+   "file": "ui/ui12-choice-blue-selected.webp",
+   "shows": "Derived locally (free) from ui12-choice-button: gold glow ring (selected)",
+   "state": "blue-selected",
+   "width": 256,
+   "height": 148,
    "transparent": true,
    "code_notes": "Three color variants via CSS hue-rotate"
   },
   {
-   "id": "ui12-choice-button@2x",
-   "file": "ui/ui12-choice-button@2x.webp",
+   "id": "ui12-choice-blue",
+   "file": "ui/ui12-choice-blue.webp",
+   "shows": "Derived locally (free) from ui12-choice-button: hue 200 (unselected)",
+   "state": "blue",
+   "width": 256,
+   "height": 136,
+   "transparent": true,
+   "code_notes": "Three color variants via CSS hue-rotate"
+  },
+  {
+   "id": "ui12-choice-button",
+   "file": "ui/ui12-choice-button.webp",
    "shows": "a large blank rounded pastel pink pill-shaped button, glossy soft 3D, empty, no symbol.",
    "state": "button",
+   "width": 256,
+   "height": 136,
+   "transparent": true,
+   "code_notes": "Three color variants via CSS hue-rotate"
+  },
+  {
+   "id": "ui12-choice-pink-selected",
+   "file": "ui/ui12-choice-pink-selected.webp",
+   "shows": "Derived locally (free) from ui12-choice-button: gold glow ring (selected)",
+   "state": "pink-selected",
+   "width": 256,
+   "height": 148,
+   "transparent": true,
+   "code_notes": "Three color variants via CSS hue-rotate"
+  },
+  {
+   "id": "ui12-choice-pink",
+   "file": "ui/ui12-choice-pink.webp",
+   "shows": "Derived locally (free) from ui12-choice-button: hue 0 (unselected)",
+   "state": "pink",
+   "width": 256,
+   "height": 136,
+   "transparent": true,
+   "code_notes": "Three color variants via CSS hue-rotate"
+  },
+  {
+   "id": "ui12-choice-yellow-selected",
+   "file": "ui/ui12-choice-yellow-selected.webp",
+   "shows": "Derived locally (free) from ui12-choice-button: gold glow ring (selected)",
+   "state": "yellow-selected",
+   "width": 256,
+   "height": 148,
+   "transparent": true,
+   "code_notes": "Three color variants via CSS hue-rotate"
+  },
+  {
+   "id": "ui12-choice-yellow",
+   "file": "ui/ui12-choice-yellow.webp",
+   "shows": "Derived locally (free) from ui12-choice-button: hue 60 (unselected)",
+   "state": "yellow",
    "width": 256,
    "height": 136,
    "transparent": true,
@@ -1944,6 +3074,26 @@
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
   },
   {
+   "id": "ui13-unlock-ready",
+   "file": "ui/ui13-unlock-ready.webp",
+   "shows": "the same golden padlock glowing and wiggling with sparkles, about to open, key nearby.",
+   "state": "ready",
+   "width": 125,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui13-unlock-ready@2x",
+   "file": "ui/ui13-unlock-ready@2x.webp",
+   "shows": "the same golden padlock glowing and wiggling with sparkles, about to open, key nearby.",
+   "state": "ready",
+   "width": 250,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
    "id": "ui13-unlock",
    "file": "ui/ui13-unlock.webp",
    "shows": "a cute chunky golden padlock with a heart keyhole, open, sparkles.",
@@ -1959,6 +3109,156 @@
    "shows": "a cute chunky golden padlock with a heart keyhole, open, sparkles.",
    "state": "normal",
    "width": 238,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui14-milestone-filled",
+   "file": "ui/ui14-milestone-filled.webp",
+   "shows": "Derived locally (free) from ui08-star: copy (filled)",
+   "state": "filled",
+   "width": 128,
+   "height": 123,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui14-milestone-filled@2x",
+   "file": "ui/ui14-milestone-filled@2x.webp",
+   "shows": "Derived locally (free) from ui08-star: copy (filled)",
+   "state": "filled",
+   "width": 256,
+   "height": 246,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui14-milestone-unfilled",
+   "file": "ui/ui14-milestone-unfilled.webp",
+   "shows": "Derived locally (free) from ui08-star: grayscale (unfilled)",
+   "state": "unfilled",
+   "width": 128,
+   "height": 123,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui14-milestone-unfilled@2x",
+   "file": "ui/ui14-milestone-unfilled@2x.webp",
+   "shows": "Derived locally (free) from ui08-star: grayscale (unfilled)",
+   "state": "unfilled",
+   "width": 256,
+   "height": 246,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui15-silhouette-st01-royal-crown",
+   "file": "ui/ui15-silhouette-st01-royal-crown.webp",
+   "shows": "Derived locally (free) from st01-royal-crown: sticker alpha as soft lavender silhouette (locked)",
+   "state": "st01-royal-crown",
+   "width": 256,
+   "height": 228,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui15-silhouette-st02-magic-cupcake",
+   "file": "ui/ui15-silhouette-st02-magic-cupcake.webp",
+   "shows": "Derived locally (free) from st02-magic-cupcake: sticker alpha as soft lavender silhouette (locked)",
+   "state": "st02-magic-cupcake",
+   "width": 209,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui15-silhouette-st03-happy-flower",
+   "file": "ui/ui15-silhouette-st03-happy-flower.webp",
+   "shows": "Derived locally (free) from st03-happy-flower: sticker alpha as soft lavender silhouette (locked)",
+   "state": "st03-happy-flower",
+   "width": 231,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui15-silhouette-st04-sleepy-moon",
+   "file": "ui/ui15-silhouette-st04-sleepy-moon.webp",
+   "shows": "Derived locally (free) from st04-sleepy-moon: sticker alpha as soft lavender silhouette (locked)",
+   "state": "st04-sleepy-moon",
+   "width": 240,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui15-silhouette-st05-storybook",
+   "file": "ui/ui15-silhouette-st05-storybook.webp",
+   "shows": "Derived locally (free) from st05-storybook: sticker alpha as soft lavender silhouette (locked)",
+   "state": "st05-storybook",
+   "width": 256,
+   "height": 202,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui15-silhouette-st06-rainbow",
+   "file": "ui/ui15-silhouette-st06-rainbow.webp",
+   "shows": "Derived locally (free) from st06-rainbow: sticker alpha as soft lavender silhouette (locked)",
+   "state": "st06-rainbow",
+   "width": 256,
+   "height": 186,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui15-silhouette-st07-butterfly",
+   "file": "ui/ui15-silhouette-st07-butterfly.webp",
+   "shows": "Derived locally (free) from st07-butterfly: sticker alpha as soft lavender silhouette (locked)",
+   "state": "st07-butterfly",
+   "width": 256,
+   "height": 233,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui15-silhouette-st08-star-explorer",
+   "file": "ui/ui15-silhouette-st08-star-explorer.webp",
+   "shows": "Derived locally (free) from st08-star-explorer: sticker alpha as soft lavender silhouette (locked)",
+   "state": "st08-star-explorer",
+   "width": 256,
+   "height": 234,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui15-silhouette-st09-castle-friend",
+   "file": "ui/ui15-silhouette-st09-castle-friend.webp",
+   "shows": "Derived locally (free) from st09-castle-friend: sticker alpha as soft lavender silhouette (locked)",
+   "state": "st09-castle-friend",
+   "width": 235,
+   "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui16-decorate-pressed",
+   "file": "ui/ui16-decorate-pressed.webp",
+   "shows": "Derived locally (free) from ui16-decorate: darkened 15% + scaled 92% (pressed)",
+   "state": "pressed",
+   "width": 127,
+   "height": 128,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui16-decorate-pressed@2x",
+   "file": "ui/ui16-decorate-pressed@2x.webp",
+   "shows": "Derived locally (free) from ui16-decorate: darkened 15% + scaled 92% (pressed)",
+   "state": "pressed",
+   "width": 254,
    "height": 256,
    "transparent": true,
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
@@ -1980,6 +3280,26 @@
    "state": "normal",
    "width": 254,
    "height": 256,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui16-picker-open",
+   "file": "ui/ui16-picker-open.webp",
+   "shows": "an open decoration picker tray: rounded pastel pink panel with three slots holding a banner, a rug and a wall star (no text).",
+   "state": "open",
+   "width": 256,
+   "height": 233,
+   "transparent": true,
+   "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
+  },
+  {
+   "id": "ui16-picker-selected",
+   "file": "ui/ui16-picker-selected.webp",
+   "shows": "an open decoration picker tray: rounded pastel pink panel with three slots, the middle rug slot highlighted with a glowing gold ring (no text).",
+   "state": "selected",
+   "width": 256,
+   "height": 194,
    "transparent": true,
    "code_notes": "Pressed = scale 0.92 + darken; locked = grayscale + ui13 badge"
   }
