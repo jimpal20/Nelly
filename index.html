@@ -459,7 +459,20 @@ input,textarea{-webkit-user-select:text;user-select:text;font-family:inherit}
       <label for="sName">Child's first name (optional)</label>
       <input type="text" id="sName" placeholder="Nelly uses this name">
 
-      <label for="sVoice">Nelly's voice</label>
+      <label for="sTtsModel">Voice model</label>
+      <input type="text" id="sTtsModel" autocapitalize="off" autocorrect="off" spellcheck="false">
+      <div class="small">Leave this empty to use the phone's free built-in voice instead.</div>
+      <label for="sTtsVoice">Nelly's voice</label>
+      <select id="sTtsVoice">
+        <option value="jessica">Jessica (playful and bright)</option>
+        <option value="laura">Laura (bubbly)</option>
+        <option value="lily">Lily (warm, British)</option>
+        <option value="matilda">Matilda (friendly)</option>
+        <option value="sarah">Sarah (soft and clear)</option>
+        <option value="alice">Alice (clear, British)</option>
+        <option value="bella">Bella (gentle)</option>
+      </select>
+      <label for="sVoice">Backup phone voice</label>
       <select id="sVoice"></select>
       <label>Voice pitch</label>
       <div class="range"><span>🐻</span><input type="range" id="sPitch" min="0.8" max="2" step="0.1"><span>🐭</span></div>
@@ -484,6 +497,7 @@ input,textarea{-webkit-user-select:text;user-select:text;font-family:inherit}
 const DEFAULTS = {
   key: "", model: "openrouter/auto", imgModel: "openai/gpt-image-2.6-flare",
   portraitModel: "openai/gpt-image-2.6-sunburst",
+  ttsModel: "elevenlabs/eleven-v4-turbo", ttsVoice: "jessica",
   name: "", voice: "", pitch: 1.5, rate: 0.95, picsPerDay: 5
 };
 const store = {
@@ -491,6 +505,11 @@ const store = {
   set(k, v){ try{ localStorage.setItem("nelly."+k, JSON.stringify(v)); }catch(e){} }
 };
 let S = Object.assign({}, DEFAULTS, store.get("settings", {}));
+// Move phones that saved the earlier Gemini voice to ElevenLabs.
+if(store.get("settingsVersion",1) < 2){
+  S.ttsModel=DEFAULTS.ttsModel; S.ttsVoice=DEFAULTS.ttsVoice;
+  store.set("settings",S); store.set("settingsVersion",2);
+}
 let stars = store.get("stars", 0);
 
 /* ================= elements ================= */
@@ -519,7 +538,7 @@ for (let i=0;i<5;i++){
 
 /* ================= sounds ================= */
 let actx=null;
-function audio(){ if(!actx){ try{ actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } if(actx&&actx.state==="suspended") actx.resume(); return actx; }
+function audio(){ if(!actx){ try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){} try{ actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } if(actx&&actx.state==="suspended") actx.resume(); return actx; }
 function chime(notes=[880,1108,1318,1760], gap=0.08, vol=0.12){
   const a=audio(); if(!a) return;
   notes.forEach((f,i)=>{
@@ -580,11 +599,62 @@ function pickVoice(){
 }
 const stripEmoji = t => t.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}\u{2B50}\u{2728}]/gu,"").replace(/\s+/g," ").trim();
 let lastSpoken="";
-function speak(text, onEnd){
+const VOICE_STYLE = "You are Nelly, a sweet, cheerful, giggly young unicorn talking to a six-year-old child. Speak warmly and brightly, full of wonder and smiles, at a gentle, clear pace. Giggle softly where it fits.";
+let speechToken=0, currentSrc=null, lastAudio={text:"",buf:null};
+function stopSpeech(){
+  speechToken++;
+  if(currentSrc){ try{ currentSrc.onended=null; currentSrc.stop(); }catch(e){} currentSrc=null; }
+  if(synth) synth.cancel();
+  setState("talking",false);
+}
+async function fetchVoice(text){
+  const res=await fetch("https://openrouter.ai/api/v1/audio/speech",{
+    method:"POST",
+    headers:{"Authorization":"Bearer "+S.key,"Content-Type":"application/json","X-Title":"Nelly's Magical World"},
+    body:JSON.stringify(Object.assign(
+      {model:S.ttsModel, voice:S.ttsVoice||undefined, response_format:"pcm"},
+      /^elevenlabs\//.test(S.ttsModel) ? {input:"[sweetly, cheerfully] "+text} : {input:text, instructions:VOICE_STYLE}
+    ))
+  });
+  if(!res.ok) throw new Error(res.status+" "+(await res.text().catch(()=> "")).slice(0,200));
+  const type=(res.headers.get("content-type")||"").toLowerCase();
+  const bytes=await res.arrayBuffer();
+  const a=audio(); if(!a) throw new Error("no audio");
+  if(type.includes("mpeg")||type.includes("mp3")||type.includes("wav")||type.includes("ogg")){
+    return await a.decodeAudioData(bytes);
+  }
+  // raw PCM: 16-bit signed little-endian, mono
+  const m=type.match(/rate=(\d+)/); const rate=m?+m[1]:24000;
+  const n=Math.floor(bytes.byteLength/2), dv=new DataView(bytes);
+  const buf=a.createBuffer(1,Math.max(1,n),rate), ch=buf.getChannelData(0);
+  for(let i=0;i<n;i++) ch[i]=dv.getInt16(i*2,true)/32768;
+  return buf;
+}
+function playBuffer(buf, onEnd){
+  const a=audio(); const src=a.createBufferSource(); src.buffer=buf; src.connect(a.destination);
+  currentSrc=src; setState("talking",true);
+  src.onended=()=>{ if(currentSrc===src) currentSrc=null; setState("talking",false); onEnd&&onEnd(); };
+  src.start();
+}
+// Speak with the AI voice when it's set up; otherwise, or on any error, use the phone's voice.
+async function speak(text, onEnd){
+  stopSpeech(); const my=speechToken;
   lastSpoken=text;
+  const clean=stripEmoji(text);
+  if(S.key && S.ttsModel && clean){
+    try{
+      const buf = (lastAudio.text===clean && lastAudio.buf) ? lastAudio.buf : await fetchVoice(clean);
+      lastAudio={text:clean, buf};
+      if(my!==speechToken) return;
+      playBuffer(buf, onEnd); return;
+    }catch(e){ console.warn("voice",e); if(my!==speechToken) return; }
+  }
+  phoneSpeak(clean, onEnd);
+}
+function phoneSpeak(text, onEnd){
   if(!synth){ onEnd&&onEnd(); return; }
   synth.cancel();
-  const u=new SpeechSynthesisUtterance(stripEmoji(text));
+  const u=new SpeechSynthesisUtterance(text);
   const v=pickVoice(); if(v){ u.voice=v; u.lang=v.lang; }
   u.pitch=+S.pitch; u.rate=+S.rate;
   u.onstart=()=>setState("talking",true);
@@ -610,7 +680,7 @@ let rec=null, listening=false;
 function startListening(){
   if(!Rec){ showTyping(true); say("Ask a grown-up to type what you want to say!"); return; }
   if(listening){ try{rec.stop();}catch(e){} return; }
-  if(synth) synth.cancel();
+  stopSpeech();
   rec=new Rec(); rec.lang="en-US"; rec.interimResults=true; rec.maxAlternatives=1; rec.continuous=false;
   let finalText="", heard="";
   rec.onstart=()=>{ listening=true; mic.classList.add("on"); setState("listening",true); bubble.classList.remove("hidden"); bubble.textContent="👂 I'm listening…"; chime([660,880],0.07,0.08); };
@@ -785,7 +855,7 @@ function renderChoices(list){
 function goHome(greet=true){
   history=[]; renderChoices([]); showTyping(false);
   convo.classList.add("hide"); homeBtns.classList.remove("hide");
-  if(synth) synth.cancel();
+  stopSpeech();
   if(greet) say(S.name ? `What should we do now, ${S.name}?` : "What should we do now?");
 }
 function startMode(mode){
@@ -990,7 +1060,7 @@ $("gateGo").onclick=()=>{
 $("gateA").addEventListener("keydown",e=>{ if(e.key==="Enter") $("gateGo").click(); });
 function openSettings(){
   loadVoices();
-  $("sKey").value=S.key; $("sModel").value=S.model; $("sPortraitModel").value=S.portraitModel; $("sImgModel").value=S.imgModel; $("sName").value=S.name;
+  $("sKey").value=S.key; $("sModel").value=S.model; $("sTtsModel").value=S.ttsModel; $("sTtsVoice").value=S.ttsVoice; $("sPortraitModel").value=S.portraitModel; $("sImgModel").value=S.imgModel; $("sName").value=S.name;
   $("sVoice").value=S.voice||""; $("sPitch").value=S.pitch; $("sRate").value=S.rate; $("sPics").value=S.picsPerDay;
   $("settings").classList.remove("hide");
 }
@@ -998,13 +1068,13 @@ function readSettings(){
   return Object.assign({}, S, {
     key:$("sKey").value.trim(), model:$("sModel").value.trim()||DEFAULTS.model,
     imgModel:$("sImgModel").value.trim()||DEFAULTS.imgModel, portraitModel:$("sPortraitModel").value.trim()||DEFAULTS.portraitModel, name:$("sName").value.trim().slice(0,30),
-    voice:$("sVoice").value, pitch:+$("sPitch").value, rate:+$("sRate").value,
+    ttsModel:$("sTtsModel").value.trim(), ttsVoice:$("sTtsVoice").value, voice:$("sVoice").value, pitch:+$("sPitch").value, rate:+$("sRate").value,
     picsPerDay:Math.max(0,Math.min(50,parseInt($("sPics").value||"0",10)))
   });
 }
 $("sSave").onclick=()=>{ S=readSettings(); store.set("settings",S); $("grown").classList.add("hide"); goHome(false); say(S.key ? "Yay! My magic is all charged up!" : "I still need a magic key from a grown-up."); };
 $("sCancel").onclick=()=>$("grown").classList.add("hide");
-$("testVoice").onclick=()=>{ const keep=S; S=readSettings(); speak("Hiiii! It's me, Nelly! A little kindness makes a lot of magic!"); S=keep; };
+$("testVoice").onclick=async()=>{ audio(); const keep=S; S=readSettings(); lastAudio={text:"",buf:null}; const btn=$("testVoice"); btn.textContent="🔊 Loading…"; await speak("Hiiii! It's me, Nelly! A little kindness makes a lot of magic!"); btn.textContent="🔊 Test voice"; S=keep; };
 $("resetStars").onclick=()=>{ stars=0; store.set("stars",0); $("starCount").textContent="0"; };
 
 })();
