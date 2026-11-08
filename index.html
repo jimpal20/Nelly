@@ -23,7 +23,7 @@ body{font-family:var(--font);color:var(--ink);
   position:fixed;inset:0;touch-action:manipulation;transition:background 1s}
 button{font-family:inherit;color:inherit;border:0;cursor:pointer}
 input,textarea{-webkit-user-select:text;user-select:text;font-family:inherit}
- 
+
 /* ---------- sky ---------- */
 #sky{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 .star{position:absolute;width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 8px #fff;animation:twinkle 3s ease-in-out infinite}
@@ -41,7 +41,7 @@ input,textarea{-webkit-user-select:text;user-select:text;font-family:inherit}
   background:radial-gradient(ellipse at 50% 0%,#fff 0%,#fff 55%,rgba(255,255,255,.0) 72%);}
 #moonOrb{position:absolute;top:9%;right:12%;width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fffbe6,#ffe9a8 70%);
   box-shadow:0 0 30px 8px rgba(255,240,180,.45);opacity:0;transition:opacity 1s}
- 
+
 /* ---------- bedtime ---------- */
 body.bedtime{background:linear-gradient(180deg,#1d1640 0%,#3a2a6e 50%,#6b4f9e 85%,#8a6bb0 100%)}
 body.bedtime #rainbow{opacity:.06}
@@ -50,7 +50,7 @@ body.bedtime #ground{opacity:.3}
 body.bedtime .cloud{opacity:.2}
 body.bedtime .star{box-shadow:0 0 12px #fff}
 body.bedtime #moonOrb{opacity:1}
- 
+
 /* ---------- layout ---------- */
 #app{position:absolute;inset:0;display:flex;flex-direction:column;
   padding:calc(env(safe-area-inset-top) + 10px) 16px calc(env(safe-area-inset-bottom) + 14px)}
@@ -63,7 +63,7 @@ body.bedtime #moonOrb{opacity:1}
 #gear{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.35);font-size:20px;opacity:.55;position:relative;overflow:hidden;padding:0}
 #gear .fill{position:absolute;left:0;bottom:0;width:100%;height:0;background:rgba(185,148,255,.6)}
 #gear span{position:relative}
- 
+
 #stage{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-height:0}
 #bubble{position:relative;z-index:4;background:var(--white);border-radius:26px;padding:14px 18px;max-width:440px;width:100%;
   font-size:21px;line-height:1.3;font-weight:700;text-align:center;box-shadow:0 8px 24px rgba(140,80,190,.22);
@@ -76,7 +76,7 @@ body.bedtime #moonOrb{opacity:1}
 .dots span:nth-child(2){animation-delay:.15s;background:var(--pink)}
 .dots span:nth-child(3){animation-delay:.3s;background:var(--gold)}
 @keyframes dot{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
- 
+
 #nellyWrap{position:relative;width:min(64vw,300px);max-height:40vh;aspect-ratio:300/330;flex-shrink:1;z-index:3}
 #nellyWrap svg{width:100%;height:100%;overflow:visible;animation:float 3.6s ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
@@ -91,7 +91,7 @@ body.bedtime #moonOrb{opacity:1}
 @keyframes swish{0%,100%{transform:rotate(0)}50%{transform:rotate(8deg)}}
 #nelly #horn-glow,#nelly #heart-glow{transition:opacity .4s}
 #nelly .flower{animation:none}
- 
+
 .listening #nelly .ear-l{transform:rotate(-10deg) translateY(-4px)}
 .listening #nelly .ear-r{transform:rotate(10deg) translateY(-4px)}
 .listening #nelly #head-group{transform:rotate(-4deg)}
@@ -108,7 +108,7 @@ body.bedtime #moonOrb{opacity:1}
 @keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
 .mood-kind #nelly #heart-glow{opacity:1;animation:pulse 1.2s ease-in-out infinite}
 .giggle #nelly #head-group{animation:wiggle .35s ease-in-out 2}
- 
+
 /* portrait (generated) Nelly */
 #nellyPic{position:absolute;inset:0;display:none;align-items:flex-end;justify-content:center;transform-origin:50% 90%;transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
 .portrait #nellyPic{display:flex}
@@ -131,7 +131,7 @@ body.bedtime #moonOrb{opacity:1}
 #grown .portraitOpts .pick{border-color:#7b3fd1;box-shadow:0 0 0 3px #c9a6ff}
 #grown .portraitOpts .psave{display:block;width:100%;margin-top:6px;background:#efe9f8;color:#4a2a6e;border:0;border-radius:10px;padding:8px;font-size:14px;font-weight:600;font-family:inherit}
 #pStatus{font-size:14px;color:#4a2a6e;margin-top:8px;min-height:20px}
- 
+
 /* ---------- controls ---------- */
 #controls{position:relative;z-index:4;padding-top:12px}
 .row{display:flex;gap:12px;justify-content:center}
@@ -146,7 +146,7 @@ body.bedtime #moonOrb{opacity:1}
 .b-paint{background:linear-gradient(180deg,#d9f6ff,#9ddcf7)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:340px;margin:0 auto}
 .grid2 .big{max-width:none;min-height:92px}
- 
+
 #choices{display:flex;flex-direction:column;gap:10px;max-width:420px;margin:0 auto 12px}
 .choice{background:#fff;border-radius:22px;padding:12px 16px;font-size:20px;font-weight:800;text-align:left;
   box-shadow:0 5px 0 rgba(140,80,190,.22);display:flex;align-items:center;gap:10px;min-height:58px}
@@ -163,7 +163,7 @@ body.bedtime #moonOrb{opacity:1}
 #typeBox{flex:1;min-width:0;border:3px solid var(--lav-soft);border-radius:18px;padding:10px 14px;font-size:18px;color:var(--ink);background:#fff;outline:none}
 #typeSend{flex-shrink:0;border-radius:18px;padding:0 16px;font-size:18px;font-weight:800;background:var(--lav);color:#fff}
 .hide{display:none !important}
- 
+
 /* ---------- wake screen ---------- */
 #wake{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
   background:linear-gradient(180deg,rgba(201,182,255,.92),rgba(255,211,234,.94))}
@@ -172,7 +172,7 @@ body.bedtime #moonOrb{opacity:1}
   box-shadow:0 0 0 10px rgba(255,255,255,.5),0 14px 40px rgba(150,70,200,.4);animation:breathe 2s ease-in-out infinite}
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 #wake p{margin:0;font-size:22px;font-weight:800;color:#fff;text-shadow:0 2px 0 #b07ad9}
- 
+
 /* ---------- picture ---------- */
 #picture{position:absolute;inset:0;z-index:17;background:rgba(90,45,130,.55);display:flex;align-items:center;justify-content:center;padding:20px}
 #picture .frame{background:#fff;border-radius:28px;padding:12px;box-shadow:0 0 0 6px var(--gold),0 20px 50px rgba(0,0,0,.3);max-width:440px;width:100%;
@@ -185,7 +185,7 @@ body.bedtime #moonOrb{opacity:1}
 @keyframes swirl{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 #picture .paintwait span{animation:brush 1.2s ease-in-out infinite;display:inline-block}
 @keyframes brush{0%,100%{transform:rotate(-20deg)}50%{transform:rotate(20deg) translateY(-8px)}}
- 
+
 /* ---------- gallery, stickers, reward ---------- */
 .overlay{position:absolute;inset:0;z-index:16;background:rgba(90,45,130,.55);display:flex;align-items:center;justify-content:center;padding:20px}
 #reward{z-index:18}
@@ -203,11 +203,11 @@ body.bedtime #moonOrb{opacity:1}
 .sgrid div{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:#fff4fb;border-radius:16px;box-shadow:inset 0 0 0 2px #f6dcee}
 .sgrid .empty{opacity:.3;filter:grayscale(1)}
 #rewardEmo{font-size:120px;line-height:1.1;animation:bounce .6s ease-in-out 3}
- 
+
 /* ---------- sparkles ---------- */
 .spark{position:absolute;z-index:19;pointer-events:none;font-size:24px;animation:rise 1.6s ease-out forwards}
 @keyframes rise{from{opacity:1;transform:translate(0,0) scale(.6)}to{opacity:0;transform:translate(var(--dx),-140px) scale(1.3)}}
- 
+
 /* ---------- grown-up panel ---------- */
 #grown{position:absolute;inset:0;z-index:30;background:rgba(60,30,90,.5);display:flex;align-items:flex-end;justify-content:center}
 #grown .sheet{background:#fff;width:100%;max-width:520px;max-height:92%;overflow:auto;border-radius:24px 24px 0 0;padding:20px 18px calc(env(safe-area-inset-bottom) + 20px);
@@ -215,7 +215,9 @@ body.bedtime #moonOrb{opacity:1}
 #grown h2{margin:0 0 4px;font-size:22px}
 #grown .note{font-size:14px;color:#6a5f80;margin:0 0 14px;line-height:1.4}
 #grown label{display:block;font-weight:600;font-size:15px;margin:14px 0 6px}
-#grown input[type=text],#grown input[type=password],#grown input[type=number],#grown select{width:100%;font-size:16px;padding:11px 12px;border:1.5px solid #d9cfe8;border-radius:12px;background:#faf8fd;color:#2b2140;font-family:inherit}
+#grown input[type=text],#grown input[type=password],#grown input[type=number],#grown input[type=search],#grown select{width:100%;font-size:16px;padding:11px 12px;border:1.5px solid #d9cfe8;border-radius:12px;background:#faf8fd;color:#2b2140;font-family:inherit}
+#grown .mfilter{margin-bottom:6px;-webkit-appearance:none;appearance:none}
+#grown .mfilter:disabled{opacity:.55}
 #grown .btns{display:flex;gap:10px;margin-top:18px}
 #grown .btns button{flex:1;padding:13px;border-radius:12px;font-size:16px;font-weight:600;font-family:inherit}
 .primary{background:#7b3fd1;color:#fff}
@@ -227,7 +229,7 @@ body.bedtime #moonOrb{opacity:1}
 </style>
 </head>
 <body>
- 
+
 <div id="sky">
   <div id="moonOrb"></div>
   <div id="rainbow"></div>
@@ -260,7 +262,7 @@ body.bedtime #moonOrb{opacity:1}
   </svg>
   <div id="ground"></div>
 </div>
- 
+
 <div id="app">
   <div id="topbar">
     <button id="stars" aria-label="Stars and stickers">⭐ <span id="starCount">0</span></button>
@@ -271,7 +273,7 @@ body.bedtime #moonOrb{opacity:1}
       <button id="gear" aria-label="Grown-up settings. Press and hold."><div class="fill"></div><span>⚙️</span></button>
     </div>
   </div>
- 
+
   <div id="stage">
     <div id="bubble" class="hidden" aria-live="polite"></div>
     <div id="nellyWrap"><svg id="nelly" viewBox="0 0 300 330" xmlns="http://www.w3.org/2000/svg" aria-label="Nelly the unicorn">
@@ -308,10 +310,10 @@ body.bedtime #moonOrb{opacity:1}
       <stop offset="1" stop-color="#ffd6f5" stop-opacity="0"/>
     </radialGradient>
   </defs>
- 
+
   <!-- shadow -->
   <ellipse cx="150" cy="318" rx="88" ry="9" fill="#b28ad6" opacity=".25"/>
- 
+
   <g id="body-group">
     <!-- tail -->
     <g class="tail">
@@ -342,7 +344,7 @@ body.bedtime #moonOrb{opacity:1}
     <!-- belly sparkle -->
     <ellipse cx="128" cy="232" rx="26" ry="12" fill="#fff" opacity=".7"/>
   </g>
- 
+
   <g id="head-group">
     <!-- back mane -->
     <g class="mane-back">
@@ -368,14 +370,14 @@ body.bedtime #moonOrb{opacity:1}
     <ellipse cx="150" cy="180" rx="44" ry="27" fill="#fdeef6"/>
     <ellipse cx="136" cy="176" rx="3.5" ry="2.5" fill="#e7a9c9"/>
     <ellipse cx="164" cy="176" rx="3.5" ry="2.5" fill="#e7a9c9"/>
- 
+
     <!-- horn -->
     <g id="horn-group">
       <circle id="horn-glow" cx="150" cy="40" r="44" fill="url(#hornGlow)" opacity="0"/>
       <path d="M137 80 L 150 6 L 163 80 Z" fill="url(#horn)" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
       <path d="M140 66 L 160 60 M 142 50 L 158 45 M 145 34 L 155 30 M 147 20 L 153 17" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".85"/>
     </g>
- 
+
     <!-- front mane bangs -->
     <g class="mane-front">
       <circle cx="122" cy="80" r="15" fill="url(#maneA)"/>
@@ -383,7 +385,7 @@ body.bedtime #moonOrb{opacity:1}
       <circle cx="178" cy="80" r="15" fill="url(#maneB)"/>
       <circle cx="196" cy="90" r="13" fill="url(#maneA)"/>
     </g>
- 
+
     <!-- flower crown -->
     <g class="crown">
       <path d="M92 96 Q 150 58 208 96" fill="none" stroke="#8ccf9a" stroke-width="3"/>
@@ -394,7 +396,7 @@ body.bedtime #moonOrb{opacity:1}
       <g class="flower" transform="translate(176 74)"><circle r="5" cx="0" cy="-5" fill="#ffb3d9"/><circle r="5" cx="5" cy="0" fill="#ffb3d9"/><circle r="5" cx="0" cy="5" fill="#ffb3d9"/><circle r="5" cx="-5" cy="0" fill="#ffb3d9"/><circle r="3.5" fill="#fff1a8"/></g>
       <g class="flower" transform="translate(202 92)"><circle r="6" cx="0" cy="-6" fill="#c9a6ff"/><circle r="6" cx="6" cy="0" fill="#c9a6ff"/><circle r="6" cx="0" cy="6" fill="#c9a6ff"/><circle r="6" cx="-6" cy="0" fill="#c9a6ff"/><circle r="4" fill="#fff1a8"/></g>
     </g>
- 
+
     <!-- eyes -->
     <g class="eye eye-l">
       <ellipse cx="118" cy="136" rx="17" ry="21" fill="url(#iris)"/>
@@ -415,7 +417,7 @@ body.bedtime #moonOrb{opacity:1}
     <path id="mouth-smile" d="M136 188 Q 150 200 164 188" fill="none" stroke="#c46a99" stroke-width="3" stroke-linecap="round"/>
     <path id="mouth-open" d="M137 187 Q 150 186 163 187 Q 160 204 150 204 Q 140 204 137 187 Z" fill="#c4568c" opacity="0"/>
   </g>
- 
+
   <!-- necklace -->
   <g id="necklace">
     <path d="M108 200 Q 150 228 192 200" fill="none" stroke="#e8c15a" stroke-width="3"/>
@@ -426,7 +428,7 @@ body.bedtime #moonOrb{opacity:1}
 </svg>
 <div id="nellyPic"><img id="nellyImg" alt="Nelly the unicorn"></div></div>
   </div>
- 
+
   <div id="controls">
     <!-- home buttons -->
     <div id="homeBtns" class="grid2">
@@ -450,13 +452,13 @@ body.bedtime #moonOrb{opacity:1}
     </div>
   </div>
 </div>
- 
+
 <div id="wake">
   <h1><span class="bn">Nelly</span>'s<br>Magical World</h1>
   <button id="wakeBtn" aria-label="Wake up Nelly">🦄</button>
   <p>Tap to wake up <span class="bn">Nelly</span> ✨</p>
 </div>
- 
+
 <div id="gallery" class="overlay hide">
   <div class="panel">
     <h2>🖼️ My pictures</h2>
@@ -464,7 +466,7 @@ body.bedtime #moonOrb{opacity:1}
     <button class="big b-paint" id="gClose"><span class="emo">💖</span>All done</button>
   </div>
 </div>
- 
+
 <div id="book" class="overlay hide">
   <div class="panel">
     <h2>⭐ My stickers</h2>
@@ -473,7 +475,7 @@ body.bedtime #moonOrb{opacity:1}
     <button class="big b-play" id="bClose"><span class="emo">💖</span>All done</button>
   </div>
 </div>
- 
+
 <div id="reward" class="overlay hide">
   <div class="panel">
     <h2>You earned a sticker!</h2>
@@ -481,7 +483,7 @@ body.bedtime #moonOrb{opacity:1}
     <button class="big b-play" id="rClose"><span class="emo">🎉</span>Yay!</button>
   </div>
 </div>
- 
+
 <div id="picture" class="hide">
   <div class="frame">
     <div id="picBody"></div>
@@ -491,7 +493,7 @@ body.bedtime #moonOrb{opacity:1}
     </div>
   </div>
 </div>
- 
+
 <div id="grown" class="hide">
   <div class="sheet">
     <div id="gate">
@@ -504,17 +506,21 @@ body.bedtime #moonOrb{opacity:1}
     <div id="settings" class="hide">
       <h2>Settings</h2>
       <p class="note">These settings stay on this phone only. Nothing here is sent anywhere except your key, which goes to OpenRouter with each request.</p>
- 
+
       <label for="sKey">OpenRouter API key</label>
       <input type="password" id="sKey" placeholder="sk-or-…" autocomplete="off">
       <div class="small">Create a separate key with a low credit limit for this app.</div>
- 
-      <label for="sModel">Chat model (the unicorn's talking)</label>
-      <input type="text" id="sModel" autocapitalize="off" autocorrect="off" spellcheck="false">
- 
+
+      <label for="sModel">Chat model</label>
+      <input type="search" id="sModelFilter" class="mfilter" placeholder="Search chat models" aria-label="Search chat models" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off">
+      <select id="sModel"></select>
+      <div class="small" id="sModelNote"></div>
+
       <label for="sImgModel">Picture model</label>
-      <input type="text" id="sImgModel" autocapitalize="off" autocorrect="off" spellcheck="false">
- 
+      <input type="search" id="sImgModelFilter" class="mfilter" placeholder="Search picture models" aria-label="Search picture models" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off">
+      <select id="sImgModel"></select>
+      <div class="small" id="sImgModelNote"></div>
+
       <label>The unicorn's look</label>
       <div class="small">Create a detailed picture of the unicorn. It takes about a minute and makes 2 choices. The unicorn still floats, bounces, wiggles, and glows, but the picture can't blink or move its mouth.</div>
       <label for="sPortraitModel">Portrait model</label>
@@ -523,14 +529,14 @@ body.bedtime #moonOrb{opacity:1}
       <div class="btns" id="pSaveCur" style="margin-top:8px"><button class="secondary" id="pSaveCurBtn">💾 Save the unicorn's current picture</button></div>
       <div id="pStatus"></div>
       <div class="portraitOpts" id="pOpts"></div>
- 
+
       <label for="sBotName">Unicorn's name</label>
       <input type="text" id="sBotName" placeholder="Nelly" maxlength="20">
       <label style="display:flex;align-items:center;gap:10px;font-weight:500"><input type="checkbox" id="sAllowRename" style="width:22px;height:22px"> Let my child rename the unicorn by asking</label>
- 
+
       <label for="sName">Child's first name (optional)</label>
       <input type="text" id="sName" placeholder="The unicorn uses this name">
- 
+
       <label for="sTtsModel">Voice model</label>
       <input type="text" id="sTtsModel" autocapitalize="off" autocorrect="off" spellcheck="false">
       <div class="small">Leave this empty to use the phone's free built-in voice instead.</div>
@@ -550,22 +556,22 @@ body.bedtime #moonOrb{opacity:1}
       <div class="range"><span>🐻</span><input type="range" id="sPitch" min="0.8" max="2" step="0.1"><span>🐭</span></div>
       <label>Voice speed</label>
       <div class="range"><span>🐢</span><input type="range" id="sRate" min="0.6" max="1.3" step="0.05"><span>🐇</span></div>
- 
+
       <label for="sPics">Pictures allowed each day</label>
       <input type="number" id="sPics" min="0" max="50" inputmode="numeric">
       <div class="small">Each picture uses credits on your OpenRouter account. Set to 0 to turn off pictures.</div>
- 
+
       <div class="btns"><button class="secondary" id="testVoice">🔊 Test voice</button><button class="secondary" id="resetStars">Reset stars</button></div>
       <div class="btns"><button class="secondary" id="clearGallery">🗑️ Clear picture gallery</button><button class="secondary" id="clearStory">Forget saved story</button></div>
       <div class="btns"><button class="secondary" id="sCancel">Cancel</button><button class="primary" id="sSave">Save</button></div>
     </div>
   </div>
 </div>
- 
+
 <script>
 (() => {
 "use strict";
- 
+
 /* ================= settings ================= */
 const DEFAULTS = {
   key: "", model: "openrouter/auto", imgModel: "openai/gpt-image-2.6-flare",
@@ -587,7 +593,7 @@ if(store.get("settingsVersion",1) < 2){
 let stars = store.get("stars", 0);
 let muted = store.get("muted", false);
 let bedtime = store.get("bedtime", false);
- 
+
 const botName = () => (S.botName||"").trim() || "Nelly";
 const pick = a => a[Math.floor(Math.random()*a.length)];
 // Keep names short, plain, and kid-friendly: letters, spaces, apostrophes, and hyphens only.
@@ -596,7 +602,7 @@ function cleanName(n){
   if(!n) return "";
   return n.split(" ").map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(" ");
 }
- 
+
 /* ================= elements ================= */
 const $ = id => document.getElementById(id);
 const bubble=$("bubble"), stage=$("stage"), choicesEl=$("choices");
@@ -613,7 +619,7 @@ function applyName(){
   $("nellyImg").alt=n+" the unicorn";
 }
 applyName();
- 
+
 /* ================= sky decoration ================= */
 const sky = $("sky");
 for (let i=0;i<22;i++){
@@ -631,7 +637,7 @@ for (let i=0;i<5;i++){
   c.style.animationDelay=(-Math.random()*90)+"s";
   sky.appendChild(c);
 }
- 
+
 /* ================= sounds ================= */
 let actx=null;
 function audio(){ if(!actx){ try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){} try{ actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } if(actx&&actx.state==="suspended") actx.resume(); return actx; }
@@ -647,7 +653,7 @@ function chime(notes=[880,1108,1318,1760], gap=0.08, vol=0.12){
   });
 }
 const tap = () => chime([1318,1760],0.05,0.08);
- 
+
 /* ================= sparkles ================= */
 function sparkle(n=10, emojis=["✨","⭐","💖","🌈","💜"], el){
   const r=(el||$("nellyWrap")).getBoundingClientRect();
@@ -661,7 +667,7 @@ function sparkle(n=10, emojis=["✨","⭐","💖","🌈","💜"], el){
     document.body.appendChild(s); setTimeout(()=>s.remove(),2200);
   }
 }
- 
+
 /* ================= stars and stickers ================= */
 const STICKERS=["🦋","🌸","🍓","🐱","🌙","🧁","🐬","🌻","🎀","🍭","🐞","🌈","🐰","🍩","🦊","🐣","🌷","🪐","🐢","🍉","🐼","🍒","🐙","🎈"];
 const STAR_STEP=10;
@@ -694,7 +700,7 @@ function openBook(){
 }
 $("stars").onclick=openBook;
 $("bClose").onclick=()=>{ tap(); $("book").classList.add("hide"); };
- 
+
 /* ================= Nelly states ================= */
 function setState(cls, on){ stage.classList.toggle(cls,on); }
 let moodTimer=null;
@@ -704,7 +710,7 @@ function mood(m){
   if(m) stage.classList.add("mood-"+m);
   clearTimeout(moodTimer); moodTimer=setTimeout(()=>stage.classList.remove("mood-"+m),4000);
 }
- 
+
 /* ================= speech out ================= */
 const synth = window.speechSynthesis;
 let voices=[];
@@ -817,7 +823,7 @@ function say(text, opts={}){
     opts.onShow && opts.onShow();
   });
 }
- 
+
 /* ================= greetings ================= */
 function greeting(){
   const n=S.name;
@@ -837,7 +843,7 @@ function homeLine(){
   return pick(n ? [`What should we do now, ${n}?`,`What's next, ${n}?`,`Ooh, ${n}, what should we do next?`,`Pick something fun, ${n}!`]
                 : ["What should we do now?","What's next, friend?","Ooh, what should we do next?","Pick something fun to do next!","Where should our magic go next?"]);
 }
- 
+
 /* ================= speech in ================= */
 const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
 let rec=null, listening=false;
@@ -864,12 +870,12 @@ function startListening(){
   try{ rec.start(); }catch(e){ showTyping(true); }
 }
 function showTyping(on){ $("typeRow").classList.toggle("show",on); if(on) setTimeout(()=>$("typeBox").focus(),50); }
- 
+
 /* ================= AI ================= */
 function systemPrompt(){
   const who = S.name ? `You are talking with a 6-year-old child named ${S.name}.` : "You are talking with a 6-year-old child.";
   return `You are ${botName()}, a sweet, gentle, giggly magical unicorn who lives in Cloud Castle, high above the clouds. You have pearly-white fur, a pink and purple curly mane, a glowing rainbow horn, a flower crown, and a golden necklace with a pink heart that glows when someone is kind. ${who}
- 
+
 How you talk:
 - Your words are read out loud to a young child who is still learning to read. Use short, simple words. Say 1 to 3 short sentences, at most 45 words.
 - Be cheerful, warm, and a little silly. Sometimes giggle ("hee hee!"). Use the child's ideas and make them feel clever and creative.
@@ -888,22 +894,22 @@ Safety rules (always follow):
 - If the child says they are hurt, scared, sad, or that someone is being unkind to them, be gentle and tell them to go tell a grown-up they trust right now.
 - For real-world questions, give a simple kid-level answer, and for anything about health or safety, tell them to ask a grown-up.
 - If asked, you are a pretend magic unicorn friend inside a game. Don't say you are a real, living animal.
- 
+
 ${S.allowRename!==false ? `Your name:
 - Your name is ${botName()}. If the child clearly asks to change your name or to call you something new, happily say yes to a kind, G-rated name of 1 to 3 words, and add a "rename" field with just the new name. Say your new name out loud with lots of excitement.
 - If the new name is unkind, rude, or the name of a real person, a brand, or a famous cartoon character, gently say you'd love a different name and leave "rename" out.
 - If the child only mentions a name in a story or game, keep your name and leave "rename" out.
- 
+
 ` : `Your name:
 - Your name is ${botName()}. If the child asks to change your name, kindly say a grown-up can help change it in the settings.
- 
+
 `}Pictures:
 - If the child asks you to draw, paint, or make a picture, add a "paint" field: a short, kind, G-rated description of the picture in plain English for an artist (no names of real people, brands, or famous cartoon characters). Otherwise leave "paint" out.
- 
+
 Reply ONLY with JSON, no other text:
 {"say": "what you say out loud", "choices": ["up to 3 short options, each starting with one emoji, 1 to 4 words"], "mood": "happy" | "excited" | "silly" | "kind" | "thinking", "kindness": true or false (true only if the child said or did something kind), "paint": "optional picture description", "rename": "optional new name"}`;
 }
- 
+
 const STORY_LEN = 8;
 const MODE_PROMPTS = {
   story: "[The child tapped the STORIES button. Start a brand-new short magical fairytale where the child is the hero. Set the scene in 2 short sentences, then ask what happens next with 3 choices. Each message after this is labeled with its story turn number. Continue the story from the child's choice and give new choices. On the last turn, give the story a happy ending and ask if they want a new story.]",
@@ -911,11 +917,11 @@ const MODE_PROMPTS = {
   play: "[The child tapped the PLAY button. Offer 3 fun games as choices: an animal guessing game, a silly riddle, or a pretend imagination game. Keep games short and very easy for a 6-year-old. Give gentle hints and lots of cheering.]",
   paint: "[The child tapped the PICTURES button. Ask the child what magical picture you should paint for them, with 3 fun ideas as choices. When they choose or describe something, include the paint field.]"
 };
- 
+
 let history=[];  // {role, content}
 let busy=false;
 let curMode=null, storyTurn=0;
- 
+
 function parseReply(txt){
   let obj=null;
   try{ obj=JSON.parse(txt); }catch(e){
@@ -927,7 +933,14 @@ function parseReply(txt){
   obj.choices=obj.choices.filter(c=>typeof c==="string"&&c.trim()).slice(0,3);
   return obj;
 }
- 
+
+// Which model to use for a request. If the grown-up's chosen model was rejected earlier
+// (it's gone or can't do the job), use the default instead for the rest of this visit.
+const badModel = {chat:"", img:""};
+function chatModel(){ const m=S.model||DEFAULTS.model; return m===badModel.chat ? DEFAULTS.model : m; }
+function imgModel(){ const m=S.imgModel||DEFAULTS.imgModel; return m===badModel.img ? DEFAULTS.imgModel : m; }
+const modelGone = res => res.status===400 || res.status===404;
+
 async function callChat(userText, raw){
   let content=userText;
   if(curMode==="story" && !raw){
@@ -938,24 +951,28 @@ async function callChat(userText, raw){
   }
   history.push({role:"user", content});
   if(history.length>18) history=history.slice(-18);
-  const res=await fetch("https://openrouter.ai/api/v1/chat/completions",{
+  // The unicorn's kid-safe system instructions go first on every request, whichever model is picked.
+  const post = model => fetch("https://openrouter.ai/api/v1/chat/completions",{
     method:"POST",
     headers:{"Authorization":"Bearer "+S.key,"Content-Type":"application/json","X-Title":"Nelly's Magical World"},
-    body:JSON.stringify({model:S.model, max_tokens:400, temperature:0.9,
+    body:JSON.stringify({model, max_tokens:400, temperature:0.9,
       messages:[{role:"system",content:systemPrompt()}, ...history]})
   });
+  let model=chatModel();
+  let res=await post(model);
+  if(!res.ok && modelGone(res) && model!==DEFAULTS.model){ badModel.chat=model; res=await post(DEFAULTS.model); }
   if(!res.ok){ history.pop(); if(curMode==="story" && !raw) storyTurn--; const t=await res.text().catch(()=> ""); throw new Error(res.status+" "+t.slice(0,200)); }
   const data=await res.json();
   const txt=(data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content)||"";
   history.push({role:"assistant", content:txt});
   return parseReply(String(txt));
 }
- 
+
 /* ================= saved story ================= */
 function saveStory(){ store.set("story",{history, turn:storyTurn}); }
 function clearStory(){ store.set("story",null); }
 function savedStory(){ const s=store.get("story",null); return (s && Array.isArray(s.history) && s.history.length) ? s : null; }
- 
+
 function picsLeftToday(){
   const today=new Date().toDateString();
   const rec=store.get("pics",{day:today,n:0});
@@ -967,7 +984,7 @@ function usePic(){
   const rec=store.get("pics",{day:today,n:0});
   store.set("pics", rec.day===today ? {day:today,n:rec.n+1} : {day:today,n:1});
 }
- 
+
 /* ================= save pictures ================= */
 let lastPicture=null;
 async function toBlob(src){ if(src instanceof Blob) return src; return (await fetch(src)).blob(); }
@@ -988,7 +1005,7 @@ async function savePicture(src, base){
     setTimeout(()=>URL.revokeObjectURL(url),4000); return true;
   }catch(e){ console.warn("save",e); return false; }
 }
- 
+
 function showPicture(src, saveSrc){
   const body=$("picBody");
   body.innerHTML=""; const img=new Image(); img.alt=botName()+"'s magic picture"; img.src=src; body.appendChild(img);
@@ -996,7 +1013,7 @@ function showPicture(src, saveSrc){
   $("picBtns").classList.remove("hide");
   $("picture").classList.remove("hide");
 }
- 
+
 async function paint(desc){
   if(picsLeftToday()<=0){
     say("My paintbrush is sleepy for today! Let's paint more pictures tomorrow. Want to play a game instead?",
@@ -1006,13 +1023,17 @@ async function paint(desc){
   const box=$("picture"), body=$("picBody");
   body.innerHTML='<div class="paintwait"><span>🖌️</span></div>';
   box.classList.remove("hide"); $("picBtns").classList.add("hide");
+  // The gentle, G-rated style instructions go on every picture request, whichever model is picked.
   const prompt="A gentle, cheerful children's storybook illustration in a soft 3D animated style, pastel pink, lavender, pearly white and soft gold colors, sparkles and fluffy clouds, warm and cozy, completely G-rated, no text or letters. Scene: "+desc;
   try{
-    const res=await fetch("https://openrouter.ai/api/v1/images",{
+    const post = model => fetch("https://openrouter.ai/api/v1/images",{
       method:"POST",
       headers:{"Authorization":"Bearer "+S.key,"Content-Type":"application/json","X-Title":"Nelly's Magical World"},
-      body:JSON.stringify({model:S.imgModel, prompt, quality:"medium", aspect_ratio:"1:1", output_format:"jpeg", n:1})
+      body:JSON.stringify({model, prompt, quality:"medium", aspect_ratio:"1:1", output_format:"jpeg", n:1})
     });
+    const model=imgModel();
+    let res=await post(model);
+    if(!res.ok && modelGone(res) && model!==DEFAULTS.imgModel){ badModel.img=model; res=await post(DEFAULTS.imgModel); }
     if(!res.ok) throw new Error(res.status+" "+(await res.text().catch(()=> "")).slice(0,200));
     const data=await res.json();
     const d=data.data&&data.data[0];
@@ -1031,7 +1052,7 @@ async function paint(desc){
     say("Oh no, my paint got all splashy! Let's try again in a little bit.");
   }
 }
- 
+
 /* ================= picture gallery ================= */
 const GALLERY_MAX=30;
 async function galleryAdd(src, desc){
@@ -1064,7 +1085,7 @@ async function openGallery(){
 }
 $("galleryBtn").onclick=openGallery;
 $("gClose").onclick=()=>{ tap(); $("gallery").classList.add("hide"); };
- 
+
 /* ================= talking ================= */
 async function send(text, opts={}){
   if(busy) return;
@@ -1100,7 +1121,7 @@ async function send(text, opts={}){
     else say("Oopsie! My rainbow got tangled. Can you say that again?");
   }finally{ busy=false; }
 }
- 
+
 /* ================= choices ================= */
 function renderChoices(list, handler){
   choicesEl.innerHTML="";
@@ -1113,7 +1134,7 @@ function renderChoices(list, handler){
     choicesEl.appendChild(b);
   });
 }
- 
+
 /* ================= modes ================= */
 function goHome(greet=true){
   history=[]; curMode=null; renderChoices([]); showTyping(false);
@@ -1160,7 +1181,7 @@ $("typeSend").onclick=sendTyped;
 $("typeBox").addEventListener("keydown",e=>{ if(e.key==="Enter") sendTyped(); });
 $("picSave").onclick=async()=>{ tap(); if(lastPicture) { const ok=await savePicture(lastPicture.src,lastPicture.name); if(ok){ sparkle(6,["💾","✨","⭐"]); } } };
 $("picClose").onclick=()=>{ tap(); $("picture").classList.add("hide"); };
- 
+
 // tap Nelly: giggle and repeat what she said
 $("nellyWrap").addEventListener("click",()=>{
   stage.classList.remove("giggle"); void stage.offsetWidth; stage.classList.add("giggle");
@@ -1168,7 +1189,7 @@ $("nellyWrap").addEventListener("click",()=>{
   chime([1568,1318,1568,1760],0.06,0.08); sparkle(5);
   if(lastSpoken && !busy) speak(lastSpoken);
 });
- 
+
 /* ================= bedtime and sound ================= */
 function applyBedtime(){
   document.body.classList.toggle("bedtime", bedtime);
@@ -1189,7 +1210,7 @@ $("muteBtn").onclick=()=>{
   muted=!muted; store.set("muted",muted); applyMute();
   if(muted) stopSpeech(); else tap();
 };
- 
+
 /* ================= portrait Nelly ================= */
 const idb = {
   open(){ return new Promise((res,rej)=>{ const r=indexedDB.open("nelly",1); r.onupgradeneeded=()=>r.result.createObjectStore("kv"); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); },
@@ -1207,7 +1228,7 @@ function showPortrait(blob){
   if(wb){ wb.innerHTML = blob ? '<img alt="">' : "🦄"; if(blob) wb.querySelector("img").src=portraitURL; }
 }
 idb.get("portrait").then(b=>{ if(b) showPortrait(b); }).catch(()=>{});
- 
+
 const PORTRAIT_PROMPT = "Full-body character portrait of an adorable baby unicorn for a children's app, facing the viewer and standing on all four legs, in a polished 3D animated movie style. "
  + "Fluffy pearly-white fur that softly glows. A long, curly, bouncy mane and tail in soft pink and lavender waves. A shimmering rainbow spiral horn with a few sparkles. "
  + "A flower crown of small pink and lavender flowers with tiny green leaves. A delicate gold necklace with a glowing pink heart pendant. "
@@ -1215,7 +1236,7 @@ const PORTRAIT_PROMPT = "Full-body character portrait of an adorable baby unicor
  + "Only the character, centered, with the whole body visible and some space around it. No ground, no shadow, no scenery, no text.";
 const BG_TRANSPARENT = " Transparent background.";
 const BG_GREEN = " Place the character on a flat, solid, bright green (#00FF00) background with no gradient, like a green screen.";
- 
+
 function loadImg(src){ return new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=src; }); }
 // If the picture came back with a solid background, remove it by flood-filling from the edges, then trim.
 async function cleanPortrait(src){
@@ -1265,7 +1286,7 @@ async function cleanPortrait(src){
   o.getContext("2d").drawImage(c,minX,minY,maxX-minX+1,maxY-minY+1,pad,pad,maxX-minX+1,maxY-minY+1);
   return new Promise(res=>o.toBlob(res,"image/png"));
 }
- 
+
 async function requestPortrait(transparent){
   const body={model:S.portraitModel, prompt:PORTRAIT_PROMPT+(transparent?BG_TRANSPARENT:BG_GREEN), quality:"high", aspect_ratio:"1:1", output_format:"png", n:1};
   if(transparent) body.background="transparent";
@@ -1322,7 +1343,7 @@ $("pMake").onclick=async()=>{
 };
 $("pSaveCurBtn").onclick=async()=>{ const b=await idb.get("portrait").catch(()=>null); if(b) savePicture(b,"portrait"); else $("pStatus").textContent="The unicorn is using the drawn version, so there's no picture to save yet."; };
 $("pDrawn").onclick=async()=>{ await idb.del("portrait"); showPortrait(null); $("pOpts").innerHTML=""; $("pStatus").textContent="The unicorn is back to the drawn version."; };
- 
+
 /* ================= wake ================= */
 $("wakeBtn").onclick=()=>{
   audio(); chime([523,659,784,1046,1318],0.1,0.13);
@@ -1333,7 +1354,7 @@ $("wakeBtn").onclick=()=>{
     say(greeting(), {onShow:()=>{ mood("excited"); sparkle(14); }});
   },500);
 };
- 
+
 /* ================= grown-up gate ================= */
 const gear=$("gear"); let holdStart=0, raf=null;
 function holdTick(){
@@ -1346,7 +1367,7 @@ function endHold(){ cancelAnimationFrame(raf); gear.querySelector(".fill").style
 gear.addEventListener("pointerdown",e=>{ e.preventDefault(); holdStart=Date.now(); raf=requestAnimationFrame(holdTick); });
 ["pointerup","pointerleave","pointercancel"].forEach(ev=>gear.addEventListener(ev,()=>{ if(holdStart) endHold(); }));
 gear.addEventListener("contextmenu",e=>e.preventDefault());
- 
+
 let gateAns=0;
 function openGate(){
   const a=6+Math.floor(Math.random()*7), b=6+Math.floor(Math.random()*7);
@@ -1360,16 +1381,127 @@ $("gateGo").onclick=()=>{
   else { $("gateA").value=""; $("gateA").placeholder="Try again"; }
 };
 $("gateA").addEventListener("keydown",e=>{ if(e.key==="Enter") $("gateGo").click(); });
+
+/* ================= model pickers (grown-up settings) ================= */
+// Lists come live from OpenRouter each time the settings open. Choices are saved with the other settings.
+const PICKERS = {
+  chat: {sel:"sModel",    filter:"sModelFilter",    note:"sModelNote",    key:"model"},
+  img:  {sel:"sImgModel", filter:"sImgModelFilter", note:"sImgModelNote", key:"imgModel"}
+};
+let modelLists={chat:null, img:null}, modelsFailed=false, modelReq=0;
+const num = v => { const n=parseFloat(v); return Number.isFinite(n) ? n : null; };
+function money(n){
+  if(n===0) return "$0";
+  if(n>=100) return "$"+Math.round(n);
+  if(n>=0.01) return "$"+n.toFixed(2);
+  return "$"+String(+n.toPrecision(2));
+}
+// Chat: dollars per 1M input and output tokens.
+function chatPrice(p){
+  const i=num(p.prompt), o=num(p.completion);
+  if(i===null && o===null) return "price not listed";
+  if((i!==null && i<0) || (o!==null && o<0)) return "price varies";
+  if(!i && !o) return "free";
+  return money((i||0)*1e6)+" in / "+money((o||0)*1e6)+" out per 1M tokens";
+}
+// Pictures: a per-image price when the API gives one, otherwise dollars per 1M tokens.
+// OpenRouter lists image_output per token for most models; a value of $0.001 or more is treated as a per-image price.
+function imgPrice(p){
+  const io=num(p.image_output);
+  if(io!==null && io>=0.001) return money(io)+" per image";
+  const t = (io!==null && io>0) ? io : num(p.completion);
+  if(t===null) return "price not listed";
+  if(t<0) return "price varies";
+  if(t===0) return "free";
+  return money(t*1e6)+" per 1M tokens";
+}
+function optLabel(m, kind){ return m.name+" — "+(kind==="chat" ? chatPrice(m.pricing) : imgPrice(m.pricing)); }
+function renderPicker(kind, want){
+  const P=PICKERS[kind], sel=$(P.sel), def=DEFAULTS[P.key], list=modelLists[kind];
+  const cur = want!==undefined ? want : (sel.value || S[P.key] || def);
+  sel.innerHTML="";
+  const add=(value,text)=>{ const o=document.createElement("option"); o.value=value; o.textContent=text; sel.appendChild(o); };
+  if(!list){
+    add(def, def+" (default)");
+    // While the list loads, keep the saved choice so pressing Save doesn't change it.
+    if(!modelsFailed && cur!==def) add(cur, cur+" (saved)");
+    sel.value = modelsFailed ? def : cur;
+    return;
+  }
+  const defM=list.find(m=>m.id===def);
+  add(def, (defM ? optLabel(defM,kind) : def)+" (default)");
+  const rest=list.filter(m=>m.id!==def);
+  const q=$(P.filter).value.trim().toLowerCase();
+  const shown = q ? rest.filter(m=>(m.name+" "+m.id).toLowerCase().includes(q)) : rest;
+  const curM=rest.find(m=>m.id===cur);
+  if(curM && !shown.includes(curM)) add(curM.id, optLabel(curM,kind)); // keep the current pick visible while filtering
+  shown.forEach(m=>add(m.id, optLabel(m,kind)));
+  sel.value = curM ? cur : def;
+}
+async function loadModels(){
+  const my=++modelReq;
+  modelLists={chat:null, img:null}; modelsFailed=false;
+  Object.keys(PICKERS).forEach(k=>{
+    const P=PICKERS[k];
+    $(P.filter).value=""; $(P.filter).disabled=true;
+    $(P.note).textContent="Loading models…";
+    renderPicker(k, S[P.key]||DEFAULTS[P.key]);
+  });
+  try{
+    const headers={}; if(S.key) headers.Authorization="Bearer "+S.key;
+    const ctl=new AbortController(); const timer=setTimeout(()=>ctl.abort(), 15000);
+    let res;
+    try{ res=await fetch("https://openrouter.ai/api/v1/models",{headers, signal:ctl.signal}); }
+    finally{ clearTimeout(timer); }
+    if(!res.ok) throw new Error(String(res.status));
+    const data=await res.json();
+    const all=(data && Array.isArray(data.data) ? data.data : [])
+      .filter(m=>m && typeof m.id==="string")
+      .map(m=>{
+        const a=m.architecture||{};
+        let out=Array.isArray(a.output_modalities) ? a.output_modalities : [];
+        if(!out.length && typeof a.modality==="string") out=(a.modality.split("->")[1]||"").split("+");
+        return {id:m.id, name:String(m.name||m.id), pricing:m.pricing||{}, out:out.map(s=>String(s).trim().toLowerCase())};
+      });
+    if(!all.length) throw new Error("empty");
+    if(my!==modelReq) return;
+    const byName=(a,b)=>a.name.localeCompare(b.name, undefined, {sensitivity:"base"}) || a.id.localeCompare(b.id);
+    modelLists.chat=all.filter(m=>m.out.includes("text")).sort(byName);
+    modelLists.img=all.filter(m=>m.out.includes("image")).sort(byName);
+    Object.keys(PICKERS).forEach(k=>{
+      const P=PICKERS[k], def=DEFAULTS[P.key], want=$(P.sel).value||S[P.key]||def;
+      renderPicker(k, want);
+      $(P.filter).disabled=false;
+      const missing = want!==def && !modelLists[k].some(m=>m.id===want);
+      $(P.note).textContent = missing
+        ? "The saved model isn't available anymore, so the default is selected."
+        : modelLists[k].length+" models. Prices are from OpenRouter.";
+    });
+  }catch(e){
+    if(my!==modelReq) return;
+    console.warn("models",e);
+    modelsFailed=true;
+    Object.keys(PICKERS).forEach(k=>{
+      const P=PICKERS[k];
+      renderPicker(k, DEFAULTS[P.key]);
+      $(P.filter).disabled=true;
+      $(P.note).textContent="Couldn't load models";
+    });
+  }
+}
+Object.keys(PICKERS).forEach(k=>$(PICKERS[k].filter).addEventListener("input",()=>renderPicker(k)));
+
 function openSettings(){
   loadVoices();
-  $("sKey").value=S.key; $("sBotName").value=botName(); $("sAllowRename").checked=S.allowRename!==false; $("sModel").value=S.model; $("sTtsModel").value=S.ttsModel; $("sTtsVoice").value=S.ttsVoice; $("sPortraitModel").value=S.portraitModel; $("sImgModel").value=S.imgModel; $("sName").value=S.name;
+  $("sKey").value=S.key; $("sBotName").value=botName(); $("sAllowRename").checked=S.allowRename!==false; $("sTtsModel").value=S.ttsModel; $("sTtsVoice").value=S.ttsVoice; $("sPortraitModel").value=S.portraitModel; $("sName").value=S.name;
   $("sVoice").value=S.voice||""; $("sPitch").value=S.pitch; $("sRate").value=S.rate; $("sPics").value=S.picsPerDay;
+  loadModels();
   $("settings").classList.remove("hide");
 }
 function readSettings(){
   return Object.assign({}, S, {
-    key:$("sKey").value.trim(), model:$("sModel").value.trim()||DEFAULTS.model,
-    imgModel:$("sImgModel").value.trim()||DEFAULTS.imgModel, portraitModel:$("sPortraitModel").value.trim()||DEFAULTS.portraitModel, botName:cleanName($("sBotName").value)||"Nelly", allowRename:$("sAllowRename").checked, name:$("sName").value.trim().slice(0,30),
+    key:$("sKey").value.trim(), model:$("sModel").value||DEFAULTS.model,
+    imgModel:$("sImgModel").value||DEFAULTS.imgModel, portraitModel:$("sPortraitModel").value.trim()||DEFAULTS.portraitModel, botName:cleanName($("sBotName").value)||"Nelly", allowRename:$("sAllowRename").checked, name:$("sName").value.trim().slice(0,30),
     ttsModel:$("sTtsModel").value.trim(), ttsVoice:$("sTtsVoice").value, voice:$("sVoice").value, pitch:+$("sPitch").value, rate:+$("sRate").value,
     picsPerDay:Math.max(0,Math.min(50,parseInt($("sPics").value||"0",10)))
   });
@@ -1380,7 +1512,7 @@ $("testVoice").onclick=async()=>{ audio(); const keep=S, keepMute=muted; S=readS
 $("resetStars").onclick=()=>{ stars=0; store.set("stars",0); $("starCount").textContent="0"; $("resetStars").textContent="Stars reset"; };
 $("clearGallery").onclick=async()=>{ if(confirm("Delete all the pictures saved in the gallery on this phone?")){ await idb.del("gallery"); $("clearGallery").textContent="Gallery cleared"; } };
 $("clearStory").onclick=()=>{ clearStory(); $("clearStory").textContent="Story forgotten"; };
- 
+
 })();
 </script>
 </body>
