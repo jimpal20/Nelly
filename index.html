@@ -65,10 +65,16 @@ body.bedtime #moonOrb{opacity:1}
 #gear span{position:relative}
 
 #stage{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-height:0}
+/* The bubble scrolls by finger when the words are longer than it. The words sit in one inner line with auto margins:
+   short messages stay centered, and long ones start at the first word, so every word can be reached. */
 #bubble{position:relative;z-index:4;background:var(--white);border-radius:26px;padding:14px 18px;max-width:440px;width:100%;
   font-size:21px;line-height:1.3;font-weight:700;text-align:center;box-shadow:0 8px 24px rgba(140,80,190,.22);
-  margin-bottom:10px;min-height:62px;display:flex;align-items:center;justify-content:center;
-  max-height:30vh;overflow:auto;-webkit-user-select:none}
+  margin-bottom:10px;min-height:62px;display:flex;flex-direction:column;
+  max-height:30vh;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y;-webkit-user-select:none}
+#bubble > *{margin:auto 0;flex-shrink:0}
+#bubble .btext{display:block;width:100%}
+/* While choice buttons show, keep room for at least 3 lines of words. */
+#stage.has-choices #bubble{min-height:calc(3.9em + 28px)}
 #bubble::after{content:"";position:absolute;left:50%;bottom:-12px;transform:translateX(-50%);
   border:12px solid transparent;border-top-color:var(--white);border-bottom:0}
 #bubble.hidden{visibility:hidden}
@@ -1144,9 +1150,16 @@ function phoneSpeak(text, onEnd, my=speechToken){
     if(wait) setTimeout(go, wait); else go();
   });
 }
+// Put words in the bubble inside one inner line, and start at the top, so every message can be read from its first word.
+function setBubble(text){
+  const s=document.createElement("span"); s.className="btext"; s.textContent=text;
+  bubble.innerHTML=""; bubble.appendChild(s);
+  bubble.scrollTop=0;
+}
 function showThinking(){
   bubble.classList.remove("hidden");
   bubble.innerHTML='<span class="dots"><span></span><span></span><span></span></span>';
+  bubble.scrollTop=0;
   setState("thinking",true);
 }
 // Show thinking dots until the voice starts, then reveal the words at the same moment.
@@ -1157,8 +1170,7 @@ function say(text, opts={}){
     if(shown) return; shown=true;
     setState("thinking",false);
     bubble.classList.remove("hidden");
-    bubble.textContent=text;
-    bubble.scrollTop=0;
+    setBubble(text);
     opts.onShow && opts.onShow();
   });
 }
@@ -1192,10 +1204,10 @@ function startListening(){
   stopSpeech();
   rec=new Rec(); rec.lang="en-US"; rec.interimResults=true; rec.maxAlternatives=1; rec.continuous=false;
   let finalText="", heard="";
-  rec.onstart=()=>{ listening=true; mic.classList.add("on"); setState("listening",true); setState("thinking",false); bubble.classList.remove("hidden"); bubble.textContent="👂 I'm listening…"; chime([660,880],0.07,0.08); };
+  rec.onstart=()=>{ listening=true; mic.classList.add("on"); setState("listening",true); setState("thinking",false); bubble.classList.remove("hidden"); setBubble("👂 I'm listening…"); chime([660,880],0.07,0.08); };
   rec.onresult=e=>{
     heard=""; for(let i=0;i<e.results.length;i++){ heard+=e.results[i][0].transcript; if(e.results[i].isFinal) finalText=heard; }
-    bubble.textContent="👂 "+heard;
+    setBubble("👂 "+heard);
   };
   rec.onerror=e=>{
     if(e.error==="not-allowed"||e.error==="service-not-allowed"){ showTyping(true); say("Oops! My ears need a grown-up's help. Ask a grown-up to let me use the microphone."); }
@@ -1468,12 +1480,14 @@ function renderChoices(list, handler){
   choicesEl.innerHTML="";
   list.forEach(c=>{
     const b=document.createElement("button"); b.className="choice";
-    const m=c.match(/^(\p{Extended_Pictographic}[️‍\p{Extended_Pictographic}]*)\s*(.*)$/u);
+    const m=c.match(/^(\p{Extended_Pictographic}[\uFE0F\u200D\p{Extended_Pictographic}]*)\s*(.*)$/u);
     if(m){ b.innerHTML='<span class="ce"></span><span class="ct"></span>'; b.querySelector(".ce").textContent=m[1]; b.querySelector(".ct").textContent=m[2]; }
     else b.textContent=c;
     b.onclick=()=>{ tap(); (handler||send)(c); };
     choicesEl.appendChild(b);
   });
+  // While choice buttons show, the bubble keeps room for at least 3 lines.
+  stage.classList.toggle("has-choices", list.length>0);
 }
 
 /* ================= modes ================= */
