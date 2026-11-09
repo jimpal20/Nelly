@@ -228,6 +228,125 @@ body.bedtime #moonOrb{opacity:1}
 #grown .range{display:flex;align-items:center;gap:10px}
 #grown .range input{flex:1}
 #gate .q{font-size:30px;font-weight:700;text-align:center;margin:12px 0}
+
+/* ---------- home: castle button ---------- */
+.grid2 .b-castle{grid-column:1/-1;min-height:80px;flex-direction:row;gap:12px;background:linear-gradient(180deg,#fff0f8,#ffc6e4)}
+.b-castle img{width:64px;height:64px;object-fit:contain;flex-shrink:0;border-radius:16px;background:radial-gradient(circle,rgba(255,255,255,.8),rgba(255,255,255,0) 70%)}
+.b-castle .emo{display:none}
+
+/* ---------- Nelly's heart necklace ---------- */
+.heartLayer{position:absolute;inset:0;pointer-events:none;z-index:2}
+#homeHeart{--hx:50%;--hy:67.3%;--hw:20%;animation:float 3.6s ease-in-out infinite}
+.heartBtn{position:absolute;left:calc(var(--hx) - 32px);top:calc(var(--hy) - 32px);width:64px;height:64px;padding:0;border-radius:50%;background:transparent;pointer-events:auto}
+.heartGlow{position:absolute;left:var(--hx);top:var(--hy);width:var(--hw);height:auto;translate:-50% -50%;opacity:0;pointer-events:none}
+.heartGlow.on{animation:heartPulse 2.2s ease-in-out forwards}
+@keyframes heartPulse{0%{opacity:0;transform:scale(.6)}15%{opacity:1;transform:scale(1.12)}35%{transform:scale(.96)}55%{transform:scale(1.1)}75%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.9)}}
+
+/* ---------- enchanted castle ---------- */
+#castleView{position:absolute;inset:0;z-index:15;overflow:hidden;--cs:1;
+  background:linear-gradient(180deg,#d9c8ff 0%,#ffd6ec 55%,#fff0e2 100%)}
+body.bedtime #castleView{--cs:1.6;background:linear-gradient(180deg,#2a2052 0%,#4b3778 60%,#6b4f8e 100%)}
+.cscene{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .45s,visibility 0s linear .45s}
+.cscene.on{opacity:1;visibility:visible;transition:opacity .45s}
+.cfill{position:absolute;left:-8%;top:-8%;width:116%;height:116%;object-fit:cover;filter:blur(24px) saturate(1.1);opacity:.55;pointer-events:none}
+.cfill.cmissing{display:none}
+/* The picture box keeps the art's 2:3 shape, so tap areas in percent stay on the art at any screen size. */
+.cbox{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(100%,66.667vh);width:min(100%,66.667dvh);aspect-ratio:2/3;overflow:hidden;
+  background:radial-gradient(circle at 50% 35%,#fff6fb 0%,#ffe1f1 40%,#e6d8ff 100%);box-shadow:0 10px 40px rgba(120,60,180,.25)}
+@media (min-aspect-ratio:2/3){.cbox{border-radius:24px}}
+body.bedtime .cbox{filter:brightness(.72) saturate(.82) sepia(.22)}
+body.bedtime .cfill{opacity:.3}
+.cbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:0}
+.cbg.cmissing{visibility:hidden}
+#cThroneRainbow{opacity:0;transition:opacity calc(1.4s*var(--cs)) ease-in-out;z-index:1}
+.rainbow-on #cThroneRainbow{opacity:1}
+.cpress{transition:scale .1s,filter .1s}
+.cpress:active{scale:.92;filter:brightness(.93)}
+/* Every tappable picture: soft placeholder until it loads, an emoji if it is missing. */
+[data-emo]{position:absolute;padding:0;background:transparent}
+[data-emo]:not(.ok){background:radial-gradient(circle,rgba(255,255,255,.75) 0%,rgba(255,214,236,.5) 50%,rgba(255,214,236,0) 72%)}
+[data-emo] > img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none}
+[data-emo].bad::after{content:attr(data-emo);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(30px,9vw,60px)}
+img.cmissing{visibility:hidden}
+.cnav{position:absolute;top:calc(env(safe-area-inset-top) + 10px);width:76px;height:76px;border-radius:50%;z-index:11;padding:6px;
+  background:rgba(255,255,255,.72);box-shadow:0 5px 16px rgba(140,80,190,.25)}
+.cnav.left{left:calc(env(safe-area-inset-left) + 12px)}
+.cnav.right{right:calc(env(safe-area-inset-right) + 12px)}
+.cnav > img{width:64px;height:64px}
+/* Every castle tap area is placed by percent inside the 2:3 art box, above the background picture. */
+.croom,#cDoor,#tWindow,#tThrone,#tPippa,#tMusic,#tChest,#cNelly{position:absolute;display:block;margin:0;padding:0}
+/* outside view: the golden front door (percent of the picture). Adjust these numbers to fit the art. */
+#cDoor{left:38%;top:49%;width:24%;height:18%;border-radius:40%;z-index:4}
+#cDoor > img{filter:drop-shadow(0 0 14px rgba(255,236,170,.95));animation:cbreathe calc(1.8s*var(--cs)) ease-in-out infinite}
+@keyframes cbreathe{0%,100%{transform:scale(.92)}50%{transform:scale(1.08)}}
+/* map: room tap areas (percent of the picture). Adjust these numbers to fit the art. */
+.croom{border-radius:22px;background:transparent;z-index:4;animation:cglow calc(2.6s*var(--cs)) ease-in-out infinite}
+.croom[data-room=tower]  {left:28%;top:3%; width:44%;height:20%}
+.croom[data-room=bedroom]{left:4%; top:25%;width:44%;height:19%}
+.croom[data-room=library]{left:52%;top:25%;width:44%;height:19%}
+.croom[data-room=throne] {left:8%; top:45%;width:84%;height:20%}
+.croom[data-room=kitchen]{left:4%; top:67%;width:44%;height:25%}
+.croom[data-room=garden] {left:52%;top:67%;width:44%;height:25%}
+@keyframes cglow{0%,100%{box-shadow:inset 0 0 0 3px rgba(255,255,255,.25),0 0 12px 2px rgba(255,236,170,.15)}50%{box-shadow:inset 0 0 0 3px rgba(255,255,255,.6),0 0 22px 6px rgba(255,236,170,.4)}}
+.croom .cricon{position:absolute;left:50%;bottom:6%;width:56px;height:56px;translate:-50% 0;pointer-events:none;filter:drop-shadow(0 3px 6px rgba(120,60,180,.35))}
+.croom .clock{position:absolute;right:5%;top:6%;width:42px;height:auto;pointer-events:none;filter:drop-shadow(0 2px 5px rgba(120,60,180,.35))}
+.croom[data-room=library] .cricon,.croom[data-room=tower] .cricon{filter:grayscale(.85) drop-shadow(0 3px 6px rgba(120,60,180,.35))}
+/* throne room: object places and sizes (percent of the picture) */
+#tWindow{left:5%;top:14%;width:22%;aspect-ratio:283/384;z-index:3}
+#tThrone{left:31%;top:26%;width:38%;aspect-ratio:448/512;z-index:3}
+#tPippa{left:70%;top:36%;width:26%;aspect-ratio:526/768;z-index:5}
+#tMusic{left:4%;top:60%;width:24%;aspect-ratio:384/312;z-index:4}
+#tChest{left:72%;top:66%;width:24%;aspect-ratio:1/1;z-index:4}
+#cNelly{left:30%;top:52%;width:40%;aspect-ratio:641/768;z-index:6;animation:cfloat calc(3.6s*var(--cs)) ease-in-out infinite}
+@keyframes cfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-2%)}}
+#cNellyBtn{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;background:transparent;border-radius:30%}
+/* Nelly and Pippa pictures fit their boxes instead of painting at full size. */
+#cNellyBtn > img,#tPippa > img{display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;object-position:50% 100%;pointer-events:none}
+#cNellyHead{position:absolute;left:30%;top:0;width:40%;height:22%;pointer-events:none}
+#cNellyCrown{position:absolute;left:30%;top:-3%;width:40%;height:auto;z-index:2;pointer-events:none;display:none}
+#cNellyCrown.show{display:block;animation:cpopin .5s cubic-bezier(.3,1.6,.5,1)}
+#cHeart{--hx:50%;--hy:50%;--hw:18%;z-index:4}
+#cFloatCrown{position:absolute;left:0;top:0;height:auto;z-index:9;pointer-events:none;display:none;filter:drop-shadow(0 0 10px rgba(255,230,140,.9))}
+#cFloatCrown.show{display:block}
+#cBeam{position:absolute;top:-15%;left:-60%;width:45%;height:130%;z-index:2;pointer-events:none;opacity:0;transform:rotate(18deg);
+  background:linear-gradient(90deg,rgba(255,250,210,0),rgba(255,250,210,.6),rgba(255,250,210,0))}
+#cBeam.beam{animation:cbeam calc(1.8s*var(--cs)) ease-in-out}
+@keyframes cbeam{0%{left:-60%;opacity:0}20%{opacity:1}80%{opacity:1}100%{left:120%;opacity:0}}
+#cCrownPick{position:absolute;inset:0;z-index:10;background:rgba(90,45,130,.35);display:flex;align-items:center;justify-content:center;padding:6%}
+.cpickgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:420px;animation:cpopin .4s cubic-bezier(.3,1.6,.5,1)}
+.cpickgrid [data-crown]{position:relative;aspect-ratio:1/1;min-height:80px;border-radius:26px;background:#fff;padding:12%;
+  box-shadow:0 6px 0 rgba(140,80,190,.25),0 10px 20px rgba(140,80,190,.2)}
+.cpickgrid [data-crown].sel{box-shadow:0 0 0 5px var(--gold),0 0 24px 6px rgba(255,220,120,.7)}
+@keyframes cpopin{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+/* tap feedback */
+.cbump{animation:cbump .45s ease-out}
+@keyframes cbump{0%{transform:scale(1)}40%{transform:scale(1.08) translateY(-4%)}100%{transform:scale(1)}}
+.cwiggle{animation:cwiggle .6s ease-in-out}
+@keyframes cwiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg) scale(1.03)}75%{transform:rotate(3deg) scale(1.03)}}
+.cdance{animation:cdance calc(.5s*var(--cs)) ease-in-out infinite alternate}
+#cNelly.cdance{animation:cdance calc(.5s*var(--cs)) ease-in-out infinite alternate}
+@keyframes cdance{from{transform:rotate(-6deg) translateY(0)}to{transform:rotate(6deg) translateY(-4%)}}
+.cspark{position:absolute;z-index:12;width:var(--sz);height:auto;pointer-events:none;opacity:0;animation:cpop calc(1.4s*var(--cs)) ease-out forwards}
+.cspark.ctxt{font-size:var(--sz);width:auto;line-height:1}
+@keyframes cpop{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}25%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.8)}}
+body.bedtime .cspark{filter:brightness(.8)}
+/* castle speech bubble */
+#cBubble{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom) + 16px);translate:-50% 0;width:calc(100% - 32px);max-width:440px;z-index:13;
+  background:var(--white);border-radius:26px;padding:10px 16px;font-size:21px;line-height:1.3;font-weight:700;min-height:62px;
+  display:flex;align-items:center;gap:12px;box-shadow:0 8px 24px rgba(140,80,190,.25);pointer-events:none;animation:cpopin .35s ease-out}
+#cBubble.hidden{display:none}
+#cBubbleWho{width:48px;height:48px;object-fit:contain;flex-shrink:0}
+#cBubbleText{flex:1;text-align:center}
+body.bedtime #cBubble{background:#f1e8fb}
+/* sparkle transition */
+#cFlash{position:absolute;inset:0;z-index:14;pointer-events:none;opacity:0;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle,rgba(255,255,255,.96) 0%,rgba(255,214,236,.9) 45%,rgba(201,166,255,.8) 100%)}
+body.bedtime #cFlash{background:radial-gradient(circle,rgba(240,226,255,.9) 0%,rgba(120,90,170,.9) 60%,rgba(60,40,110,.95) 100%)}
+#cFlash img{width:min(55vw,260px);height:auto}
+#cFlash.go{pointer-events:auto;animation:cflash calc(1s*var(--cs)) ease-in-out}
+#cFlash.go img{animation:cdoorgrow calc(1s*var(--cs)) ease-out}
+@keyframes cflash{0%{opacity:0}35%{opacity:1}60%{opacity:1}100%{opacity:0}}
+@keyframes cdoorgrow{from{transform:scale(.4) rotate(-10deg)}to{transform:scale(1.4) rotate(0)}}
 </style>
 </head>
 <body>
@@ -428,7 +547,8 @@ body.bedtime #moonOrb{opacity:1}
     <circle cx="146" cy="215" r="1.8" fill="#fff" opacity=".9"/>
   </g>
 </svg>
-<div id="nellyPic"><img id="nellyImg" alt="Nelly the unicorn"></div></div>
+<div id="nellyPic"><img id="nellyImg" alt="Nelly the unicorn"></div>
+<div class="heartLayer" id="homeHeart"><img class="heartGlow" id="homeHeartGlow" src="images/castle/characters/ch01-nelly-heart-glow.webp" width="233" height="256" alt="" onerror="this.style.display='none'"><button class="heartBtn" id="homeHeartBtn" type="button" aria-label="Nelly's heart necklace"></button></div></div>
   </div>
 
   <div id="controls">
@@ -438,6 +558,7 @@ body.bedtime #moonOrb{opacity:1}
       <button class="big b-story" data-mode="story"><span class="emo">📖</span>Stories</button>
       <button class="big b-play" data-mode="play"><span class="emo">🎲</span>Play</button>
       <button class="big b-paint" data-mode="paint"><span class="emo">🎨</span>Pictures</button>
+      <button class="big b-castle" id="castleBtn" type="button" aria-label="Nelly's castle"><img src="images/castle/ui/ui01-castle-button.webp" srcset="images/castle/ui/ui01-castle-button.webp 1x, images/castle/ui/ui01-castle-button@2x.webp 2x" width="64" height="64" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'"><span class="emo">🏰</span>Castle</button>
     </div>
     <!-- conversation -->
     <div id="convo" class="hide">
@@ -494,6 +615,69 @@ body.bedtime #moonOrb{opacity:1}
       <button class="big b-paint" id="picClose" style="min-height:70px;max-width:none;flex-direction:row;gap:8px"><span class="emo" style="font-size:28px">💖</span>All done</button>
     </div>
   </div>
+</div>
+
+<!-- ================= Enchanted Castle (Part 1) ================= -->
+<div id="castleView" class="hide">
+  <!-- outside view -->
+  <section class="cscene" id="cExt" aria-hidden="true">
+    <img class="cfill" data-src="images/castle/backgrounds/bg01-castle-exterior.webp" alt="">
+    <div class="cbox">
+      <img class="cbg" data-src="images/castle/backgrounds/bg01-castle-exterior.webp" width="1024" height="1536" alt="Nelly's castle">
+      <button class="cpress" id="cDoor" type="button" data-emo="✨" aria-label="Go inside the castle"><img data-src="images/castle/fx/fx05-doorway.webp" width="256" height="252" alt=""></button>
+    </div>
+    <button class="cnav left cpress" type="button" data-cgo="home" data-emo="🏠" aria-label="Go home"><img data-src="images/castle/ui/ui03-home.webp" data-srcset="images/castle/ui/ui03-home.webp 1x, images/castle/ui/ui03-home@2x.webp 2x" width="128" height="128" alt=""></button>
+  </section>
+
+  <!-- castle map -->
+  <section class="cscene" id="cMap" aria-hidden="true">
+    <img class="cfill" data-src="images/castle/backgrounds/bg01-castle-map.webp" alt="">
+    <div class="cbox">
+      <img class="cbg" data-src="images/castle/backgrounds/bg01-castle-map.webp" width="1024" height="1536" alt="Castle map">
+      <button class="croom" type="button" data-room="tower" aria-label="Rainbow Tower"><img class="cricon" data-src="images/castle/ui/ui02-room-tower.webp" data-srcset="images/castle/ui/ui02-room-tower.webp 1x, images/castle/ui/ui02-room-tower@2x.webp 2x" width="128" height="128" alt=""><img class="clock" data-src="images/castle/ui/ui13-lock.webp" data-srcset="images/castle/ui/ui13-lock.webp 1x, images/castle/ui/ui13-lock@2x.webp 2x" width="112" height="128" alt=""></button>
+      <button class="croom" type="button" data-room="bedroom" aria-label="Cloud Bedroom"><img class="cricon" data-src="images/castle/ui/ui02-room-bedroom.webp" data-srcset="images/castle/ui/ui02-room-bedroom.webp 1x, images/castle/ui/ui02-room-bedroom@2x.webp 2x" width="126" height="128" alt=""></button>
+      <button class="croom" type="button" data-room="library" aria-label="Storybook Library"><img class="cricon" data-src="images/castle/ui/ui02-room-library.webp" data-srcset="images/castle/ui/ui02-room-library.webp 1x, images/castle/ui/ui02-room-library@2x.webp 2x" width="127" height="128" alt=""><img class="clock" data-src="images/castle/ui/ui13-lock.webp" data-srcset="images/castle/ui/ui13-lock.webp 1x, images/castle/ui/ui13-lock@2x.webp 2x" width="112" height="128" alt=""></button>
+      <button class="croom" type="button" data-room="throne" aria-label="Sparkle Throne Room"><img class="cricon" data-src="images/castle/ui/ui02-room-throne.webp" data-srcset="images/castle/ui/ui02-room-throne.webp 1x, images/castle/ui/ui02-room-throne@2x.webp 2x" width="128" height="128" alt=""></button>
+      <button class="croom" type="button" data-room="kitchen" aria-label="Cupcake Kitchen"><img class="cricon" data-src="images/castle/ui/ui02-room-kitchen.webp" data-srcset="images/castle/ui/ui02-room-kitchen.webp 1x, images/castle/ui/ui02-room-kitchen@2x.webp 2x" width="126" height="128" alt=""></button>
+      <button class="croom" type="button" data-room="garden" aria-label="Moonflower Garden"><img class="cricon" data-src="images/castle/ui/ui02-room-garden.webp" data-srcset="images/castle/ui/ui02-room-garden.webp 1x, images/castle/ui/ui02-room-garden@2x.webp 2x" width="128" height="128" alt=""></button>
+    </div>
+    <button class="cnav left cpress" type="button" data-cgo="home" data-emo="🏠" aria-label="Go home"><img data-src="images/castle/ui/ui03-home.webp" data-srcset="images/castle/ui/ui03-home.webp 1x, images/castle/ui/ui03-home@2x.webp 2x" width="128" height="128" alt=""></button>
+  </section>
+
+  <!-- Sparkle Throne Room -->
+  <section class="cscene" id="cThrone" aria-hidden="true">
+    <img class="cfill" data-src="images/castle/backgrounds/bg02-throne.webp" alt="">
+    <div class="cbox" id="cThroneBox">
+      <img class="cbg" data-src="images/castle/backgrounds/bg02-throne.webp" width="1024" height="1536" alt="Sparkle Throne Room">
+      <img class="cbg" id="cThroneRainbow" data-src="images/castle/backgrounds/bg02-throne-rainbow.webp" width="1024" height="1536" alt="">
+      <div id="cBeam"></div>
+      <button class="cpress" id="tWindow" type="button" data-emo="🌈" aria-label="Rainbow window"><img id="tWindowImg" data-src="images/castle/rooms/throne/tr04-window-plain.webp" width="283" height="384" alt=""></button>
+      <button class="cpress" id="tThrone" type="button" data-emo="👑" aria-label="Golden throne"><img data-src="images/castle/rooms/throne/tr01-throne-empty.webp" width="448" height="512" alt=""></button>
+      <button class="cpress" id="tPippa" type="button" data-emo="🐰" aria-label="Princess Pippa"><img id="tPippaImg" data-src="images/castle/characters/ch02-pippa-idle.webp" width="526" height="768" alt=""></button>
+      <button class="cpress" id="tMusic" type="button" data-emo="🎵" aria-label="Music box"><img id="tMusicImg" data-src="images/castle/rooms/throne/tr05-musicbox-closed.webp" width="384" height="312" alt=""></button>
+      <button class="cpress" id="tChest" type="button" data-emo="🎁" aria-label="Crown chest"><img id="tChestImg" data-src="images/castle/rooms/throne/tr02-chest-closed.webp" width="384" height="384" alt=""></button>
+      <div id="cNelly" data-emo="🦄">
+        <button class="cpress" id="cNellyBtn" type="button" aria-label="Nelly the unicorn"><img id="cNellyImg" data-src="images/castle/characters/ch01-nelly-idle.webp" width="641" height="768" alt=""></button>
+        <div id="cNellyHead"></div>
+        <img id="cNellyCrown" width="384" height="358" alt="">
+        <div class="heartLayer" id="cHeart"><img class="heartGlow" id="cHeartGlow" data-src="images/castle/characters/ch01-nelly-heart-glow.webp" width="233" height="256" alt=""><button class="heartBtn" id="cHeartBtn" type="button" aria-label="Nelly's heart necklace"></button></div>
+      </div>
+      <img id="cFloatCrown" width="384" height="358" alt="">
+      <div id="cCrownPick" class="hide">
+        <div class="cpickgrid">
+          <button type="button" class="cpress" data-crown="gold" data-emo="👑" aria-label="Gold crown"><img data-src="images/castle/rooms/throne/tr03-crown-gold.webp" width="384" height="358" alt=""></button>
+          <button type="button" class="cpress" data-crown="pink" data-emo="💗" aria-label="Pink crown"><img data-src="images/castle/rooms/throne/tr03-crown-pink.webp" width="384" height="344" alt=""></button>
+          <button type="button" class="cpress" data-crown="blue" data-emo="💙" aria-label="Blue crown"><img data-src="images/castle/rooms/throne/tr03-crown-blue.webp" width="384" height="341" alt=""></button>
+          <button type="button" class="cpress" data-crown="lavender" data-emo="💜" aria-label="Lavender crown"><img data-src="images/castle/rooms/throne/tr03-crown-lavender.webp" width="384" height="319" alt=""></button>
+        </div>
+      </div>
+    </div>
+    <button class="cnav left cpress" type="button" data-cgo="map" data-emo="⬅️" aria-label="Back to the castle map"><img data-src="images/castle/ui/ui04-back.webp" data-srcset="images/castle/ui/ui04-back.webp 1x, images/castle/ui/ui04-back@2x.webp 2x" width="128" height="128" alt=""></button>
+    <button class="cnav right cpress" type="button" data-cgo="map" data-emo="🏰" aria-label="Castle map"><img data-src="images/castle/ui/ui05-map.webp" data-srcset="images/castle/ui/ui05-map.webp 1x, images/castle/ui/ui05-map@2x.webp 2x" width="127" height="128" alt=""></button>
+  </section>
+
+  <div id="cBubble" class="hidden" aria-live="polite"><img id="cBubbleWho" width="621" height="768" alt=""><span id="cBubbleText"></span></div>
+  <div id="cFlash"><img data-src="images/castle/fx/fx05-doorway-opening.webp" width="230" height="256" alt=""></div>
 </div>
 
 <div id="grown" class="hide">
@@ -1500,6 +1684,343 @@ $("pMake").onclick=async()=>{
 };
 $("pSaveCurBtn").onclick=async()=>{ const b=await idb.get("portrait").catch(()=>null); if(b) savePicture(b,"portrait"); else $("pStatus").textContent="The unicorn is using the drawn version, so there's no picture to save yet."; };
 $("pDrawn").onclick=async()=>{ await idb.del("portrait"); showPortrait(null); $("pOpts").innerHTML=""; $("pStatus").textContent="The unicorn is back to the drawn version."; };
+
+/* ================= enchanted castle (Part 1) ================= */
+const CP = "images/castle/";
+const castleView=$("castleView");
+const NELLY_LOOKS = {
+  idle:    [CP+"characters/ch01-nelly-idle.webp",641,768],
+  crowned: [CP+"characters/ch01-nelly-crowned.webp",631,768],
+  dancing: [CP+"characters/ch01-nelly-dancing.webp",604,768],
+  happy:   [CP+"characters/ch01-nelly-happy.webp",621,768]
+};
+const PIPPA_LOOKS = {
+  idle:    [CP+"characters/ch02-pippa-idle.webp",526,768],
+  waving:  [CP+"characters/ch02-pippa-waving.webp",646,768],
+  dancing: [CP+"characters/ch02-pippa-dancing.webp",658,768]
+};
+const CROWNS = {
+  gold:     [CP+"rooms/throne/tr03-crown-gold.webp",384,358],
+  pink:     [CP+"rooms/throne/tr03-crown-pink.webp",384,344],
+  blue:     [CP+"rooms/throne/tr03-crown-blue.webp",384,341],
+  lavender: [CP+"rooms/throne/tr03-crown-lavender.webp",384,319]
+};
+const SPARKS = [CP+"fx/fx01-sparkle.webp", CP+"fx/fx01-sparkle-small.webp", CP+"fx/fx01-sparkle-medium.webp", CP+"rooms/throne/tr06-sparkle-small.webp"];
+const ROOM_LINES = {
+  tower:   "The Rainbow Tower is still getting ready. Come back soon!",
+  bedroom: "The Cloud Bedroom is still getting ready. Come back soon!",
+  library: "The Storybook Library is still getting ready. Come back soon!",
+  kitchen: "The Cupcake Kitchen is still getting ready. Come back soon!",
+  garden:  "The Moonflower Garden is still getting ready. Come back soon!"
+};
+
+// Load a screen's pictures only when it opens.
+function loadImgs(root){
+  root.querySelectorAll("img[data-src]").forEach(i=>{
+    if(i.dataset.srcset){ i.srcset=i.dataset.srcset; i.removeAttribute("data-srcset"); }
+    i.src=i.dataset.src; i.removeAttribute("data-src");
+  });
+}
+function setImg(img, spec){
+  if(!img || !spec) return;
+  const [src,w,h]=spec;
+  if(img.getAttribute("src")===src) return;
+  img.classList.remove("cmissing");
+  const host=img.closest("[data-emo]"); if(host) host.classList.remove("bad");
+  img.width=w; img.height=h; img.src=src;
+}
+function preload(list){ list.forEach(s=>{ const i=new Image(); i.src=s[0]||s; }); }
+// A soft placeholder shows until a picture loads. A missing picture shows an emoji instead, and taps still work.
+castleView.addEventListener("load",e=>{
+  const t=e.target; if(!t || t.tagName!=="IMG") return;
+  const h=t.closest("[data-emo]"); if(h) h.classList.add("ok");
+},true);
+castleView.addEventListener("error",e=>{
+  const t=e.target; if(!t || t.tagName!=="IMG" || t.classList.contains("cspark")) return;
+  t.classList.add("cmissing");
+  const h=t.closest("[data-emo]"); if(h){ h.classList.remove("ok"); h.classList.add("bad"); }
+},true);
+
+let cTimers=[];
+const later=(fn,ms)=>{ const id=setTimeout(fn,ms); cTimers.push(id); return id; };
+function clearLater(){ cTimers.forEach(clearTimeout); cTimers=[]; }
+function bump(el, cls="cbump", ms=500){ if(!el) return; el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); setTimeout(()=>el.classList.remove(cls), ms); }
+
+// Picture sparkles (sparkle and FX art). Fewer and softer at bedtime.
+function cSparkle(el, n=3, srcs=SPARKS, size=56){
+  if(!el) return;
+  if(bedtime) n=Math.max(1,Math.ceil(n/2));
+  const v=castleView.getBoundingClientRect(), r=el.getBoundingClientRect();
+  for(let i=0;i<n;i++){
+    const s=document.createElement("img"); s.className="cspark"; s.alt="";
+    s.style.left=(r.left-v.left+r.width*(.2+Math.random()*.6))+"px";
+    s.style.top=(r.top-v.top+r.height*(.15+Math.random()*.55))+"px";
+    s.style.setProperty("--sz",(size*(.7+Math.random()*.6))+"px");
+    s.style.setProperty("--dx",((Math.random()-.5)*90)+"px");
+    s.style.setProperty("--dy",(-30-Math.random()*70)+"px");
+    s.style.animationDelay=(i*.08)+"s";
+    s.onerror=()=>{ const d=document.createElement("div"); d.className="cspark ctxt"; d.textContent="✨"; d.style.cssText=s.style.cssText; s.replaceWith(d); setTimeout(()=>d.remove(),1900); };
+    s.src=srcs[Math.floor(Math.random()*srcs.length)];
+    castleView.appendChild(s); setTimeout(()=>s.remove(),1900);
+  }
+}
+
+// Castle speech bubble. Uses the app's speak(), so mute, bedtime, the Safari fix and the phone voice all apply.
+let cSayTok=0, cHideTimer=null;
+const WHO = {nelly:[CP+"characters/ch01-nelly-happy.webp",621,768], pippa:[CP+"characters/ch02-pippa-smiling.webp",581,768]};
+function castleSay(text, who="nelly"){
+  const my=++cSayTok; clearTimeout(cHideTimer);
+  const b=$("cBubble"), t=$("cBubbleText");
+  setImg($("cBubbleWho"), WHO[who]||WHO.nelly);
+  t.innerHTML='<span class="dots"><span></span><span></span><span></span></span>';
+  b.classList.remove("hidden");
+  speak(text, ()=>{
+    if(my!==cSayTok) return;
+    cHideTimer=setTimeout(()=>{ if(my===cSayTok) b.classList.add("hidden"); }, 2600);
+  }, ()=>{
+    if(my!==cSayTok) return;
+    t.textContent=text;
+  });
+}
+function hideCastleBubble(){ cSayTok++; clearTimeout(cHideTimer); $("cBubble").classList.add("hidden"); }
+
+// Short sparkle transition between castle screens.
+let cTransBusy=false;
+function cTransition(next){
+  if(cTransBusy) return; cTransBusy=true;
+  const f=$("cFlash"); f.classList.remove("go"); void f.offsetWidth; f.classList.add("go");
+  chime([784,1046,1318,1568,2093],0.06,bedtime?0.05:0.08);
+  setTimeout(next, 450);
+  setTimeout(()=>{ f.classList.remove("go"); cTransBusy=false; }, 1050);
+}
+
+let cScreen=null;
+function showScreen(id){
+  if(cScreen==="cThrone" && id!=="cThrone") leaveThrone();
+  const sc=$(id); loadImgs(sc);
+  castleView.querySelectorAll(".cscene").forEach(s=>{ const on=s===sc; s.classList.toggle("on",on); s.setAttribute("aria-hidden", on?"false":"true"); });
+  cScreen=id;
+  if(id==="cThrone") enterThrone();
+}
+function openCastle(){
+  tap(); stopSpeech();
+  castleView.classList.remove("hide");
+  loadImgs($("cBubble")); loadImgs($("cFlash"));
+  showScreen("cExt");
+  castleSay("Welcome to my castle!");
+}
+function closeCastle(){
+  tap(); leaveThrone(); hideCastleBubble(); stopSpeech();
+  castleView.querySelectorAll(".cscene").forEach(s=>s.classList.remove("on"));
+  castleView.classList.add("hide"); cScreen=null;
+  say(homeLine());
+}
+$("castleBtn").addEventListener("click", openCastle);
+castleView.querySelectorAll("[data-cgo]").forEach(b=>b.addEventListener("click",()=>{
+  bump(b);
+  const go=b.dataset.cgo;
+  if(go==="home") closeCastle();
+  else { tap(); hideCastleBubble(); stopSpeech(); showScreen("cMap"); }
+}));
+
+/* ---- outside view ---- */
+$("cDoor").addEventListener("click",()=>{
+  const d=$("cDoor"); bump(d); cSparkle(d,5);
+  stopSpeech(); hideCastleBubble();
+  cTransition(()=>showScreen("cMap"));
+});
+
+/* ---- castle map ---- */
+castleView.querySelectorAll(".croom").forEach(b=>b.addEventListener("click",()=>{
+  const room=b.dataset.room;
+  bump(b,"cwiggle",650); cSparkle(b,4);
+  if(room==="throne"){
+    stopSpeech(); hideCastleBubble();
+    cTransition(()=>showScreen("cThrone"));
+    return;
+  }
+  chime([988,1318,1568],0.08,0.07);
+  castleSay(ROOM_LINES[room]||"That room is still getting ready. Come back soon!");
+}));
+
+/* ---- Sparkle Throne Room ---- */
+let cLook="idle", cCrown=store.get("castleCrown",""), dancing=false, rainbowOn=false, musicNodes=null, crownFloating=false;
+if(!CROWNS[cCrown]) cCrown="";
+function showNelly(look){
+  setImg($("cNellyImg"), NELLY_LOOKS[look]||NELLY_LOOKS.idle);
+  const cr=$("cNellyCrown");
+  if(look==="idle" && cCrown){ setImg(cr, CROWNS[cCrown]); cr.classList.add("show"); }
+  else cr.classList.remove("show");
+}
+function enterThrone(){
+  clearLater(); dancing=false; rainbowOn=false; crownFloating=false;
+  cLook="idle"; showNelly("idle");
+  setImg($("tPippaImg"), PIPPA_LOOKS.idle);
+  setImg($("tWindowImg"), [CP+"rooms/throne/tr04-window-plain.webp",283,384]);
+  setImg($("tChestImg"), [CP+"rooms/throne/tr02-chest-closed.webp",384,384]);
+  setImg($("tMusicImg"), [CP+"rooms/throne/tr05-musicbox-closed.webp",384,312]);
+  $("cThroneBox").classList.remove("rainbow-on");
+  $("cCrownPick").classList.add("hide");
+  ["cNelly","tPippa"].forEach(id=>$(id).classList.remove("cdance"));
+  // Get the other pictures for this room ready, so taps change them right away.
+  preload([NELLY_LOOKS.crowned, NELLY_LOOKS.dancing, NELLY_LOOKS.happy, PIPPA_LOOKS.waving, PIPPA_LOOKS.dancing,
+    [CP+"rooms/throne/tr04-window-rainbow.webp"], [CP+"rooms/throne/tr02-chest-open.webp"], [CP+"rooms/throne/tr05-musicbox-open.webp"],
+    [CP+"backgrounds/bg02-throne-rainbow.webp"], CROWNS.gold, CROWNS.pink, CROWNS.blue, CROWNS.lavender]);
+}
+function leaveThrone(){
+  clearLater(); stopMusic(); dancing=false; crownFloating=false;
+  const pk=$("cCrownPick"); if(pk) pk.classList.add("hide");
+  ["cNelly","tPippa"].forEach(id=>{ const e=$(id); if(e) e.classList.remove("cdance"); });
+}
+
+// Golden throne: a crown floats onto Nelly.
+$("tThrone").addEventListener("click",()=>{
+  const th=$("tThrone"); bump(th);
+  if(dancing || crownFloating) { cSparkle(th,2); return; }
+  crownFloating=true;
+  const box=$("cThroneBox").getBoundingClientRect(), tr=th.getBoundingClientRect(), nr=$("cNelly").getBoundingClientRect();
+  const fc=$("cFloatCrown"); setImg(fc, CROWNS.gold);
+  const w=nr.width*0.4;
+  fc.style.width=w+"px";
+  const x0=tr.left-box.left+tr.width/2-w/2, y0=tr.top-box.top+tr.height*0.05;
+  const x1=nr.left-box.left+nr.width/2-w/2, y1=nr.top-box.top-nr.height*0.02;
+  fc.classList.add("show");
+  chime([659,784,988,1318],0.12,0.07);
+  const anim=fc.animate([
+    {transform:`translate(${x0}px,${y0}px) scale(.7) rotate(-8deg)`, opacity:0},
+    {transform:`translate(${x0}px,${y0-40}px) scale(1) rotate(6deg)`, opacity:1, offset:.3},
+    {transform:`translate(${x1}px,${y1}px) scale(1) rotate(0deg)`, opacity:1}
+  ],{duration:bedtime?1500:1000, easing:"ease-in-out", fill:"forwards"});
+  anim.onfinish=()=>{
+    fc.classList.remove("show"); anim.cancel(); crownFloating=false;
+    if(cScreen!=="cThrone") return;
+    cLook="crowned"; showNelly("crowned"); bump($("cNellyBtn"));
+    const head=$("cNellyHead");
+    cSparkle(head,3,[CP+"rooms/throne/tr06-sparkle-large.webp",CP+"fx/fx01-sparkle-large.webp"],70);
+    castleSay("Ta-da! Royal unicorn!");
+  };
+});
+
+// Crown chest: pick a crown for Nelly.
+$("tChest").addEventListener("click",()=>{
+  const c=$("tChest"); bump(c); cSparkle(c,2);
+  const pk=$("cCrownPick");
+  if(!pk.classList.contains("hide")){ closeCrownPick(); return; }
+  tap();
+  setImg($("tChestImg"), [CP+"rooms/throne/tr02-chest-open.webp",343,384]);
+  loadImgs(pk);
+  pk.querySelectorAll("[data-crown]").forEach(b=>b.classList.toggle("sel", b.dataset.crown===cCrown));
+  pk.classList.remove("hide");
+});
+function closeCrownPick(){
+  $("cCrownPick").classList.add("hide");
+  later(()=>setImg($("tChestImg"), [CP+"rooms/throne/tr02-chest-closed.webp",384,384]), 700);
+}
+$("cCrownPick").addEventListener("click",e=>{
+  const b=e.target.closest("[data-crown]");
+  if(!b){ closeCrownPick(); return; }
+  const k=b.dataset.crown; if(!CROWNS[k]) return;
+  bump(b); cCrown=k; store.set("castleCrown",k);
+  $("cCrownPick").querySelectorAll("[data-crown]").forEach(x=>x.classList.toggle("sel", x===b));
+  chime([1046,1318,1568],0.08,0.08);
+  later(()=>{
+    closeCrownPick();
+    cLook="idle"; if(!dancing) showNelly("idle");
+    bump($("cNellyBtn")); cSparkle($("cNellyHead"),3);
+  }, 350);
+});
+
+// Rainbow window: a sunbeam and a rainbow glow.
+$("tWindow").addEventListener("click",()=>{
+  const w=$("tWindow"); bump(w);
+  rainbowOn=!rainbowOn;
+  $("cThroneBox").classList.toggle("rainbow-on", rainbowOn);
+  if(rainbowOn){
+    setImg($("tWindowImg"), [CP+"rooms/throne/tr04-window-rainbow.webp",296,384]);
+    const beam=$("cBeam"); beam.classList.remove("beam"); void beam.offsetWidth; beam.classList.add("beam");
+    chime([784,988,1175,1568],0.18,0.06);
+    cSparkle(w,3,[CP+"fx/fx03-rainbow-complete.webp",CP+"fx/fx01-sparkle.webp"],64);
+  }else{
+    setImg($("tWindowImg"), [CP+"rooms/throne/tr04-window-plain.webp",283,384]);
+    chime([1175,988],0.12,0.05); cSparkle(w,2);
+  }
+});
+
+// Music box: an original 8-second melody while Pippa and Nelly dance.
+function stopMusic(){
+  if(musicNodes){ try{ musicNodes.gain.cancelScheduledValues(0); musicNodes.gain.value=0; musicNodes.disconnect(); }catch(e){} musicNodes=null; }
+}
+function playMelody(){
+  if(muted) return;
+  const a=audio(); if(!a) return;
+  stopMusic();
+  const master=a.createGain(); master.gain.value=bedtime?0.45:1; master.connect(a.destination); musicNodes=master;
+  const bell=(f,t,d,vol)=>{
+    [[f,vol,"sine"],[f*2,vol*0.25,"sine"]].forEach(([fr,v,type])=>{
+      const o=a.createOscillator(), g=a.createGain();
+      o.type=type; o.frequency.value=fr;
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(v,t+.015); g.gain.exponentialRampToValueAtTime(.0008,t+Math.max(.5,d*1.8));
+      o.connect(g).connect(master); o.start(t); o.stop(t+Math.max(.5,d*1.8)+.05);
+    });
+  };
+  // 16 beats at 0.5 s = 8 s. Notes in Hz, length in beats.
+  const tune=[[523.25,1],[659.25,1],[783.99,1],[659.25,1],[880,1],[783.99,1],[659.25,2],
+              [587.33,1],[698.46,1],[880,1],[783.99,1],[659.25,1],[587.33,1],[523.25,2]];
+  let t=a.currentTime+0.06;
+  tune.forEach(([f,b])=>{ bell(f,t,b*.5,0.085); t+=b*.5; });
+  const start=a.currentTime+0.06;
+  [130.81,174.61,196,130.81].forEach((f,i)=>bell(f,start+i*2,2,0.05));
+}
+$("tMusic").addEventListener("click",()=>{
+  const m=$("tMusic"); bump(m);
+  if(dancing){ cSparkle(m,2,[CP+"rooms/bedroom/br06-note-1.webp",CP+"rooms/bedroom/br06-note-2.webp"],44); return; }
+  dancing=true; stopSpeech(); hideCastleBubble(); closeCrownPickSilently();
+  setImg($("tMusicImg"), [CP+"rooms/throne/tr05-musicbox-open.webp",306,384]);
+  setImg($("cNellyImg"), NELLY_LOOKS.dancing); $("cNellyCrown").classList.remove("show");
+  setImg($("tPippaImg"), PIPPA_LOOKS.dancing);
+  $("cNelly").classList.add("cdance"); $("tPippa").classList.add("cdance");
+  playMelody();
+  const notes=[CP+"rooms/bedroom/br06-note-1.webp",CP+"rooms/bedroom/br06-note-2.webp"];
+  for(let i=0;i<8;i++) later(()=>cSparkle(m,1,notes,46), i*1000);
+  later(()=>{
+    dancing=false;
+    $("cNelly").classList.remove("cdance"); $("tPippa").classList.remove("cdance");
+    showNelly(cLook); setImg($("tPippaImg"), PIPPA_LOOKS.idle);
+    setImg($("tMusicImg"), [CP+"rooms/throne/tr05-musicbox-closed.webp",384,312]);
+    musicNodes=null;
+  }, 8200);
+});
+function closeCrownPickSilently(){ const pk=$("cCrownPick"); if(!pk.classList.contains("hide")) closeCrownPick(); }
+
+// Princess Pippa waves and asks a question (offline line only in Part 1).
+$("tPippa").addEventListener("click",()=>{
+  const p=$("tPippa"); bump(p); cSparkle(p,2);
+  if(dancing) return;
+  setImg($("tPippaImg"), PIPPA_LOOKS.waving);
+  chime([880,1175],0.08,0.06);
+  castleSay("What should we celebrate today?","pippa");
+  later(()=>{ if(!dancing) setImg($("tPippaImg"), PIPPA_LOOKS.idle); }, 2600);
+});
+
+// Tapping Nelly in the castle: a happy bounce.
+$("cNellyBtn").addEventListener("click",()=>{
+  bump($("cNellyBtn")); cSparkle($("cNellyBtn"),2);
+  if(dancing) return;
+  chime([1568,1318,1568,1760],0.06,0.07);
+  setImg($("cNellyImg"), NELLY_LOOKS.happy); $("cNellyCrown").classList.remove("show");
+  later(()=>{ if(!dancing) showNelly(cLook); }, 1300);
+  castleSay(pick(["I love my castle!","Tap something in my castle!","This is my throne room!"]));
+});
+
+/* ---- Nelly's heart necklace (home and castle) ---- */
+function heartTap(e, glow, btn){
+  e.stopPropagation(); e.preventDefault();
+  glow.classList.remove("on"); void glow.offsetWidth; glow.classList.add("on");
+  chime([1046,1318,1568,2093],0.11,0.07);
+  sparkle(bedtime?2:4,["💖","✨","💗"],btn);
+}
+$("homeHeartBtn").addEventListener("click",e=>heartTap(e,$("homeHeartGlow"),$("homeHeartBtn")));
+$("cHeartBtn").addEventListener("click",e=>heartTap(e,$("cHeartGlow"),$("cHeartBtn")));
 
 /* ================= wake ================= */
 $("wakeBtn").onclick=()=>{
