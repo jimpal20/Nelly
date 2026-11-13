@@ -128,6 +128,7 @@ body.bedtime #moonOrb{opacity:1}
 #nellyPic{position:absolute;inset:0;display:none;align-items:flex-end;justify-content:center;transform-origin:50% 90%;transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
 .portrait #nellyPic{display:flex}
 .portrait #nellyWrap svg{display:none}
+.builtin #homeHeart{--hx:43.2%;--hy:65.5%}
 #nellyPic img{max-width:100%;max-height:100%;object-fit:contain;animation:float 3.6s ease-in-out infinite;
   filter:drop-shadow(0 10px 14px rgba(150,90,200,.25));transition:filter .4s}
 .talking #nellyPic img{animation:float 3.6s ease-in-out infinite,talkbob .32s ease-in-out infinite alternate}
@@ -725,7 +726,7 @@ body.bedtime #cFlash{background:radial-gradient(circle,rgba(240,226,255,.9) 0%,r
       <div class="small">Create a detailed picture of the unicorn. It takes about a minute and makes 2 choices. The unicorn still floats, bounces, wiggles, and glows, but the picture can't blink or move its mouth.</div>
       <label for="sPortraitModel">Portrait model</label>
       <input type="text" id="sPortraitModel" autocapitalize="off" autocorrect="off" spellcheck="false">
-      <div class="btns" style="margin-top:10px"><button class="primary" id="pMake">✨ Create picture</button><button class="secondary" id="pDrawn">Use drawn unicorn</button></div>
+      <div class="btns" style="margin-top:10px"><button class="primary" id="pMake">✨ Create picture</button><button class="secondary" id="pDrawn">Use built-in Nelly picture</button></div>
       <div class="btns" id="pSaveCur" style="margin-top:8px"><button class="secondary" id="pSaveCurBtn">💾 Save the unicorn's current picture</button></div>
       <div id="pStatus"></div>
       <div class="portraitOpts" id="pOpts"></div>
@@ -1623,14 +1624,21 @@ const idb = {
   async del(k){ const db=await this.open(); return new Promise((res)=>{ const t=db.transaction("kv","readwrite"); t.objectStore("kv").delete(k); t.oncomplete=()=>res(); t.onerror=()=>res(); }); }
 };
 let portraitURL=null;
+// The built-in main Nelly picture. A grown-up's own picture (from settings) replaces it; if it can't load, the drawn Nelly shows.
+const NELLY_MAIN = "images/nelly/nelly-main.webp";
+let builtinFailed=false;
+$("nellyImg").addEventListener("error",()=>{ if(stage.classList.contains("builtin")){ builtinFailed=true; stage.classList.remove("portrait","builtin"); const wb=$("wakeBtn"); if(wb) wb.textContent="🦄"; } });
 function showPortrait(blob){
   if(portraitURL) URL.revokeObjectURL(portraitURL);
   portraitURL = blob ? URL.createObjectURL(blob) : null;
-  stage.classList.toggle("portrait", !!blob);
-  if(blob) $("nellyImg").src=portraitURL;
+  const src = blob ? portraitURL : (builtinFailed ? null : NELLY_MAIN);
+  stage.classList.toggle("portrait", !!src);
+  stage.classList.toggle("builtin", !blob && !!src);
+  if(src) $("nellyImg").src=src;
   const wb=$("wakeBtn");
-  if(wb){ wb.innerHTML = blob ? '<img alt="">' : "🦄"; if(blob) wb.querySelector("img").src=portraitURL; }
+  if(wb){ wb.innerHTML = src ? '<img alt="">' : "🦄"; if(src) wb.querySelector("img").src=src; }
 }
+showPortrait(null);
 idb.get("portrait").then(b=>{ if(b) showPortrait(b); }).catch(()=>{});
 
 const PORTRAIT_PROMPT = "Full-body character portrait of an adorable baby unicorn for a children's app, facing the viewer and standing on all four legs, in a polished 3D animated movie style. "
@@ -1745,8 +1753,8 @@ $("pMake").onclick=async()=>{
     $("pOpts").appendChild(wrap);
   });
 };
-$("pSaveCurBtn").onclick=async()=>{ const b=await idb.get("portrait").catch(()=>null); if(b) savePicture(b,"portrait"); else $("pStatus").textContent="The unicorn is using the drawn version, so there's no picture to save yet."; };
-$("pDrawn").onclick=async()=>{ await idb.del("portrait"); showPortrait(null); $("pOpts").innerHTML=""; $("pStatus").textContent="The unicorn is back to the drawn version."; };
+$("pSaveCurBtn").onclick=async()=>{ const b=await idb.get("portrait").catch(()=>null); if(b) savePicture(b,"portrait"); else $("pStatus").textContent="The unicorn is using the built-in Nelly picture, so there's no new picture to save."; };
+$("pDrawn").onclick=async()=>{ await idb.del("portrait"); showPortrait(null); $("pOpts").innerHTML=""; $("pStatus").textContent="The unicorn is back to the built-in Nelly picture."; };
 
 /* ================= enchanted castle (Part 1) ================= */
 const CP = "images/castle/";
