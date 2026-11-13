@@ -6,7 +6,7 @@
 <title>Nelly's Magical World</title>
 <meta name="apple-mobile-web-app-title" content="Nelly">
 <meta name="theme-color" content="#f7c6e3">
-<meta name="app-version" content="2026-11-13.2">
+<meta name="app-version" content="2026-11-13.3">
 <link rel="apple-touch-icon" href="images/icon/icon-180.png">
 <link rel="icon" type="image/png" sizes="32x32" href="images/icon/icon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="images/icon/icon-192.png">
@@ -219,6 +219,14 @@ body.bedtime #moonOrb{opacity:1}
 .sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font-size:42px}
 .sgrid div{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:#fff4fb;border-radius:16px;box-shadow:inset 0 0 0 2px #f6dcee}
 .sgrid .empty{opacity:.3;filter:grayscale(1)}
+/* badges: earned ones in color, not-yet ones as a soft grey silhouette */
+.bhead{margin:18px 0 8px;font-size:22px;line-height:1.1}
+.bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.bgrid div{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 4px;background:#fff4fb;border-radius:16px;box-shadow:inset 0 0 0 2px #f6dcee}
+.bgrid .be{font-size:40px;line-height:1.1}
+.bgrid .blabel{font-size:14px;font-weight:800;line-height:1.1}
+.bgrid .locked .be{filter:grayscale(1) contrast(0) brightness(1.35);opacity:.45}
+.bgrid .locked .blabel{opacity:.35}
 #rewardEmo{font-size:120px;line-height:1.1;animation:bounce .6s ease-in-out 3}
 
 /* ---------- sparkles ---------- */
@@ -611,13 +619,15 @@ body.bedtime #cFlash{background:radial-gradient(circle,rgba(240,226,255,.9) 0%,r
     <h2>⭐ My stickers</h2>
     <p class="pnote" id="bookNote"></p>
     <div class="sgrid" id="sGrid"></div>
+    <h3 class="bhead">🏅 My badges</h3>
+    <div class="bgrid" id="badgeGrid"></div>
     <button class="big b-play" id="bClose"><span class="emo">💖</span>All done</button>
   </div>
 </div>
 
 <div id="reward" class="overlay hide">
   <div class="panel">
-    <h2>You earned a sticker!</h2>
+    <h2 id="rewardTitle">You earned a sticker!</h2>
     <div id="rewardEmo"></div>
     <button class="big b-play" id="rClose"><span class="emo">🎉</span>Yay!</button>
   </div>
@@ -767,6 +777,7 @@ body.bedtime #cFlash{background:radial-gradient(circle,rgba(240,226,255,.9) 0%,r
       <div class="small">Each picture uses credits on your OpenRouter account. Set to 0 to turn off pictures.</div>
 
       <div class="btns"><button class="secondary" id="testVoice">🔊 Test voice</button><button class="secondary" id="resetStars">Reset stars</button></div>
+      <div class="small" id="progressSummary"></div>
       <div class="small" id="voiceStatus" role="status" aria-live="polite"></div>
       <div class="btns"><button class="secondary" id="clearGallery">🗑️ Clear picture gallery</button><button class="secondary" id="clearStory">Forget saved story</button></div>
       <div class="small" id="appVersionLabel">App version: …</div>
@@ -922,19 +933,88 @@ function sparkle(n=10, emojis=["✨","⭐","💖","🌈","💜"], el){
 const STICKERS=["🦋","🌸","🍓","🐱","🌙","🧁","🐬","🌻","🎀","🍭","🐞","🌈","🐰","🍩","🦊","🐣","🌷","🪐","🐢","🍉","🐼","🍒","🐙","🎈"];
 const STAR_STEP=10;
 const stickerAt = i => STICKERS[i % STICKERS.length];
+/* ---- progress counters (localStorage "nelly.progress") ----
+   {stars, pictures, storiesFinished, castleCrown}. stars and castleCrown mirror the existing "nelly.stars" and
+   "nelly.castleCrown" values; the first run copies them over. Nothing here ever takes anything away from the child. */
+const cleanCount = x => Math.max(0, Math.floor(+x||0));
+let progress=(()=>{
+  const p=store.get("progress",null);
+  if(p && typeof p==="object") return {stars:cleanCount(p.stars), pictures:cleanCount(p.pictures), storiesFinished:cleanCount(p.storiesFinished), castleCrown:!!p.castleCrown};
+  return {stars:0, pictures:0, storiesFinished:0, castleCrown:false};
+})();
+progress.stars=stars;
+if(store.get("castleCrown","")) progress.castleCrown=true;
+store.set("progress",progress);
+
+/* ---- badges: worked out from the counters, never stored themselves ---- */
+const BADGES=[
+  {id:"story1",   name:"First Story",   emo:"📖", ok:p=>p.storiesFinished>=1},
+  {id:"story5",   name:"5 Stories",     emo:"🌟", ok:p=>p.storiesFinished>=5},
+  {id:"pic1",     name:"First Picture", emo:"🎨", ok:p=>p.pictures>=1},
+  {id:"pic10",    name:"10 Pictures",   emo:"🖼️", ok:p=>p.pictures>=10},
+  {id:"crown",    name:"Castle Crown",  emo:"👑", ok:p=>!!p.castleCrown},
+  {id:"stars100", name:"100 Stars",     emo:"🦄", ok:p=>p.stars>=100}
+];
+// Badges already celebrated. On the very first run, badges a child already has are marked as seen quietly.
+let badgesSeen=store.get("badgesSeen",null);
+if(!Array.isArray(badgesSeen)){ badgesSeen=BADGES.filter(b=>b.ok(progress)).map(b=>b.id); store.set("badgesSeen",badgesSeen); }
+// Once a badge has been celebrated it stays in color, even if a grown-up resets the stars.
+const badgeEarned = b => b.ok(progress) || badgesSeen.includes(b.id);
+let badgeTimer=null;
+function saveProgress(patch, delay=2600){
+  Object.assign(progress, patch||{}); store.set("progress",progress);
+  clearTimeout(badgeTimer); badgeTimer=setTimeout(checkBadges, delay);
+}
+function checkBadges(){
+  BADGES.forEach(b=>{
+    if(b.ok(progress) && !badgesSeen.includes(b.id)){
+      badgesSeen.push(b.id); store.set("badgesSeen",badgesSeen);
+      showReward(`You earned the ${b.name} badge! ${b.emo}`, b.emo);
+    }
+  });
+}
+
 function addStar(){
   stars++; store.set("stars",stars); $("starCount").textContent=stars;
+  saveProgress({stars});
   const st=$("stars"); st.animate([{transform:"scale(1)"},{transform:"scale(1.3)"},{transform:"scale(1)"}],{duration:500});
   if(stars % STAR_STEP === 0) setTimeout(celebrate, 2500);
 }
-function celebrate(){
-  const emo=stickerAt(stars/STAR_STEP-1);
+// One celebration at a time: a sticker and a badge earned together show one after the other.
+const rewardQueue=[];
+function showReward(title, emo){
+  if(!$("reward").classList.contains("hide")){ rewardQueue.push([title, emo]); return; }
+  $("rewardTitle").textContent=title;
   $("rewardEmo").textContent=emo;
   $("reward").classList.remove("hide");
   chime([523,659,784,1046,1318,1568,2093],0.09,0.13);
   sparkle(20,["🎉","✨","⭐","💖",emo],$("rewardEmo"));
 }
-$("rClose").onclick=()=>{ tap(); $("reward").classList.add("hide"); };
+function celebrate(){
+  const emo=stickerAt(stars/STAR_STEP-1);
+  showReward("You earned a sticker!", emo);
+}
+$("rClose").onclick=()=>{
+  tap(); $("reward").classList.add("hide");
+  const next=rewardQueue.shift(); if(next) setTimeout(()=>showReward(next[0], next[1]), 400);
+};
+function renderBadges(){
+  const g=$("badgeGrid"); g.innerHTML="";
+  BADGES.forEach(b=>{
+    const on=badgeEarned(b);
+    const d=document.createElement("div"); if(!on) d.className="locked";
+    d.setAttribute("aria-label", on ? b.name+" badge" : b.name+" badge, not yet");
+    const e=document.createElement("span"); e.className="be"; e.textContent=b.emo;
+    const l=document.createElement("span"); l.className="blabel"; l.textContent=b.name;
+    d.appendChild(e); d.appendChild(l); g.appendChild(d);
+  });
+}
+// The grown-up summary line, for example "212 stars · 21 stickers · 9 stories · 34 pictures".
+function progressLine(){
+  const n=(v,one,many)=>v+" "+(v===1?one:many);
+  return [n(stars,"star","stars"), n(Math.floor(stars/STAR_STEP),"sticker","stickers"),
+    n(progress.storiesFinished,"story","stories"), n(progress.pictures,"picture","pictures")].join(" · ");
+}
 function openBook(){
   tap();
   const earned=Math.floor(stars/STAR_STEP), need=STAR_STEP-(stars%STAR_STEP);
@@ -946,6 +1026,7 @@ function openBook(){
     if(i<earned) d.textContent=stickerAt(i); else { d.textContent="❓"; d.className="empty"; }
     g.appendChild(d);
   }
+  renderBadges();
   $("book").classList.remove("hide");
 }
 $("stars").onclick=openBook;
@@ -1229,6 +1310,12 @@ function greeting(){
   const line=pick(["My rainbow horn is extra sparkly today!","I just slid down a rainbow. Wheee!","The clouds are extra fluffy today!","I was just counting stars in Cloud Castle!","My flower crown is giggling. Hee hee!"]);
   return `${hi} ${me} ${line} Should we talk, make up a story, play a game, or paint a magic picture?`;
 }
+// A short hello for when Nelly opens with the "keep chatting" offer instead of the full greeting.
+function wakeHello(){
+  const n=S.name;
+  const hi=pick(n ? [`Hiiii ${n}!`,`Yay, ${n} is here!`,`Hello hello, ${n}!`] : [`Hiiii!`,`Yay, you're here!`,`Hello hello!`]);
+  return `${hi} It's me, ${botName()}!`;
+}
 function homeLine(){
   if(bedtime) return pick(["What cozy thing should we do next?","Should we have a sleepy story?","What would you like to do, sleepyhead?"]);
   const n=S.name;
@@ -1309,6 +1396,7 @@ const STORY_LEN = 8;
 const MODE_PROMPTS = {
   story: "[The child tapped the STORIES button. Start a brand-new short magical fairytale where the child is the hero. Set the scene in 2 short sentences, then ask what happens next with 3 choices. Each message after this is labeled with its story turn number. Continue the story from the child's choice and give new choices. On the last turn, give the story a happy ending and ask if they want a new story.]",
   storyResume: "[The child wants to keep going with the story you were telling. In one short sentence, remind them where the story left off, then ask what happens next with 3 choices.]",
+  chatResume: "[The child came back and wants to keep chatting about what you were talking about before. In one short sentence, happily remind them what you were talking about, then ask a simple question or give 2 or 3 choices.]",
   play: "[The child tapped the PLAY button. Offer 3 fun games as choices: an animal guessing game, a silly riddle, or a pretend imagination game. Keep games short and very easy for a 6-year-old. Give gentle hints and lots of cheering.]",
   paint: "[The child tapped the PICTURES button. Ask the child what magical picture you should paint for them, with 3 fun ideas as choices. When they choose or describe something, include the paint field.]"
 };
@@ -1387,9 +1475,57 @@ async function callChat(userText, raw){
 }
 
 /* ================= saved story ================= */
-function saveStory(){ store.set("story",{history, turn:storyTurn}); }
+function saveStory(at){ store.set("story",{history, turn:storyTurn, at:at||Date.now()}); }
 function clearStory(){ store.set("story",null); }
 function savedStory(){ const s=store.get("story",null); return (s && Array.isArray(s.history) && s.history.length) ? s : null; }
+
+/* ================= saved chat (resume the last chat) =================
+   localStorage "nelly.chat" = {history (last 18), mode, storyTurn, at}. Saved after each finished reply, dropped after 7 days. */
+const CHAT_MAX_AGE=7*24*60*60*1000;
+const CHAT_MODES=["talk","story","play","paint"];
+// The child's own words in a history message: story labels are removed, and the app's [button prompts] don't count.
+function childWords(content){
+  const t=String(content||"").replace(/^\[Story turn[^\]]*\]\s*/,"").trim();
+  return /^\[/.test(t) ? "" : t;
+}
+const hasChildWords = h => h.some(m=>m.role==="user" && childWords(m.content));
+function saveChat(at){
+  if(!hasChildWords(history)) return; // nothing the child said yet, so nothing to come back to
+  store.set("chat",{history:history.slice(-18), mode:curMode, storyTurn, at});
+}
+function clearChat(){ store.set("chat",null); }
+function savedChat(){
+  const c=store.get("chat",null);
+  if(!c) return null;
+  const h=Array.isArray(c.history) ? c.history.filter(m=>m && (m.role==="user"||m.role==="assistant") && typeof m.content==="string") : [];
+  if(!h.length || typeof c.at!=="number" || Date.now()-c.at>CHAT_MAX_AGE || !hasChildWords(h)){ clearChat(); return null; }
+  return {history:h.slice(-18), mode:CHAT_MODES.includes(c.mode)?c.mode:"talk", storyTurn:cleanCount(c.storyTurn), at:c.at};
+}
+// A short, gentle topic from the child's last message (about 5 words), or "" when there isn't a good one.
+const TOPIC_SKIP=/\b(kill\w*|die|dies|died|dead|death|blood\w*|guns?|knife|knives|weapons?|sex\w*|kiss\w*|naked|hate|stupid|dumb|idiot|shut up|drugs?|beer|wine|scary|address|phone|password|school)\b/i;
+const TOPIC_LEADS=["can we talk about","could we talk about","let's talk about","lets talk about","i want to talk about","i wanna talk about",
+  "can you tell me about","tell me a story about","tell me about","talk about","i want to know about","do you know about","what about","how about","i really like","i really love","i like","i love"];
+const TOPIC_SWAP={i:"you",me:"you",my:"your",mine:"yours",myself:"yourself","i'm":"you're",im:"you're","i've":"you've","i'll":"you'll",your:"my",yours:"mine",yourself:"myself"};
+function chatTopic(h){
+  let t="";
+  for(let i=h.length-1;i>=0 && !t;i--) if(h[i].role==="user") t=childWords(h[i].content);
+  if(!t || TOPIC_SKIP.test(t)) return "";
+  t=t.replace(/\p{Extended_Pictographic}|️|‍/gu," ").replace(/[’]/g,"'")
+     .replace(/[^\p{L}\s'\-]/gu," ").replace(/\s+/g," ").trim().toLowerCase(); // no digits or punctuation
+  const bn=botName().toLowerCase();
+  for(let again=true; again;){
+    again=false;
+    for(const p of ["um","uh","so","and","okay","ok","hey","hi","please",bn,...TOPIC_LEADS]){
+      if(t===p){ t=""; break; }
+      if(t.startsWith(p+" ")){ t=t.slice(p.length+1).trim(); again=true; break; }
+    }
+  }
+  let w=t.split(" ").filter(Boolean).map(x=>TOPIC_SWAP[x]||x).slice(0,5);
+  while(w.length && /^(and|the|a|an|to|of|with|or|but|so|is|are|his|her|their|your|my|our|its|in|on|at|for)$/.test(w[w.length-1])) w.pop();
+  const out=w.join(" ");
+  if(out.length<2 || /^(yes|no|yeah|yep|nope|sure|maybe|hello|bye|you|me|that|this|it)$/.test(out)) return "";
+  return out;
+}
 
 function picsLeftToday(){
   const today=new Date().toDateString();
@@ -1460,6 +1596,7 @@ async function paint(desc){
     else if(d&&d.url) src=d.url;
     if(!src) throw new Error("no image");
     usePic();
+    saveProgress({pictures:progress.pictures+1});
     showPicture(src);
     galleryAdd(src, desc);
     chime([784,988,1175,1568,1976],0.09,0.12); sparkle(16); addStar();
@@ -1511,7 +1648,13 @@ async function send(text, opts={}){
   busy=true; renderChoices([]); showThinking();
   try{
     const r=await callChat(text, opts.raw);
-    if(curMode==="story"){ if(storyTurn>=STORY_LEN) clearStory(); else saveStory(); }
+    const at=Date.now();
+    if(curMode==="story"){
+      if(storyTurn>=STORY_LEN){
+        clearStory(); clearChat(); // the story reached its happy ending, so there's nothing to resume
+        if(!opts.raw) saveProgress({storiesFinished:progress.storiesFinished+1});
+      }else{ saveStory(at); saveChat(at); }
+    }else saveChat(at);
     if(!opts.silent) addStar();
     let renamed=false;
     if(S.allowRename!==false && r.rename){
@@ -1559,8 +1702,39 @@ function goHome(greet=true){
   history=[]; curMode=null; renderChoices([]); showTyping(false);
   convo.classList.add("hide"); homeBtns.classList.remove("hide");
   stopSpeech();
-  if(greet) say(homeLine());
+  if(greet) homeGreet();
 }
+/* ---- "Want to keep chatting about ___?" ----
+   Shown when the app opens or comes back home, if a saved chat exists and is newer than any saved story.
+   The saved-story offer lives on the Stories button, so the two never show at once. Each saved chat is offered once per visit. */
+const YES_CHAT="💖 Yes!", NEW_THING="✨ Something new";
+let offeredAt=0;
+function chatOffer(){
+  const c=savedChat(); if(!c || c.at===offeredAt) return null;
+  const s=savedStory(); if(s && (+s.at||0)>=c.at) return null;
+  return c;
+}
+function homeGreet(){ const c=chatOffer(); if(c) offerChat(c); else say(homeLine()); }
+function offerChat(c, lead, onShow){
+  offeredAt=c.at;
+  homeBtns.classList.add("hide"); convo.classList.remove("hide");
+  history=[]; curMode="talk"; storyTurn=0; renderChoices([]); showTyping(false);
+  const topic=chatTopic(c.history);
+  const q=topic ? `Want to keep chatting about ${topic}?` : "Want to keep chatting where we left off?";
+  say((lead?lead+" ":"")+q, {onShow:()=>{
+    onShow && onShow();
+    renderChoices([YES_CHAT, NEW_THING], ch=>{ if(ch===YES_CHAT) resumeChat(); else somethingNew(); });
+  }});
+}
+function resumeChat(){
+  const c=savedChat();
+  if(!c){ goHome(false); say(homeLine()); return; }
+  homeBtns.classList.add("hide"); convo.classList.remove("hide");
+  history=c.history.slice(-18); curMode=c.mode; storyTurn=c.storyTurn;
+  offeredAt=c.at;
+  send(curMode==="story" ? MODE_PROMPTS.storyResume : MODE_PROMPTS.chatResume, {silent:true, raw:true});
+}
+function somethingNew(){ clearChat(); goHome(false); say(homeLine()); }
 const KEEP_GOING="📖 Keep going", NEW_STORY="✨ New story";
 function newStory(){ clearStory(); history=[]; storyTurn=0; send(MODE_PROMPTS.story, {silent:true, raw:true}); }
 function resumeStory(){
@@ -1908,7 +2082,7 @@ function closeCastle(){
   tap(); leaveThrone(); hideCastleBubble(); stopSpeech();
   castleView.querySelectorAll(".cscene").forEach(s=>s.classList.remove("on"));
   castleView.classList.add("hide"); cScreen=null;
-  say(homeLine());
+  homeGreet();
 }
 $("castleBtn").addEventListener("click", openCastle);
 castleView.querySelectorAll("[data-cgo]").forEach(b=>b.addEventListener("click",()=>{
@@ -2016,6 +2190,7 @@ $("cCrownPick").addEventListener("click",e=>{
   if(!b){ closeCrownPick(); return; }
   const k=b.dataset.crown; if(!CROWNS[k]) return;
   bump(b); cCrown=k; store.set("castleCrown",k);
+  if(!progress.castleCrown) saveProgress({castleCrown:true}, 1500);
   $("cCrownPick").querySelectorAll("[data-crown]").forEach(x=>x.classList.toggle("sel", x===b));
   chime([1046,1318,1568],0.08,0.08);
   later(()=>{
@@ -2124,7 +2299,9 @@ $("wakeBtn").onclick=()=>{
   unlockAudio(); loadVoices();
   $("wake").style.transition="opacity .6s"; $("wake").style.opacity="0";
   setTimeout(()=>{ $("wake").remove();
-    say(greeting(), {onShow:()=>{ mood("excited"); sparkle(14); }});
+    const c=chatOffer();
+    if(c) offerChat(c, wakeHello(), ()=>{ mood("excited"); sparkle(14); });
+    else say(greeting(), {onShow:()=>{ mood("excited"); sparkle(14); }});
   },500);
 };
 
@@ -2271,6 +2448,7 @@ function openSettings(){
   $("sVoice").value=S.voice||""; $("sPitch").value=S.pitch; $("sRate").value=S.rate; $("sPics").value=S.picsPerDay;
   $("sNight").checked=bedtime;
   $("voiceStatus").textContent="";
+  $("progressSummary").textContent=progressLine();
   loadModels();
   $("settings").classList.remove("hide");
 }
@@ -2301,7 +2479,7 @@ $("testVoice").onclick=async()=>{
   const p=await info.phone;
   st.textContent = info.why + (p.ok ? "" : " The phone voice didn't play either: "+p.why+".");
 };
-$("resetStars").onclick=()=>{ stars=0; store.set("stars",0); $("starCount").textContent="0"; $("resetStars").textContent="Stars reset"; };
+$("resetStars").onclick=()=>{ stars=0; store.set("stars",0); $("starCount").textContent="0"; $("resetStars").textContent="Stars reset"; progress.stars=0; store.set("progress",progress); $("progressSummary").textContent=progressLine(); };
 $("clearGallery").onclick=async()=>{ if(confirm("Delete all the pictures saved in the gallery on this phone?")){ await idb.del("gallery"); $("clearGallery").textContent="Gallery cleared"; } };
 $("clearStory").onclick=()=>{ clearStory(); $("clearStory").textContent="Story forgotten"; };
 
