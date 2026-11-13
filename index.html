@@ -404,7 +404,6 @@ body.bedtime #cFlash{background:radial-gradient(circle,rgba(240,226,255,.9) 0%,r
     <button id="stars" aria-label="Stars and stickers">⭐ <span id="starCount">0</span></button>
     <div id="topRight">
       <button class="tb" id="galleryBtn" aria-label="My pictures">🖼️</button>
-      <button class="tb" id="bedBtn" aria-label="Bedtime mode">🌙</button>
       <button class="tb" id="muteBtn" aria-label="Turn sound off">🔊</button>
       <button id="gear" aria-label="Grown-up settings. Press and hold."><div class="fill"></div><span>⚙️</span></button>
     </div>
@@ -758,6 +757,9 @@ body.bedtime #cFlash{background:radial-gradient(circle,rgba(240,226,255,.9) 0%,r
       <label>Voice speed</label>
       <div class="range"><span>🐢</span><input type="range" id="sRate" min="0.6" max="1.3" step="0.05"><span>🐇</span></div>
 
+      <label style="display:flex;align-items:center;gap:10px"><input type="checkbox" id="sNight" style="width:22px;height:22px"> Night mode</label>
+      <div class="small">Turns on by itself from 6:00 PM to 6:30 AM. Switching it here lasts until the next 6:00 PM or 6:30 AM change.</div>
+
       <label for="sPics">Pictures allowed each day</label>
       <input type="number" id="sPics" min="0" max="50" inputmode="numeric">
       <div class="small">Each picture uses credits on your OpenRouter account. Set to 0 to turn off pictures.</div>
@@ -794,7 +796,32 @@ if(store.get("settingsVersion",1) < 2){
 }
 let stars = store.get("stars", 0);
 let muted = store.get("muted", false);
-let bedtime = store.get("bedtime", false);
+
+/* ---- night (bedtime) mode schedule ----
+   Night mode is on from 6:00 PM to 6:30 AM by the phone's clock (6:00 PM exactly is night, 6:30 AM exactly is day).
+   A grown-up's switch in the settings lasts until the next scheduled change, then the schedule takes over again. */
+const NIGHT_START=18*60, DAY_START=6*60+30; // minutes after midnight
+function scheduledNight(d=new Date()){ const m=d.getHours()*60+d.getMinutes(); return m>=NIGHT_START || m<DAY_START; }
+// The time of the next scheduled change (the next 6:00 PM or 6:30 AM after now), in epoch milliseconds.
+function nextNightSwitch(d=new Date()){
+  const m=d.getHours()*60+d.getMinutes(), t=new Date(d.getTime());
+  if(m<DAY_START) t.setHours(6,30,0,0);
+  else if(m<NIGHT_START) t.setHours(18,0,0,0);
+  else { t.setDate(t.getDate()+1); t.setHours(6,30,0,0); }
+  return t.getTime();
+}
+// A valid, unexpired grown-up override, or null. An expired or broken one is cleared.
+function nightOverride(){
+  const o=store.get("bedtimeOverride",null);
+  if(o===null) return null;
+  const now=Date.now();
+  if(o && typeof o.on==="boolean" && typeof o.until==="number" && now<o.until && o.until<=nextNightSwitch()) return o;
+  store.set("bedtimeOverride",null);
+  return null;
+}
+function effectiveNight(){ const o=nightOverride(); return o ? o.on : scheduledNight(); }
+let bedtime = effectiveNight();
+store.set("bedtime", bedtime); // the "bedtime" key mirrors the current mode
 
 const botName = () => (S.botName||"").trim() || "Nelly";
 const pick = a => a[Math.floor(Math.random()*a.length)];
@@ -1267,6 +1294,7 @@ ${S.allowRename!==false ? `Your name:
 
 `}Pictures:
 - If the child asks you to draw, paint, or make a picture, add a "paint" field: a short, kind, G-rated description of the picture in plain English for an artist (no names of real people, brands, or famous cartoon characters). Otherwise leave "paint" out.
+- When you include a paint field, your 'say' must only happily confirm you are painting it now. Do not ask any question, and leave 'choices' empty.
 
 Reply ONLY with JSON, no other text:
 {"say": "what you say out loud", "choices": ["up to 3 short options, each starting with one emoji, 1 to 4 words"], "mood": "happy" | "excited" | "silly" | "kind" | "thinking", "kindness": true or false (true only if the child said or did something kind), "paint": "optional picture description", "rename": "optional new name"}`;
@@ -1466,13 +1494,15 @@ async function send(text, opts={}){
       const nn=cleanName(r.rename);
       if(nn && nn!==botName()){ S.botName=nn; store.set("settings",S); applyName(); renamed=true; }
     }
+    const painting = !!(r.paint && typeof r.paint==="string");
     say(r.say, {onShow:()=>{
       mood(r.mood);
       if(r.kindness){ mood("kind"); chime([1046,1318,1568],0.12,0.1); sparkle(10,["💖","💗","✨"]); }
       else if(r.mood==="excited"){ sparkle(8); }
       if(renamed){ mood("excited"); sparkle(18,["✨","🌈","💖","⭐","🦄"]); chime([523,659,784,1046,1318,1568],0.08,0.13); }
-      renderChoices(r.choices);
-      if(r.paint && typeof r.paint==="string") setTimeout(()=>paint(r.paint), 1800);
+      // The picture is already being painted, so no choice buttons for this reply.
+      renderChoices(painting ? [] : r.choices);
+      if(painting) setTimeout(()=>paint(r.paint), 1800);
     }});
   }catch(e){
     console.warn(e);
@@ -1557,19 +1587,29 @@ $("nellyWrap").addEventListener("click",()=>{
 /* ================= bedtime and sound ================= */
 function applyBedtime(){
   document.body.classList.toggle("bedtime", bedtime);
-  $("bedBtn").textContent = bedtime ? "☀️" : "🌙";
-  $("bedBtn").setAttribute("aria-label", bedtime ? "Turn off bedtime mode" : "Bedtime mode");
   const tc=document.querySelector('meta[name="theme-color"]'); if(tc) tc.content = bedtime ? "#1d1640" : "#f7c6e3";
+  const sn=$("sNight"); if(sn) sn.checked=bedtime;
 }
 function applyMute(){
   $("muteBtn").textContent = muted ? "🔇" : "🔊";
   $("muteBtn").setAttribute("aria-label", muted ? "Turn sound on" : "Turn sound off");
 }
 applyBedtime(); applyMute();
-$("bedBtn").onclick=()=>{
-  bedtime=!bedtime; store.set("bedtime",bedtime); applyBedtime(); tap();
-  if(!$("wake")) say(bedtime ? "Ooh, the moon is up. Time for cozy, sleepy magic." : "Good morning, sunshine! My rainbow is awake!");
-};
+// Switch night mode by the schedule (or an unexpired grown-up switch) while the app is open.
+// This is silent: it only changes the look and voice style, and doesn't interrupt anything in progress.
+function checkNight(){
+  const n=effectiveNight();
+  if(n!==bedtime){ bedtime=n; store.set("bedtime",bedtime); applyBedtime(); }
+}
+setInterval(checkNight, 30000);
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden) checkNight(); });
+window.addEventListener("focus", checkNight);
+// Grown-up switch: lasts until the next 6:00 PM or 6:30 AM change.
+$("sNight").addEventListener("change",()=>{
+  const on=$("sNight").checked;
+  store.set("bedtimeOverride",{on, until:nextNightSwitch()});
+  bedtime=on; store.set("bedtime",bedtime); applyBedtime();
+});
 $("muteBtn").onclick=()=>{
   muted=!muted; store.set("muted",muted); applyMute();
   if(muted) stopSpeech(); else tap();
@@ -2194,8 +2234,10 @@ Object.keys(PICKERS).forEach(k=>$(PICKERS[k].filter).addEventListener("input",()
 
 function openSettings(){
   loadVoices();
+  checkNight();
   $("sKey").value=S.key; $("sBotName").value=botName(); $("sAllowRename").checked=S.allowRename!==false; $("sTtsModel").value=S.ttsModel; $("sTtsVoice").value=S.ttsVoice; $("sPortraitModel").value=S.portraitModel; $("sName").value=S.name;
   $("sVoice").value=S.voice||""; $("sPitch").value=S.pitch; $("sRate").value=S.rate; $("sPics").value=S.picsPerDay;
+  $("sNight").checked=bedtime;
   $("voiceStatus").textContent="";
   loadModels();
   $("settings").classList.remove("hide");
