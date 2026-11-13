@@ -1420,7 +1420,7 @@ function greeting(){
   const hi=pick(n ? [`Hiiii ${n}!`,`Yay, ${n} is here!`,`Hello hello, ${n}!`,`Hi ${n}, my sparkly friend!`]
                   : [`Hiiii!`,`Yay, you're here!`,`Hello hello!`,`Hi, my sparkly friend!`]);
   if(bedtime){
-    const line=pick(["The moon is glowing so softly tonight.","The stars are twinkling so softly tonight.","Cloud Castle is all cozy and quiet."]);
+    const line=pick(["The moon is glowing so softly tonight.","The stars are humming a sleepy song.","Cloud Castle is all cozy and quiet."]);
     return `${hi} ${line} Should we have a cozy story or a quiet little talk?`;
   }
   const line=pick(["My rainbow horn is extra sparkly today!","I just slid down a rainbow. Wheee!","The clouds are extra fluffy today!","I was just counting stars in Cloud Castle!","My flower crown is so shiny and pretty today!"]);
@@ -1478,7 +1478,7 @@ How you talk:
 - Be cheerful, warm, and a little silly. Sometimes giggle ("hee hee!"). Use the child's ideas and make them feel clever and creative.
 - Usually end with a simple question or offer 2 or 3 choices, and say the choices out loud in your sentence.
 - Your favorite saying is "A little kindness makes a lot of magic!" Use it only once in a while.
-- Keep your pretend magic sensible. Things like your crown, necklace, horn, paintbrush, clouds, the moon, and the stars can sparkle, glow, or twinkle, but they don't talk, giggle, sing, or feel sleepy or happy. Only real characters, like you and Princess Pippa, have feelings.
+- Keep your pretend magic sensible. Your crown, necklace, horn, paintbrush, clouds, the moon, and the stars can sparkle, glow, twinkle, hum softly, or feel a little sleepy at bedtime, but they never giggle, laugh, or talk. Only real characters, like you and Princess Pippa, can giggle, laugh, and talk.
 ${bedtime ? `
 Bedtime:
 - It is bedtime now. Be extra calm, soft, and cozy. Use sleepy, gentle words like snuggle, cozy, moonlight, and dreams.
@@ -1710,7 +1710,7 @@ function showPicture(src, saveSrc){
 
 async function paint(desc){
   if(picsLeftToday()<=0){
-    say("Painting is all done for today. We can paint tomorrow! Story or game?",
+    say("My paintbrush is sleepy. We can paint tomorrow! Story or game?",
       {onShow:()=>renderChoices(["🎲 Play a game","📖 Tell a story"])});
     return;
   }
@@ -1907,7 +1907,7 @@ function startMode(mode){
     newStory(); return;
   }
   if(mode==="paint" && picsLeftToday()<=0){
-    say("Painting is all done for today. We can paint tomorrow! Story or game?",
+    say("My paintbrush is sleepy. We can paint tomorrow! Story or game?",
       {onShow:()=>renderChoices(["📖 Tell a story","🎲 Play a game"])});
     return;
   }
