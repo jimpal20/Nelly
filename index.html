@@ -6,7 +6,7 @@
 <title>Nelly's Magical World</title>
 <meta name="apple-mobile-web-app-title" content="Nelly">
 <meta name="theme-color" content="#f7c6e3">
-<meta name="app-version" content="2026-11-13.3">
+<meta name="app-version" content="2026-11-13.4">
 <link rel="apple-touch-icon" href="images/icon/icon-180.png">
 <link rel="icon" type="image/png" sizes="32x32" href="images/icon/icon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="images/icon/icon-192.png">
@@ -252,6 +252,17 @@ body.bedtime #moonOrb{opacity:1}
 #grown #voiceStatus:empty{display:none}
 #grown .range{display:flex;align-items:center;gap:10px}
 #grown .range input{flex:1}
+/* OpenRouter-for-chat plug switch and its sub-panel */
+#grown .plugRow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 0 4px;font-weight:600;font-size:15px}
+#grown .plugBtn{position:relative;flex-shrink:0;width:66px;height:38px;border-radius:999px;background:#e4dcef;padding:0;transition:background .2s}
+#grown .plugBtn .knob{position:absolute;top:3px;left:3px;width:32px;height:32px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.2);
+  display:flex;align-items:center;justify-content:center;font-size:17px;transition:left .2s}
+#grown .plugBtn:not(.on) .knob{filter:grayscale(1);opacity:.75}
+#grown .plugBtn.on{background:#7b3fd1}
+#grown .plugBtn.on .knob{left:31px}
+#grown .plugPanel{margin-top:10px;padding:2px 14px 14px;border-left:3px solid #c9a6ff;background:#faf6ff;border-radius:12px}
+#grown label.radio{display:flex;align-items:center;gap:10px;font-weight:500;margin:8px 0}
+#grown label.radio input{width:22px;height:22px;margin:0}
 #gate .q{font-size:30px;font-weight:700;text-align:center;margin:12px 0}
 
 /* ---------- home: castle button ---------- */
@@ -717,16 +728,26 @@ body.bedtime #cFlash{background:radial-gradient(circle,rgba(240,226,255,.9) 0%,r
     </div>
     <div id="settings" class="hide">
       <h2>Settings</h2>
-      <p class="note">These settings stay on this phone only. Nothing here is sent anywhere except your key, which goes to OpenRouter with each request.</p>
+      <p class="note">These settings stay on this device. Your OpenRouter key goes only to OpenRouter, for pictures, voice, and chat if plugged in.</p>
 
-      <label for="sKey">OpenRouter API key</label>
+      <label for="sKey">OpenRouter API key (pictures and voice)</label>
       <input type="password" id="sKey" placeholder="sk-or-…" autocomplete="off">
-      <div class="small">Create a separate key with a low credit limit for this app.</div>
+      <div class="small">Used for pictures and Nelly's voice. Chat uses Grok unless you plug in OpenRouter below.</div>
 
-      <label for="sModel">Chat model</label>
-      <input type="search" id="sModelFilter" class="mfilter" placeholder="Search chat models" aria-label="Search chat models" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off">
-      <select id="sModel"></select>
-      <div class="small" id="sModelNote"></div>
+      <div class="plugRow">
+        <span>🔌 OpenRouter for chat: <span id="plugState">Unplugged</span></span>
+        <button type="button" id="sPlug" class="plugBtn" role="switch" aria-checked="false" aria-label="Plug OpenRouter into chat"><span class="knob">🔌</span></button>
+      </div>
+      <div class="small" id="plugStatus" role="status" aria-live="polite">Unplugged: chat uses Grok only</div>
+      <div id="plugPanel" class="plugPanel hide">
+        <label for="sModel">Chat model</label>
+        <input type="search" id="sModelFilter" class="mfilter" placeholder="Search chat models" aria-label="Search chat models" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off">
+        <select id="sModel"></select>
+        <div class="small" id="sModelNote"></div>
+        <label>Primary chat</label>
+        <label class="radio"><input type="radio" name="sPrimary" id="sPrimaryGrok" value="grok"> Grok (recommended)</label>
+        <label class="radio"><input type="radio" name="sPrimary" id="sPrimaryOR" value="openrouter"> OpenRouter</label>
+      </div>
 
       <label for="sImgModel">Picture model</label>
       <input type="search" id="sImgModelFilter" class="mfilter" placeholder="Search picture models" aria-label="Search picture models" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off">
@@ -796,9 +817,11 @@ const DEFAULTS = {
   portraitModel: "openai/gpt-image-2.6-sunburst",
   ttsModel: "elevenlabs/eleven-v4-turbo", ttsVoice: "jessica",
   botName: "Nelly", allowRename: true,
-  name: "", voice: "", pitch: 1.5, rate: 0.95, picsPerDay: 5
+  name: "", voice: "", pitch: 1.5, rate: 0.95, picsPerDay: 5,
+  chatPlug: false, chatPrimary: "grok"
 };
-// Chat goes to Grok (xAI) through this small server proxy first. OpenRouter is the fallback.
+// Chat goes to Grok (xAI) through this small server proxy. OpenRouter is used for chat only when a grown-up
+// "plugs it in" (S.chatPlug), and then S.chatPrimary says which one goes first.
 const GROK_PROXY = "https://suqdxohnuxryufljkjao.supabase.co/functions/v1/nelly-chat";
 const store = {
   get(k, d){ try{ const v = localStorage.getItem("nelly."+k); return v===null ? d : JSON.parse(v); }catch(e){ return d; } },
@@ -810,6 +833,13 @@ if(store.get("settingsVersion",1) < 2){
   S.ttsModel=DEFAULTS.ttsModel; S.ttsVoice=DEFAULTS.ttsVoice;
   store.set("settings",S); store.set("settingsVersion",2);
 }
+// OpenRouter chat starts unplugged: everyone moves to Grok-only chat.
+if(store.get("settingsVersion",1) < 3){
+  S.chatPlug=false; S.chatPrimary="grok";
+  store.set("settings",S); store.set("settingsVersion",3);
+}
+if(typeof S.chatPlug!=="boolean") S.chatPlug=false;
+if(S.chatPrimary!=="grok" && S.chatPrimary!=="openrouter") S.chatPrimary="grok";
 let stars = store.get("stars", 0);
 let muted = store.get("muted", false);
 
@@ -1424,19 +1454,9 @@ function chatModel(){ const m=S.model||DEFAULTS.model; return m===badModel.chat 
 function imgModel(){ const m=S.imgModel||DEFAULTS.imgModel; return m===badModel.img ? DEFAULTS.imgModel : m; }
 const modelGone = res => res.status===400 || res.status===404;
 
-async function callChat(userText, raw){
-  let content=userText;
-  if(curMode==="story" && !raw){
-    if(storyTurn>=STORY_LEN) storyTurn=0; // the last story ended; this starts a new one
-    storyTurn++;
-    const last = storyTurn>=STORY_LEN ? " This is the last turn: give the story a happy ending now and ask if they want a new story." : "";
-    content=`[Story turn ${storyTurn} of ${STORY_LEN}.${last}] `+userText;
-  }
-  history.push({role:"user", content});
-  if(history.length>18) history=history.slice(-18);
-  // 1) Grok through the server proxy. The proxy holds the key and picks the model.
-  //    Any failure (network, 15s timeout, non-2xx, or empty content) falls through to OpenRouter.
-  let txt="";
+// Grok through the server proxy. The proxy holds the key and picks the model.
+// Returns the reply text, or "" on any failure (network, 15s timeout, non-2xx, or empty content).
+async function grokChat(){
   try{
     const ctl=new AbortController(); const timer=setTimeout(()=>ctl.abort(), 15000);
     try{
@@ -1449,26 +1469,59 @@ async function callChat(userText, raw){
       if(pres.ok){
         const pdata=await pres.json();
         const c=pdata&&pdata.choices&&pdata.choices[0]&&pdata.choices[0].message&&pdata.choices[0].message.content;
-        txt = typeof c==="string" ? c : "";
-      }else console.warn("grok proxy", pres.status);
+        return typeof c==="string" ? c : "";
+      }
+      console.warn("grok proxy", pres.status);
     }finally{ clearTimeout(timer); }
-  }catch(e){ console.warn("grok proxy",e); txt=""; }
-  // 2) Fallback: OpenRouter, exactly as before.
-  if(!txt.trim()){
-    if(!S.key){ history.pop(); if(curMode==="story" && !raw) storyTurn--; throw new Error("NOKEY"); }
-    // The unicorn's kid-safe system instructions go first on every request, whichever model is picked.
-    const post = model => fetch("https://openrouter.ai/api/v1/chat/completions",{
-      method:"POST",
-      headers:{"Authorization":"Bearer "+S.key,"Content-Type":"application/json","X-Title":"Nelly's Magical World"},
-      body:JSON.stringify({model, max_tokens:400, temperature:0.9,
-        messages:[{role:"system",content:systemPrompt()}, ...history]})
-    });
-    let model=chatModel();
-    let res=await post(model);
-    if(!res.ok && modelGone(res) && model!==DEFAULTS.model){ badModel.chat=model; res=await post(DEFAULTS.model); }
-    if(!res.ok){ history.pop(); if(curMode==="story" && !raw) storyTurn--; const t=await res.text().catch(()=> ""); throw new Error(res.status+" "+t.slice(0,200)); }
-    const data=await res.json();
-    txt=(data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content)||"";
+  }catch(e){ console.warn("grok proxy",e); }
+  return "";
+}
+// OpenRouter chat with the grown-up's chosen model. Only called when OpenRouter is plugged in and a key is saved.
+// Throws "<status> <details>" on a non-2xx reply. Does not touch history.
+async function openRouterChat(){
+  // The unicorn's kid-safe system instructions go first on every request, whichever model is picked.
+  const post = model => fetch("https://openrouter.ai/api/v1/chat/completions",{
+    method:"POST",
+    headers:{"Authorization":"Bearer "+S.key,"Content-Type":"application/json","X-Title":"Nelly's Magical World"},
+    body:JSON.stringify({model, max_tokens:400, temperature:0.9,
+      messages:[{role:"system",content:systemPrompt()}, ...history]})
+  });
+  let model=chatModel();
+  let res=await post(model);
+  if(!res.ok && modelGone(res) && model!==DEFAULTS.model){ badModel.chat=model; res=await post(DEFAULTS.model); }
+  if(!res.ok){ const t=await res.text().catch(()=> ""); throw new Error(res.status+" "+t.slice(0,200)); }
+  const data=await res.json();
+  return (data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content)||"";
+}
+
+async function callChat(userText, raw){
+  let content=userText;
+  if(curMode==="story" && !raw){
+    if(storyTurn>=STORY_LEN) storyTurn=0; // the last story ended; this starts a new one
+    storyTurn++;
+    const last = storyTurn>=STORY_LEN ? " This is the last turn: give the story a happy ending now and ask if they want a new story." : "";
+    content=`[Story turn ${storyTurn} of ${STORY_LEN}.${last}] `+userText;
+  }
+  history.push({role:"user", content});
+  if(history.length>18) history=history.slice(-18);
+  // Take back this turn's message (and story turn) when no reply comes.
+  const undo=()=>{ history.pop(); if(curMode==="story" && !raw) storyTurn--; };
+  const plugged = S.chatPlug===true;
+  let txt="";
+  if(plugged && S.chatPrimary==="openrouter"){
+    // Plugged in, OpenRouter first. Any OpenRouter failure, or no key, falls back to Grok.
+    if(S.key){ try{ txt=await openRouterChat(); }catch(e){ console.warn("openrouter chat",e); txt=""; } }
+    if(!txt.trim()) txt=await grokChat();
+    if(!txt.trim()){ undo(); throw new Error("RESTING"); }
+  }else{
+    // Grok first. Unplugged, Grok is the only chat: no OpenRouter request, and the key isn't checked.
+    txt=await grokChat();
+    if(!txt.trim()){
+      if(!plugged){ undo(); throw new Error("RESTING"); }
+      // Plugged in with Grok as primary: the OpenRouter fallback, as before.
+      if(!S.key){ undo(); throw new Error("NOKEY"); }
+      try{ txt=await openRouterChat(); }catch(e){ undo(); throw e; }
+    }
   }
   history.push({role:"assistant", content:txt});
   return parseReply(String(txt));
@@ -1675,7 +1728,8 @@ async function send(text, opts={}){
     console.warn(e);
     setState("thinking",false);
     const msg=String(e.message||"");
-    if(msg==="NOKEY") say("My magic needs a grown-up's help first! Ask a grown-up to press and hold the little gear at the top.");
+    if(msg==="RESTING") say("I'm having a little rest. Let's try again in a moment! 💤");
+    else if(msg==="NOKEY") say("My magic needs a grown-up's help first! Ask a grown-up to press and hold the little gear at the top.");
     else if(msg.startsWith("401")) say("Hmm, my magic key isn't working. Ask a grown-up to check it in the settings.");
     else if(msg.startsWith("402")) say("My magic needs a recharge! Ask a grown-up to add more magic to the account.");
     else say("Oopsie! My rainbow got tangled. Can you say that again?");
@@ -2441,8 +2495,28 @@ async function loadModels(){
 }
 Object.keys(PICKERS).forEach(k=>$(PICKERS[k].filter).addEventListener("input",()=>renderPicker(k)));
 
+/* ---- OpenRouter-for-chat plug (saved with the other settings) ---- */
+let plugUI=false;
+function primaryUI(){ return $("sPrimaryOR").checked ? "openrouter" : "grok"; }
+function renderPlug(){
+  const b=$("sPlug");
+  b.classList.toggle("on", plugUI);
+  b.setAttribute("aria-checked", plugUI ? "true" : "false");
+  b.setAttribute("aria-label", plugUI ? "Unplug OpenRouter from chat" : "Plug OpenRouter into chat");
+  $("plugState").textContent = plugUI ? "Plugged in" : "Unplugged";
+  $("plugPanel").classList.toggle("hide", !plugUI);
+  $("plugStatus").textContent = plugUI
+    ? "Plugged in: primary is "+(primaryUI()==="openrouter" ? "OpenRouter" : "Grok")
+    : "Unplugged: chat uses Grok only";
+}
+$("sPlug").onclick=()=>{ plugUI=!plugUI; renderPlug(); };
+["sPrimaryGrok","sPrimaryOR"].forEach(id=>$(id).addEventListener("change", renderPlug));
+
 function openSettings(){
   loadVoices();
+  plugUI = S.chatPlug===true;
+  $("sPrimaryOR").checked = S.chatPrimary==="openrouter"; $("sPrimaryGrok").checked = S.chatPrimary!=="openrouter";
+  renderPlug();
   checkNight();
   $("sKey").value=S.key; $("sBotName").value=botName(); $("sAllowRename").checked=S.allowRename!==false; $("sTtsModel").value=S.ttsModel; $("sTtsVoice").value=S.ttsVoice; $("sPortraitModel").value=S.portraitModel; $("sName").value=S.name;
   $("sVoice").value=S.voice||""; $("sPitch").value=S.pitch; $("sRate").value=S.rate; $("sPics").value=S.picsPerDay;
@@ -2457,10 +2531,11 @@ function readSettings(){
     key:$("sKey").value.trim(), model:$("sModel").value||DEFAULTS.model,
     imgModel:$("sImgModel").value||DEFAULTS.imgModel, portraitModel:$("sPortraitModel").value.trim()||DEFAULTS.portraitModel, botName:cleanName($("sBotName").value)||"Nelly", allowRename:$("sAllowRename").checked, name:$("sName").value.trim().slice(0,30),
     ttsModel:$("sTtsModel").value.trim(), ttsVoice:$("sTtsVoice").value, voice:$("sVoice").value, pitch:+$("sPitch").value, rate:+$("sRate").value,
-    picsPerDay:Math.max(0,Math.min(50,parseInt($("sPics").value||"0",10)))
+    picsPerDay:Math.max(0,Math.min(50,parseInt($("sPics").value||"0",10))),
+    chatPlug:plugUI, chatPrimary:primaryUI()
   });
 }
-$("sSave").onclick=()=>{ S=readSettings(); store.set("settings",S); applyName(); $("grown").classList.add("hide"); goHome(false); say(S.key ? "Yay! My magic is all charged up!" : "I still need a magic key from a grown-up."); };
+$("sSave").onclick=()=>{ S=readSettings(); store.set("settings",S); applyName(); $("grown").classList.add("hide"); goHome(false); say(S.key ? "Yay! My magic is all charged up!" : "Saved! Add an OpenRouter key if you want pictures."); };
 $("sCancel").onclick=()=>$("grown").classList.add("hide");
 // Test the voice and show the grown-up a plain status line, including why the AI voice failed.
 $("testVoice").onclick=async()=>{
