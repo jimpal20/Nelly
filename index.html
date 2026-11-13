@@ -782,6 +782,8 @@ const DEFAULTS = {
   botName: "Nelly", allowRename: true,
   name: "", voice: "", pitch: 1.5, rate: 0.95, picsPerDay: 5
 };
+// Chat goes to Grok (xAI) through this small server proxy first. OpenRouter is the fallback.
+const GROK_PROXY = "https://suqdxohnuxryufljkjao.supabase.co/functions/v1/nelly-chat";
 const store = {
   get(k, d){ try{ const v = localStorage.getItem("nelly."+k); return v===null ? d : JSON.parse(v); }catch(e){ return d; } },
   set(k, v){ try{ localStorage.setItem("nelly."+k, JSON.stringify(v)); }catch(e){} }
@@ -1313,19 +1315,42 @@ async function callChat(userText, raw){
   }
   history.push({role:"user", content});
   if(history.length>18) history=history.slice(-18);
-  // The unicorn's kid-safe system instructions go first on every request, whichever model is picked.
-  const post = model => fetch("https://openrouter.ai/api/v1/chat/completions",{
-    method:"POST",
-    headers:{"Authorization":"Bearer "+S.key,"Content-Type":"application/json","X-Title":"Nelly's Magical World"},
-    body:JSON.stringify({model, max_tokens:400, temperature:0.9,
-      messages:[{role:"system",content:systemPrompt()}, ...history]})
-  });
-  let model=chatModel();
-  let res=await post(model);
-  if(!res.ok && modelGone(res) && model!==DEFAULTS.model){ badModel.chat=model; res=await post(DEFAULTS.model); }
-  if(!res.ok){ history.pop(); if(curMode==="story" && !raw) storyTurn--; const t=await res.text().catch(()=> ""); throw new Error(res.status+" "+t.slice(0,200)); }
-  const data=await res.json();
-  const txt=(data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content)||"";
+  // 1) Grok through the server proxy. The proxy holds the key and picks the model.
+  //    Any failure (network, 15s timeout, non-2xx, or empty content) falls through to OpenRouter.
+  let txt="";
+  try{
+    const ctl=new AbortController(); const timer=setTimeout(()=>ctl.abort(), 15000);
+    try{
+      const pres=await fetch(GROK_PROXY,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({messages:[{role:"system",content:systemPrompt()}, ...history], max_tokens:400, temperature:0.9}),
+        signal:ctl.signal
+      });
+      if(pres.ok){
+        const pdata=await pres.json();
+        const c=pdata&&pdata.choices&&pdata.choices[0]&&pdata.choices[0].message&&pdata.choices[0].message.content;
+        txt = typeof c==="string" ? c : "";
+      }else console.warn("grok proxy", pres.status);
+    }finally{ clearTimeout(timer); }
+  }catch(e){ console.warn("grok proxy",e); txt=""; }
+  // 2) Fallback: OpenRouter, exactly as before.
+  if(!txt.trim()){
+    if(!S.key){ history.pop(); if(curMode==="story" && !raw) storyTurn--; throw new Error("NOKEY"); }
+    // The unicorn's kid-safe system instructions go first on every request, whichever model is picked.
+    const post = model => fetch("https://openrouter.ai/api/v1/chat/completions",{
+      method:"POST",
+      headers:{"Authorization":"Bearer "+S.key,"Content-Type":"application/json","X-Title":"Nelly's Magical World"},
+      body:JSON.stringify({model, max_tokens:400, temperature:0.9,
+        messages:[{role:"system",content:systemPrompt()}, ...history]})
+    });
+    let model=chatModel();
+    let res=await post(model);
+    if(!res.ok && modelGone(res) && model!==DEFAULTS.model){ badModel.chat=model; res=await post(DEFAULTS.model); }
+    if(!res.ok){ history.pop(); if(curMode==="story" && !raw) storyTurn--; const t=await res.text().catch(()=> ""); throw new Error(res.status+" "+t.slice(0,200)); }
+    const data=await res.json();
+    txt=(data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content)||"";
+  }
   history.push({role:"assistant", content:txt});
   return parseReply(String(txt));
 }
@@ -1452,10 +1477,6 @@ $("gClose").onclick=()=>{ tap(); $("gallery").classList.add("hide"); };
 async function send(text, opts={}){
   if(busy) return;
   stopSpeech();
-  if(!S.key){
-    say("My magic needs a grown-up's help first! Ask a grown-up to press and hold the little gear at the top.");
-    return;
-  }
   busy=true; renderChoices([]); showThinking();
   try{
     const r=await callChat(text, opts.raw);
@@ -1478,7 +1499,8 @@ async function send(text, opts={}){
     console.warn(e);
     setState("thinking",false);
     const msg=String(e.message||"");
-    if(msg.startsWith("401")) say("Hmm, my magic key isn't working. Ask a grown-up to check it in the settings.");
+    if(msg==="NOKEY") say("My magic needs a grown-up's help first! Ask a grown-up to press and hold the little gear at the top.");
+    else if(msg.startsWith("401")) say("Hmm, my magic key isn't working. Ask a grown-up to check it in the settings.");
     else if(msg.startsWith("402")) say("My magic needs a recharge! Ask a grown-up to add more magic to the account.");
     else say("Oopsie! My rainbow got tangled. Can you say that again?");
   }finally{ busy=false; }
