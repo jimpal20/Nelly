@@ -6,6 +6,7 @@
 <title>Nelly's Magical World</title>
 <meta name="apple-mobile-web-app-title" content="Nelly">
 <meta name="theme-color" content="#f7c6e3">
+<meta name="app-version" content="2026-11-13.2">
 <link rel="apple-touch-icon" href="images/icon/icon-180.png">
 <link rel="icon" type="image/png" sizes="32x32" href="images/icon/icon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="images/icon/icon-192.png">
@@ -768,6 +769,7 @@ body.bedtime #cFlash{background:radial-gradient(circle,rgba(240,226,255,.9) 0%,r
       <div class="btns"><button class="secondary" id="testVoice">🔊 Test voice</button><button class="secondary" id="resetStars">Reset stars</button></div>
       <div class="small" id="voiceStatus" role="status" aria-live="polite"></div>
       <div class="btns"><button class="secondary" id="clearGallery">🗑️ Clear picture gallery</button><button class="secondary" id="clearStory">Forget saved story</button></div>
+      <div class="small" id="appVersionLabel">App version: …</div>
       <div class="btns"><button class="secondary" id="sCancel">Cancel</button><button class="primary" id="sSave">Save</button></div>
     </div>
   </div>
@@ -2303,6 +2305,45 @@ $("resetStars").onclick=()=>{ stars=0; store.set("stars",0); $("starCount").text
 $("clearGallery").onclick=async()=>{ if(confirm("Delete all the pictures saved in the gallery on this phone?")){ await idb.del("gallery"); $("clearGallery").textContent="Gallery cleared"; } };
 $("clearStory").onclick=()=>{ clearStory(); $("clearStory").textContent="Story forgotten"; };
 
+})();
+</script>
+
+<!-- app-update v1: reusable. Needs <meta name="app-version" content="..."> in <head>; bump it on every deploy. -->
+<style>
+#appUpdateBanner{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 8px);z-index:99999;display:none;
+  background:#7b4fd6;color:#fff;border:0;border-radius:999px;padding:12px 20px;font:700 16px/1.2 system-ui,-apple-system,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.25);width:max-content;max-width:92vw}
+#appUpdateBanner.show{display:block}
+</style>
+<button id="appUpdateBanner" type="button" aria-live="polite">✨ Update available, tap to refresh</button>
+<script>
+(function(){
+  var meta=document.querySelector('meta[name="app-version"]');
+  var CUR=meta?meta.content:"";
+  var lbl=document.getElementById("appVersionLabel"); if(lbl) lbl.textContent="App version: "+(CUR||"unknown");
+  if(!CUR) return;
+  var banner=document.getElementById("appUpdateBanner");
+  var AUTO_AFTER_MS=30*60*1000, hiddenAt=0, checking=false, newVer="";
+  function newer(a,b){ var x=String(a).split(/[^0-9]+/), y=String(b).split(/[^0-9]+/); for(var i=0;i<Math.max(x.length,y.length);i++){ var d=(parseInt(x[i],10)||0)-(parseInt(y[i],10)||0); if(d) return d>0; } return false; }
+  function load(v){ try{ sessionStorage.setItem("appUpdateTried",v); }catch(e){} location.replace(location.pathname+"?v="+encodeURIComponent(v)); }
+  function check(auto){
+    if(checking||!navigator.onLine) return; checking=true;
+    fetch(location.pathname+"?vc="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():"";}).then(function(t){
+      var m=t.match(/<meta name="app-version" content="([^"]+)"/); var v=m?m[1]:"";
+      if(!v||!newer(v,CUR)) return;   // only ever move forward
+      newVer=v;
+      var tried=""; try{ tried=sessionStorage.getItem("appUpdateTried")||""; }catch(e){}
+      if(auto && !tried){ load(v); return; }   // at most one automatic reload per session; after that, the banner
+      banner.classList.add("show");
+    }).catch(function(){}).then(function(){checking=false;});
+  }
+  banner.addEventListener("click",function(){ if(newVer) load(newVer); else location.reload(); });
+  document.addEventListener("visibilitychange",function(){
+    if(document.hidden){ hiddenAt=Date.now(); return; }
+    check(hiddenAt && Date.now()-hiddenAt>AUTO_AFTER_MS);
+  });
+  window.addEventListener("pageshow",function(e){ if(e.persisted) check(true); });
+  setInterval(function(){ if(!document.hidden) check(false); },15*60*1000);
+  check(true); // app opened: if a newer version is live, load it now
 })();
 </script>
 </body>
