@@ -2323,15 +2323,16 @@ $("clearStory").onclick=()=>{ clearStory(); $("clearStory").textContent="Story f
   if(!CUR) return;
   var banner=document.getElementById("appUpdateBanner");
   var AUTO_AFTER_MS=30*60*1000, hiddenAt=0, checking=false, newVer="";
+  function newer(a,b){ var x=String(a).split(/[^0-9]+/), y=String(b).split(/[^0-9]+/); for(var i=0;i<Math.max(x.length,y.length);i++){ var d=(parseInt(x[i],10)||0)-(parseInt(y[i],10)||0); if(d) return d>0; } return false; }
   function load(v){ try{ sessionStorage.setItem("appUpdateTried",v); }catch(e){} location.replace(location.pathname+"?v="+encodeURIComponent(v)); }
   function check(auto){
     if(checking||!navigator.onLine) return; checking=true;
     fetch(location.pathname+"?vc="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():"";}).then(function(t){
       var m=t.match(/<meta name="app-version" content="([^"]+)"/); var v=m?m[1]:"";
-      if(!v||v===CUR) return;
+      if(!v||!newer(v,CUR)) return;   // only ever move forward
       newVer=v;
       var tried=""; try{ tried=sessionStorage.getItem("appUpdateTried")||""; }catch(e){}
-      if(auto && tried!==v){ load(v); return; }
+      if(auto && !tried){ load(v); return; }   // at most one automatic reload per session; after that, the banner
       banner.classList.add("show");
     }).catch(function(){}).then(function(){checking=false;});
   }
