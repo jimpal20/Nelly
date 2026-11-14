@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>Nelly's Magical World</title>
+<title>Melody's Magical World</title>
 <meta name="apple-mobile-web-app-title" content="Nelly">
 <meta name="theme-color" content="#f7c6e3">
-<meta name="app-version" content="2026-11-14.2">
+<meta name="app-version" content="2026-11-14.3">
 <link rel="apple-touch-icon" href="images/icon/icon-180.png">
 <link rel="icon" type="image/png" sizes="32x32" href="images/icon/icon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="images/icon/icon-192.png">
@@ -492,7 +492,7 @@ body.bedtime #bubble::after{border-top-color:var(--surface-night)}
   <div id="stage">
     <div id="bubble" class="hidden" aria-live="polite"></div>
     <div id="modeChip" aria-hidden="true"><span></span></div>
-    <div id="nellyArea"><div id="nellyWrap"><svg id="nelly" viewBox="0 0 300 330" xmlns="http://www.w3.org/2000/svg" aria-label="Nelly the unicorn">
+    <div id="nellyArea"><div id="nellyWrap"><svg id="nelly" viewBox="0 0 300 330" xmlns="http://www.w3.org/2000/svg" aria-label="Melody the unicorn">
   <defs>
     <linearGradient id="horn" x1="0" y1="1" x2="0" y2="0">
       <stop offset="0" stop-color="#ff9ecb"/>
@@ -642,8 +642,8 @@ body.bedtime #bubble::after{border-top-color:var(--surface-night)}
     <circle cx="146" cy="215" r="1.8" fill="#fff" opacity=".9"/>
   </g>
 </svg>
-<div id="nellyPic"><img id="nellyImg" alt="Nelly the unicorn"></div>
-<div class="heartLayer" id="homeHeart"><img class="heartGlow" id="homeHeartGlow" src="images/castle/characters/ch01-nelly-heart-glow.webp" width="233" height="256" alt="" onerror="this.style.display='none'"><button class="heartBtn" id="homeHeartBtn" type="button" aria-label="Nelly's heart necklace"></button></div></div></div>
+<div id="nellyPic"><img id="nellyImg" alt="Melody the unicorn"></div>
+<div class="heartLayer" id="homeHeart"><img class="heartGlow" id="homeHeartGlow" src="images/castle/characters/ch01-nelly-heart-glow.webp" width="233" height="256" alt="" onerror="this.style.display='none'"><button class="heartBtn" id="homeHeartBtn" type="button" aria-label="Melody's heart necklace"></button></div></div></div>
   </div>
 
   <div id="controls">
@@ -653,18 +653,18 @@ body.bedtime #bubble::after{border-top-color:var(--surface-night)}
       <button class="big b-story" data-mode="story"><span class="emo" aria-hidden="true">📖</span>Stories</button>
       <button class="big b-play" data-mode="play"><span class="emo" aria-hidden="true">🎲</span>Play</button>
       <button class="big b-paint" data-mode="paint"><span class="emo" aria-hidden="true">🎨</span>Pictures</button>
-      <button class="big b-castle" id="castleBtn" type="button" aria-label="Nelly's castle"><img src="images/castle/ui/ui01-castle-button.webp" srcset="images/castle/ui/ui01-castle-button.webp 1x, images/castle/ui/ui01-castle-button@2x.webp 2x" width="64" height="64" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'"><span class="emo" aria-hidden="true">🏰</span>Castle</button>
+      <button class="big b-castle" id="castleBtn" type="button" aria-label="Melody's castle"><img src="images/castle/ui/ui01-castle-button.webp" srcset="images/castle/ui/ui01-castle-button.webp 1x, images/castle/ui/ui01-castle-button@2x.webp 2x" width="64" height="64" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'"><span class="emo" aria-hidden="true">🏰</span>Castle</button>
     </div>
     <!-- conversation -->
     <div id="convo" class="hide">
       <div id="choices"></div>
       <div id="convoBar">
         <button class="round" id="homeBtn" aria-label="Go home"><img src="images/castle/ui/ui03-home.webp" srcset="images/castle/ui/ui03-home.webp 1x, images/castle/ui/ui03-home@2x.webp 2x" width="64" height="64" alt="" onerror="this.replaceWith('🏠')"></button>
-        <button class="round" id="mic" aria-label="Talk to Nelly">🎤</button>
+        <button class="round" id="mic" aria-label="Talk to Melody">🎤</button>
         <button class="round" id="kbBtn" aria-label="Type instead">⌨️</button>
       </div>
       <div id="typeRow">
-        <input id="typeBox" type="text" placeholder="Type to Nelly…" aria-label="Type to Nelly" autocomplete="off" enterkeyhint="send">
+        <input id="typeBox" type="text" placeholder="Type to Melody…" aria-label="Type to Melody" autocomplete="off" enterkeyhint="send">
         <button id="typeSend">Send</button>
       </div>
     </div>
@@ -672,9 +672,9 @@ body.bedtime #bubble::after{border-top-color:var(--surface-night)}
 </div>
 
 <div id="wake">
-  <h1><span class="bn">Nelly</span>'s<br>Magical World</h1>
-  <button id="wakeBtn" aria-label="Wake up Nelly">🦄</button>
-  <p>Tap <span class="bn">Nelly</span>! ✨</p>
+  <h1><span class="bn">Melody</span>'s<br>Magical World</h1>
+  <button id="wakeBtn" aria-label="Wake up Melody">🦄</button>
+  <p>Tap <span class="bn">Melody</span>! ✨</p>
 </div>
 
 <div id="gallery" class="overlay hide" role="dialog" aria-modal="true" aria-label="My pictures">
@@ -718,7 +718,7 @@ body.bedtime #bubble::after{border-top-color:var(--surface-night)}
   <section class="cscene" id="cExt" aria-hidden="true">
     <img class="cfill" data-src="images/castle/backgrounds/bg01-castle-exterior.webp" alt="">
     <div class="cbox">
-      <img class="cbg" data-src="images/castle/backgrounds/bg01-castle-exterior.webp" width="1024" height="1536" alt="Nelly's castle">
+      <img class="cbg" data-src="images/castle/backgrounds/bg01-castle-exterior.webp" width="1024" height="1536" alt="Melody's castle">
       <button class="cpress" id="cDoor" type="button" data-emo="✨" aria-label="Go inside the castle"><img data-src="images/castle/fx/fx05-doorway.webp" width="256" height="252" alt=""></button>
     </div>
     <button class="cnav left cpress" type="button" data-cgo="home" data-emo="🏠" aria-label="Go home"><img data-src="images/castle/ui/ui03-home.webp" data-srcset="images/castle/ui/ui03-home.webp 1x, images/castle/ui/ui03-home@2x.webp 2x" width="128" height="128" alt=""></button>
@@ -752,10 +752,10 @@ body.bedtime #bubble::after{border-top-color:var(--surface-night)}
       <button class="cpress" id="tMusic" type="button" data-emo="🎵" aria-label="Music box"><img id="tMusicImg" data-src="images/castle/rooms/throne/tr05-musicbox-closed.webp" width="384" height="312" alt=""></button>
       <button class="cpress" id="tChest" type="button" data-emo="🎁" aria-label="Crown chest"><img id="tChestImg" data-src="images/castle/rooms/throne/tr02-chest-closed.webp" width="384" height="384" alt=""></button>
       <div id="cNelly" data-emo="🦄">
-        <button class="cpress" id="cNellyBtn" type="button" aria-label="Nelly the unicorn"><img id="cNellyImg" data-src="images/castle/characters/ch01-nelly-idle.webp" width="641" height="768" alt=""></button>
+        <button class="cpress" id="cNellyBtn" type="button" aria-label="Melody the unicorn"><img id="cNellyImg" data-src="images/castle/characters/ch01-nelly-idle.webp" width="641" height="768" alt=""></button>
         <div id="cNellyHead"></div>
         <img id="cNellyCrown" width="384" height="358" alt="">
-        <div class="heartLayer" id="cHeart"><img class="heartGlow" id="cHeartGlow" data-src="images/castle/characters/ch01-nelly-heart-glow.webp" width="233" height="256" alt=""><button class="heartBtn" id="cHeartBtn" type="button" aria-label="Nelly's heart necklace"></button></div>
+        <div class="heartLayer" id="cHeart"><img class="heartGlow" id="cHeartGlow" data-src="images/castle/characters/ch01-nelly-heart-glow.webp" width="233" height="256" alt=""><button class="heartBtn" id="cHeartBtn" type="button" aria-label="Melody's heart necklace"></button></div>
       </div>
       <img id="cFloatCrown" width="384" height="358" alt="">
       <div id="cCrownPick" class="hide">
@@ -790,7 +790,7 @@ body.bedtime #bubble::after{border-top-color:var(--surface-night)}
 
       <label for="sKey">OpenRouter API key (pictures and voice)</label>
       <input type="password" id="sKey" placeholder="sk-or-…" autocomplete="off">
-      <div class="small">Used for pictures and Nelly's voice. Chat uses Grok unless you plug in OpenRouter below.</div>
+      <div class="small">Used for pictures and Melody's voice. Chat uses Grok unless you plug in OpenRouter below.</div>
 
       <h3 class="sec">Chat</h3>
       <div class="plugRow">
@@ -824,16 +824,12 @@ body.bedtime #bubble::after{border-top-color:var(--surface-night)}
       <div class="small">Create a detailed picture of the unicorn. It takes about a minute and makes 2 choices. The unicorn still floats, bounces, wiggles, and glows, but the picture can't blink or move its mouth.</div>
       <label for="sPortraitModel">Portrait model</label>
       <input type="text" id="sPortraitModel" autocapitalize="off" autocorrect="off" spellcheck="false">
-      <div class="btns" style="margin-top:10px"><button class="primary" id="pMake">✨ Create picture</button><button class="secondary" id="pDrawn">Use built-in Nelly picture</button></div>
+      <div class="btns" style="margin-top:10px"><button class="primary" id="pMake">✨ Create picture</button><button class="secondary" id="pDrawn">Use built-in Melody picture</button></div>
       <div class="btns" id="pSaveCur" style="margin-top:8px"><button class="secondary" id="pSaveCurBtn">💾 Save the unicorn's current picture</button></div>
       <div id="pStatus"></div>
       <div class="portraitOpts" id="pOpts"></div>
 
       <h3 class="sec">Names</h3>
-      <label for="sBotName">Unicorn's name</label>
-      <input type="text" id="sBotName" placeholder="Nelly" maxlength="20">
-      <label style="display:flex;align-items:center;gap:10px;font-weight:500"><input type="checkbox" id="sAllowRename" style="width:22px;height:22px"> Let my child rename the unicorn by asking</label>
-
       <label for="sName">Child's first name (optional)</label>
       <input type="text" id="sName" placeholder="The unicorn uses this name">
 
@@ -884,7 +880,7 @@ const DEFAULTS = {
   key: "", model: "openrouter/auto", imgModel: "openai/gpt-image-2.6-flare",
   portraitModel: "openai/gpt-image-2.6-sunburst",
   ttsModel: "elevenlabs/eleven-v4-turbo", ttsVoice: "jessica",
-  botName: "Nelly", allowRename: true,
+  botName: "Melody", allowRename: true,
   name: "", voice: "", pitch: 1.5, rate: 0.95, picsPerDay: 5,
   chatPlug: false, chatPrimary: "grok"
 };
@@ -905,6 +901,11 @@ if(store.get("settingsVersion",1) < 2){
 if(store.get("settingsVersion",1) < 3){
   S.chatPlug=false; S.chatPrimary="grok";
   store.set("settings",S); store.set("settingsVersion",3);
+}
+// The unicorn's name is locked as Melody: every saved name (Nelly, empty, or one the child picked) becomes Melody.
+if(store.get("settingsVersion",1) < 4){
+  S.botName="Melody"; S.allowRename=false;
+  store.set("settings",S); store.set("settingsVersion",4);
 }
 if(typeof S.chatPlug!=="boolean") S.chatPlug=false;
 if(S.chatPrimary!=="grok" && S.chatPrimary!=="openrouter") S.chatPrimary="grok";
@@ -936,7 +937,7 @@ function effectiveNight(){ const o=nightOverride(); return o ? o.on : scheduledN
 let bedtime = effectiveNight();
 store.set("bedtime", bedtime); // the "bedtime" key mirrors the current mode
 
-const botName = () => (S.botName||"").trim() || "Nelly";
+const botName = () => "Melody";
 const pick = a => a[Math.floor(Math.random()*a.length)];
 // Keep names short, plain, and kid-friendly: letters, spaces, apostrophes, and hyphens only.
 function cleanName(n){
@@ -1217,7 +1218,7 @@ async function fetchVoice(text){
   const tag = bedtime ? "[softly, sleepily] " : "[sweetly, cheerfully] ";
   const res=await fetch("https://openrouter.ai/api/v1/audio/speech",{
     method:"POST",
-    headers:{"Authorization":"Bearer "+S.key,"Content-Type":"application/json","X-Title":"Nelly's Magical World"},
+    headers:{"Authorization":"Bearer "+S.key,"Content-Type":"application/json","X-Title":"Melody's Magical World"},
     body:JSON.stringify(Object.assign(
       {model:S.ttsModel, voice:S.ttsVoice||undefined, response_format:"pcm"},
       /^elevenlabs\//.test(S.ttsModel) ? {input:tag+text} : {input:text, instructions:voiceStyle()}
@@ -1450,20 +1451,15 @@ Safety rules (always follow):
 - For real-world questions, give a simple kid-level answer, and for anything about health or safety, tell them to ask a grown-up.
 - If asked, you are a pretend magic unicorn friend inside a game. Don't say you are a real, living animal.
 
-${S.allowRename!==false ? `Your name:
-- Your name is ${botName()}. If the child clearly asks to change your name or to call you something new, happily say yes to a kind, G-rated name of 1 to 3 words, and add a "rename" field with just the new name. Say your new name out loud with lots of excitement.
-- If the new name is unkind, rude, or the name of a real person, a brand, or a famous cartoon character, gently say you'd love a different name and leave "rename" out.
-- If the child only mentions a name in a story or game, keep your name and leave "rename" out.
+Your name:
+- Your name is ${botName()}. If the child asks to change your name or to call you something else, kindly say your name is Melody and you love it.
 
-` : `Your name:
-- Your name is ${botName()}. If the child asks to change your name, kindly say a grown-up can help change it in the settings.
-
-`}Pictures:
+Pictures:
 - If the child asks you to draw, paint, or make a picture, add a "paint" field: a short, kind, G-rated description of the picture in plain English for an artist (no names of real people, brands, or famous cartoon characters). Otherwise leave "paint" out.
 - When you include a paint field, your 'say' must only happily confirm you are painting it now. Do not ask any question, and leave 'choices' empty.
 
 Reply ONLY with JSON, no other text:
-{"say": "what you say out loud", "choices": ["up to 3 short options, each starting with one emoji, 1 to 4 words"], "mood": "happy" | "excited" | "silly" | "kind" | "thinking", "kindness": true or false (true only if the child said or did something kind), "paint": "optional picture description", "rename": "optional new name"}`;
+{"say": "what you say out loud", "choices": ["up to 3 short options, each starting with one emoji, 1 to 4 words"], "mood": "happy" | "excited" | "silly" | "kind" | "thinking", "kindness": true or false (true only if the child said or did something kind), "paint": "optional picture description"}`;
 }
 
 const STORY_LEN = 8;
@@ -1526,7 +1522,7 @@ async function openRouterChat(){
   // The unicorn's kid-safe system instructions go first on every request, whichever model is picked.
   const post = model => fetch("https://openrouter.ai/api/v1/chat/completions",{
     method:"POST",
-    headers:{"Authorization":"Bearer "+S.key,"Content-Type":"application/json","X-Title":"Nelly's Magical World"},
+    headers:{"Authorization":"Bearer "+S.key,"Content-Type":"application/json","X-Title":"Melody's Magical World"},
     body:JSON.stringify({model, max_tokens:400, temperature:0.9,
       messages:[{role:"system",content:systemPrompt()}, ...history]})
   });
@@ -1679,7 +1675,7 @@ async function paint(desc){
   try{
     const post = model => fetch("https://openrouter.ai/api/v1/images",{
       method:"POST",
-      headers:{"Authorization":"Bearer "+S.key,"Content-Type":"application/json","X-Title":"Nelly's Magical World"},
+      headers:{"Authorization":"Bearer "+S.key,"Content-Type":"application/json","X-Title":"Melody's Magical World"},
       body:JSON.stringify({model, prompt, quality:"medium", aspect_ratio:"1:1", output_format:"jpeg", n:1})
     });
     const model=imgModel();
@@ -1752,17 +1748,11 @@ async function send(text, opts={}){
         if(!opts.raw){ saveProgress({storiesFinished:progress.storiesFinished+1}); earnSticker(); }
       }else{ saveStory(at); saveChat(at); }
     }else saveChat(at);
-    let renamed=false;
-    if(S.allowRename!==false && r.rename){
-      const nn=cleanName(r.rename);
-      if(nn && nn!==botName()){ S.botName=nn; store.set("settings",S); applyName(); renamed=true; }
-    }
     const painting = !!(r.paint && typeof r.paint==="string");
     say(r.say, {onShow:()=>{
       mood(r.mood);
       if(r.kindness){ mood("kind"); chime([1046,1318,1568],0.12,0.1); sparkle(10,["💖","💗","✨"]); }
       else if(r.mood==="excited"){ sparkle(8); }
-      if(renamed){ mood("excited"); sparkle(18,["✨","🌈","💖","⭐","🦄"]); chime([523,659,784,1046,1318,1568],0.08,0.13); }
       // The picture is already being painted, so no choice buttons for this reply.
       renderChoices(painting ? [] : r.choices);
       if(painting) setTimeout(()=>paint(r.paint), 1800);
@@ -2005,7 +1995,7 @@ async function requestPortrait(transparent){
   const body={model:S.portraitModel, prompt:PORTRAIT_PROMPT+(transparent?BG_TRANSPARENT:BG_GREEN), quality:"high", aspect_ratio:"1:1", output_format:"png", n:1};
   if(transparent) body.background="transparent";
   const res=await fetch("https://openrouter.ai/api/v1/images",{
-    method:"POST", headers:{"Authorization":"Bearer "+S.key,"Content-Type":"application/json","X-Title":"Nelly's Magical World"},
+    method:"POST", headers:{"Authorization":"Bearer "+S.key,"Content-Type":"application/json","X-Title":"Melody's Magical World"},
     body:JSON.stringify(body)
   });
   if(!res.ok){ const t=await res.text().catch(()=> ""); const e=new Error(res.status+" "+t.slice(0,200)); e.status=res.status; throw e; }
@@ -2055,8 +2045,8 @@ $("pMake").onclick=async()=>{
     $("pOpts").appendChild(wrap);
   });
 };
-$("pSaveCurBtn").onclick=async()=>{ const b=await idb.get("portrait").catch(()=>null); if(b) savePicture(b,"portrait"); else $("pStatus").textContent="The unicorn is using the built-in Nelly picture, so there's no new picture to save."; };
-$("pDrawn").onclick=async()=>{ await idb.del("portrait"); showPortrait(null); $("pOpts").innerHTML=""; $("pStatus").textContent="The unicorn is back to the built-in Nelly picture."; };
+$("pSaveCurBtn").onclick=async()=>{ const b=await idb.get("portrait").catch(()=>null); if(b) savePicture(b,"portrait"); else $("pStatus").textContent="The unicorn is using the built-in Melody picture, so there's no new picture to save."; };
+$("pDrawn").onclick=async()=>{ await idb.del("portrait"); showPortrait(null); $("pOpts").innerHTML=""; $("pStatus").textContent="The unicorn is back to the built-in Melody picture."; };
 
 /* ================= enchanted castle (Part 1) ================= */
 const CP = "images/castle/";
@@ -2617,7 +2607,7 @@ function openSettings(){
   $("sPrimaryOR").checked = S.chatPrimary==="openrouter"; $("sPrimaryGrok").checked = S.chatPrimary!=="openrouter";
   renderPlug();
   checkNight();
-  $("sKey").value=S.key; $("sBotName").value=botName(); $("sAllowRename").checked=S.allowRename!==false; $("sTtsModel").value=S.ttsModel; $("sTtsVoice").value=S.ttsVoice; $("sPortraitModel").value=S.portraitModel; $("sName").value=S.name;
+  $("sKey").value=S.key; $("sTtsModel").value=S.ttsModel; $("sTtsVoice").value=S.ttsVoice; $("sPortraitModel").value=S.portraitModel; $("sName").value=S.name;
   $("sVoice").value=S.voice||""; $("sPitch").value=S.pitch; $("sRate").value=S.rate; $("sPics").value=S.picsPerDay;
   $("sNight").checked=bedtime;
   $("voiceStatus").textContent="";
@@ -2628,7 +2618,7 @@ function openSettings(){
 function readSettings(){
   return Object.assign({}, S, {
     key:$("sKey").value.trim(), model:$("sModel").value||DEFAULTS.model,
-    imgModel:$("sImgModel").value||DEFAULTS.imgModel, portraitModel:$("sPortraitModel").value.trim()||DEFAULTS.portraitModel, botName:cleanName($("sBotName").value)||"Nelly", allowRename:$("sAllowRename").checked, name:$("sName").value.trim().slice(0,30),
+    imgModel:$("sImgModel").value||DEFAULTS.imgModel, portraitModel:$("sPortraitModel").value.trim()||DEFAULTS.portraitModel, name:$("sName").value.trim().slice(0,30),
     ttsModel:$("sTtsModel").value.trim(), ttsVoice:$("sTtsVoice").value, voice:$("sVoice").value, pitch:+$("sPitch").value, rate:+$("sRate").value,
     picsPerDay:Math.max(0,Math.min(50,parseInt($("sPics").value||"0",10))),
     chatPlug:plugUI, chatPrimary:primaryUI()
