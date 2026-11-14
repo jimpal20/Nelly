@@ -6,7 +6,7 @@
 <title>Nelly's Magical World</title>
 <meta name="apple-mobile-web-app-title" content="Nelly">
 <meta name="theme-color" content="#f7c6e3">
-<meta name="app-version" content="2026-11-13.5">
+<meta name="app-version" content="2026-11-14.1">
 <link rel="apple-touch-icon" href="images/icon/icon-180.png">
 <link rel="icon" type="image/png" sizes="32x32" href="images/icon/icon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="images/icon/icon-192.png">
@@ -75,7 +75,7 @@ body.bedtime #moonOrb{opacity:1}
 #app{position:absolute;inset:0;display:flex;flex-direction:column;
   padding:calc(env(safe-area-inset-top) + 10px) var(--s4) calc(env(safe-area-inset-bottom) + 14px)}
 #topbar{display:flex;justify-content:space-between;align-items:center;height:48px;position:relative;z-index:5}
-#stars{background:rgba(255,255,255,.75);border-radius:var(--r-pill);min-height:48px;padding:4px 16px 4px 12px;font-weight:800;font-size:var(--fs-button);
+#bookBtn{background:rgba(255,255,255,.75);border-radius:var(--r-pill);min-height:48px;padding:4px 16px 4px 12px;font-weight:800;font-size:var(--fs-button);
   box-shadow:0 4px 14px rgba(var(--sh),.18);display:flex;gap:6px;align-items:center}
 #topRight{display:flex;gap:var(--s2);align-items:center}
 .tb{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.75);font-size:22px;box-shadow:0 3px 10px rgba(var(--sh),.15);padding:0}
@@ -237,14 +237,6 @@ body.bedtime #moonOrb{opacity:1}
 .sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s2);font-size:42px}
 .sgrid div{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:#fff4fb;border-radius:var(--r-sm);box-shadow:inset 0 0 0 2px #f6dcee}
 .sgrid .empty{color:var(--lav)}
-/* badges: earned ones in full color, not-yet ones as a dimmed picture with a readable name */
-.bhead{margin:18px 0 8px;font-size:var(--fs-speech);line-height:1.1}
-.bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s2)}
-.bgrid div{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 4px;background:#fff4fb;border-radius:var(--r-sm);box-shadow:inset 0 0 0 2px #f6dcee}
-.bgrid .be{font-size:40px;line-height:1.1}
-.bgrid .blabel{font-size:var(--fs-small);font-weight:800;line-height:1.1}
-.bgrid .locked .be{filter:grayscale(.7);opacity:.4}
-.bgrid .locked .blabel{color:var(--ink-soft)}
 #rewardEmo{font-size:120px;line-height:1.1;animation:bounce .6s ease-in-out 3}
 
 /* ---------- sparkles ---------- */
@@ -489,7 +481,7 @@ body.bedtime #bubble::after{border-top-color:var(--surface-night)}
 
 <div id="app">
   <div id="topbar">
-    <button id="stars" aria-label="Stars and stickers">⭐ <span id="starCount">0</span></button>
+    <button id="bookBtn" aria-label="0 stickers. Open my sticker book.">📒 <span id="stickerCount">0</span></button>
     <div id="topRight">
       <button class="tb" id="galleryBtn" aria-label="My pictures">🖼️</button>
       <button class="tb" id="muteBtn" aria-label="Turn sound off">🔊</button>
@@ -693,13 +685,11 @@ body.bedtime #bubble::after{border-top-color:var(--surface-night)}
   </div>
 </div>
 
-<div id="book" class="overlay hide" role="dialog" aria-modal="true" aria-label="My stickers and badges">
+<div id="book" class="overlay hide" role="dialog" aria-modal="true" aria-label="My stickers">
   <div class="panel">
-    <h2>⭐ My stickers</h2>
-    <p class="pnote" id="bookNote"></p>
+    <h2>📒 My stickers</h2>
+    <p class="pnote" id="bookNote">Finish a story or paint a picture to earn a sticker!</p>
     <div class="sgrid" id="sGrid"></div>
-    <h3 class="bhead">🏅 My badges</h3>
-    <div class="bgrid" id="badgeGrid"></div>
     <button class="big b-done" id="bClose"><span class="emo" aria-hidden="true">💖</span>All done</button>
   </div>
 </div>
@@ -877,7 +867,7 @@ body.bedtime #bubble::after{border-top-color:var(--surface-night)}
 
       <h3 class="sec">Progress</h3>
       <div class="small" id="progressSummary"></div>
-      <div class="btns" style="margin-top:10px"><button class="secondary" id="resetStars">Reset stars</button><button class="secondary" id="clearStory">Forget saved story</button></div>
+      <div class="btns" style="margin-top:10px"><button class="secondary" id="resetStickers">Reset stickers</button><button class="secondary" id="clearStory">Forget saved story</button></div>
       <div class="btns" style="margin-top:10px"><button class="secondary" id="clearGallery">🗑️ Clear picture gallery</button></div>
       <div class="small" id="appVersionLabel">App version: …</div>
       <div class="btns"><button class="secondary" id="sCancel">Cancel</button><button class="primary" id="sSave">Save</button></div>
@@ -918,7 +908,6 @@ if(store.get("settingsVersion",1) < 3){
 }
 if(typeof S.chatPlug!=="boolean") S.chatPlug=false;
 if(S.chatPrimary!=="grok" && S.chatPrimary!=="openrouter") S.chatPrimary="grok";
-let stars = store.get("stars", 0);
 let muted = store.get("muted", false);
 
 /* ---- night (bedtime) mode schedule ----
@@ -960,10 +949,6 @@ function cleanName(n){
 const $ = id => document.getElementById(id);
 const bubble=$("bubble"), stage=$("stage"), choicesEl=$("choices");
 const homeBtns=$("homeBtns"), convo=$("convo"), mic=$("mic");
-$("starCount").textContent = stars;
-// VoiceOver hears the count, for example "25 stars. Open my stickers."
-function starsLabel(){ $("stars").setAttribute("aria-label", stars+" "+(stars===1?"star":"stars")+". Open my stickers."); }
-starsLabel();
 // The three thinking dots, with a word for VoiceOver.
 const DOTS='<span class="dots" aria-hidden="true"><span></span><span></span><span></span></span><span class="vh">Thinking</span>';
 // Keep an emoji at the end of a message with the word before it, so it never sits alone on its own line.
@@ -1045,58 +1030,48 @@ function sparkle(n=10, emojis=["✨","⭐","💖","🌈","💜"], el){
   }
 }
 
-/* ================= stars and stickers ================= */
+/* ================= stickers ================= */
 const STICKERS=["🦋","🌸","🍓","🐱","🌙","🧁","🐬","🌻","🎀","🍭","🐞","🌈","🐰","🍩","🦊","🐣","🌷","🪐","🐢","🍉","🐼","🍒","🐙","🎈"];
-const STAR_STEP=10;
 const stickerAt = i => STICKERS[i % STICKERS.length];
-/* ---- progress counters (localStorage "nelly.progress") ----
-   {stars, pictures, storiesFinished, castleCrown}. stars and castleCrown mirror the existing "nelly.stars" and
-   "nelly.castleCrown" values; the first run copies them over. Nothing here ever takes anything away from the child. */
 const cleanCount = x => Math.max(0, Math.floor(+x||0));
+/* ---- sticker count (localStorage "nelly.stickers") ----
+   One sticker for each finished story and each painted picture. On the first run, the old stars turn into
+   stickers (10 stars = 1 sticker), so nothing earned before is lost. The old keys are left in place. */
+let stickers=(()=>{
+  const v=store.get("stickers",null);
+  if(v!==null) return cleanCount(v);
+  const n=Math.floor(cleanCount(store.get("stars",0))/10);
+  store.set("stickers",n);
+  return n;
+})();
+/* ---- progress counters (localStorage "nelly.progress") ----
+   {pictures, storiesFinished, castleCrown}. castleCrown mirrors the existing "nelly.castleCrown" value;
+   the first run copies it over. Nothing here ever takes anything away from the child. */
 let progress=(()=>{
   const p=store.get("progress",null);
-  if(p && typeof p==="object") return {stars:cleanCount(p.stars), pictures:cleanCount(p.pictures), storiesFinished:cleanCount(p.storiesFinished), castleCrown:!!p.castleCrown};
-  return {stars:0, pictures:0, storiesFinished:0, castleCrown:false};
+  if(p && typeof p==="object") return {pictures:cleanCount(p.pictures), storiesFinished:cleanCount(p.storiesFinished), castleCrown:!!p.castleCrown};
+  return {pictures:0, storiesFinished:0, castleCrown:false};
 })();
-progress.stars=stars;
 if(store.get("castleCrown","")) progress.castleCrown=true;
 store.set("progress",progress);
-
-/* ---- badges: worked out from the counters, never stored themselves ---- */
-const BADGES=[
-  {id:"story1",   name:"First Story",   emo:"📖", ok:p=>p.storiesFinished>=1},
-  {id:"story5",   name:"5 Stories",     emo:"🌟", ok:p=>p.storiesFinished>=5},
-  {id:"pic1",     name:"First Picture", emo:"🎨", ok:p=>p.pictures>=1},
-  {id:"pic10",    name:"10 Pictures",   emo:"🖼️", ok:p=>p.pictures>=10},
-  {id:"crown",    name:"Castle Crown",  emo:"👑", ok:p=>!!p.castleCrown},
-  {id:"stars100", name:"100 Stars",     emo:"🦄", ok:p=>p.stars>=100}
-];
-// Badges already celebrated. On the very first run, badges a child already has are marked as seen quietly.
-let badgesSeen=store.get("badgesSeen",null);
-if(!Array.isArray(badgesSeen)){ badgesSeen=BADGES.filter(b=>b.ok(progress)).map(b=>b.id); store.set("badgesSeen",badgesSeen); }
-// Once a badge has been celebrated it stays in color, even if a grown-up resets the stars.
-const badgeEarned = b => b.ok(progress) || badgesSeen.includes(b.id);
-let badgeTimer=null;
-function saveProgress(patch, delay=2600){
+function saveProgress(patch){
   Object.assign(progress, patch||{}); store.set("progress",progress);
-  clearTimeout(badgeTimer); badgeTimer=setTimeout(checkBadges, delay);
-}
-function checkBadges(){
-  BADGES.forEach(b=>{
-    if(b.ok(progress) && !badgesSeen.includes(b.id)){
-      badgesSeen.push(b.id); store.set("badgesSeen",badgesSeen);
-      showReward(`New badge! ${b.name} ${b.emo}`, b.emo);
-    }
-  });
 }
 
-function addStar(){
-  stars++; store.set("stars",stars); $("starCount").textContent=stars; starsLabel();
-  saveProgress({stars});
-  const st=$("stars"); st.animate([{transform:"scale(1)"},{transform:"scale(1.3)"},{transform:"scale(1)"}],{duration:500});
-  if(stars % STAR_STEP === 0) setTimeout(celebrate, 2500);
+// The sticker book button shows the count. VoiceOver hears it, for example "3 stickers. Open my sticker book."
+function showStickerCount(){
+  $("stickerCount").textContent=stickers;
+  $("bookBtn").setAttribute("aria-label", stickers+" "+(stickers===1?"sticker":"stickers")+". Open my sticker book.");
 }
-// One celebration at a time: a sticker and a badge earned together show one after the other.
+showStickerCount();
+// Earn the next sticker in the list, then celebrate it once Nelly has started talking.
+function earnSticker(){
+  stickers++; store.set("stickers",stickers); showStickerCount();
+  $("bookBtn").animate([{transform:"scale(1)"},{transform:"scale(1.3)"},{transform:"scale(1)"}],{duration:500});
+  const emo=stickerAt(stickers-1);
+  setTimeout(()=>showReward("You earned a sticker!", emo), 2500);
+}
+// One celebration at a time: stickers earned close together show one after the other.
 const rewardQueue=[];
 function showReward(title, emo){
   if(!$("reward").classList.contains("hide")){ rewardQueue.push([title, emo]); return; }
@@ -1106,36 +1081,19 @@ function showReward(title, emo){
   chime([523,659,784,1046,1318,1568,2093],0.09,0.13);
   sparkle(20,["🎉","✨","⭐","💖",emo],$("rewardEmo"));
 }
-function celebrate(){
-  const emo=stickerAt(stars/STAR_STEP-1);
-  showReward("You earned a sticker!", emo);
-}
 $("rClose").onclick=()=>{
   tap(); $("reward").classList.add("hide");
   const next=rewardQueue.shift(); if(next) setTimeout(()=>showReward(next[0], next[1]), 400);
 };
-function renderBadges(){
-  const g=$("badgeGrid"); g.innerHTML="";
-  BADGES.forEach(b=>{
-    const on=badgeEarned(b);
-    const d=document.createElement("div"); if(!on) d.className="locked";
-    d.setAttribute("role","img");
-    d.setAttribute("aria-label", on ? b.name+" badge" : b.name+" badge, not yet");
-    const e=document.createElement("span"); e.className="be"; e.textContent=b.emo;
-    const l=document.createElement("span"); l.className="blabel"; l.textContent=b.name;
-    d.appendChild(e); d.appendChild(l); g.appendChild(d);
-  });
-}
-// The grown-up summary line, for example "212 stars · 21 stickers · 9 stories · 34 pictures".
+// The grown-up summary line, for example "21 stickers · 9 stories · 34 pictures".
 function progressLine(){
   const n=(v,one,many)=>v+" "+(v===1?one:many);
-  return [n(stars,"star","stars"), n(Math.floor(stars/STAR_STEP),"sticker","stickers"),
+  return [n(stickers,"sticker","stickers"),
     n(progress.storiesFinished,"story","stories"), n(progress.pictures,"picture","pictures")].join(" · ");
 }
 function openBook(){
   tap();
-  const earned=Math.floor(stars/STAR_STEP), need=STAR_STEP-(stars%STAR_STEP);
-  $("bookNote").textContent = `${need} more ${need===1?"star":"stars"} to go!`;
+  const earned=stickers;
   const g=$("sGrid"); g.innerHTML="";
   const slots=Math.max(8, earned+4 - (earned%4));
   for(let i=0;i<slots;i++){
@@ -1143,10 +1101,9 @@ function openBook(){
     if(i<earned) d.textContent=stickerAt(i); else { d.textContent="☆"; d.className="empty"; d.setAttribute("aria-hidden","true"); }
     g.appendChild(d);
   }
-  renderBadges();
   $("book").classList.remove("hide");
 }
-$("stars").onclick=openBook;
+$("bookBtn").onclick=openBook;
 $("bClose").onclick=()=>{ tap(); $("book").classList.add("hide"); };
 
 /* ================= Nelly states ================= */
@@ -1738,7 +1695,7 @@ async function paint(desc){
     saveProgress({pictures:progress.pictures+1});
     showPicture(src);
     galleryAdd(src, desc);
-    chime([784,988,1175,1568,1976],0.09,0.12); sparkle(16); addStar();
+    chime([784,988,1175,1568,1976],0.09,0.12); sparkle(16); earnSticker();
     say(pick(["Ta-da! I made it just for you! Do you love it?","Ta-da! Fresh from my magic paintbrush!","Look! I painted it with rainbow sparkles!"]));
   }catch(e){
     console.warn(e);
@@ -1791,10 +1748,9 @@ async function send(text, opts={}){
     if(curMode==="story"){
       if(storyTurn>=STORY_LEN){
         clearStory(); clearChat(); // the story reached its happy ending, so there's nothing to resume
-        if(!opts.raw) saveProgress({storiesFinished:progress.storiesFinished+1});
+        if(!opts.raw){ saveProgress({storiesFinished:progress.storiesFinished+1}); earnSticker(); }
       }else{ saveStory(at); saveChat(at); }
     }else saveChat(at);
-    if(!opts.silent) addStar();
     let renamed=false;
     if(S.allowRename!==false && r.rename){
       const nn=cleanName(r.rename);
@@ -2696,9 +2652,9 @@ $("testVoice").onclick=async()=>{
   const p=await info.phone;
   st.textContent = info.why + (p.ok ? "" : " The phone voice didn't play either: "+p.why+".");
 };
-$("resetStars").onclick=()=>{
-  if(!confirm("Are you sure? This sets the stars back to 0. Stickers are counted from stars, so they start over too. Badges already earned stay.")) return;
-  stars=0; store.set("stars",0); $("starCount").textContent="0"; starsLabel(); $("resetStars").textContent="Stars reset"; progress.stars=0; store.set("progress",progress); $("progressSummary").textContent=progressLine();
+$("resetStickers").onclick=()=>{
+  if(!confirm("This sets stickers back to 0.")) return;
+  stickers=0; store.set("stickers",0); showStickerCount(); $("resetStickers").textContent="Stickers reset"; $("progressSummary").textContent=progressLine();
 };
 $("clearGallery").onclick=async()=>{ if(confirm("Delete all the pictures saved in the gallery on this phone?")){ await idb.del("gallery"); $("clearGallery").textContent="Gallery cleared"; } };
 $("clearStory").onclick=()=>{ clearStory(); $("clearStory").textContent="Story forgotten"; };
