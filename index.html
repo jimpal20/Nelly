@@ -6,7 +6,7 @@
 <title>Melody's Magical World</title>
 <meta name="apple-mobile-web-app-title" content="Nelly">
 <meta name="theme-color" content="#f7c6e3">
-<meta name="app-version" content="2026-11-14.5">
+<meta name="app-version" content="2026-11-14.6">
 <link rel="apple-touch-icon" href="images/icon/icon-180.png">
 <link rel="icon" type="image/png" sizes="32x32" href="images/icon/icon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="images/icon/icon-192.png">
@@ -1455,7 +1455,7 @@ Your name:
 - Your name is ${botName()}. If the child asks to change your name or to call you something else, kindly say your name is Melody and you love it.
 
 Pictures:
-- If the child asks you to draw, paint, or make a picture, add a "paint" field: a short, kind, G-rated description of the picture in plain English for an artist (no names of real people, brands, or famous cartoon characters). Otherwise leave "paint" out.
+- If the child asks you to draw, paint, or make a picture, add a "paint" field: a short, kind, G-rated description of the picture in plain English for an artist (no names of real people, brands, or famous cartoon characters). Keep the "paint" description under 40 words. Otherwise leave "paint" out.
 - When you include a paint field, your 'say' must only happily confirm you are painting it now. Do not ask any question, and leave 'choices' empty.
 
 Topic:
@@ -1479,16 +1479,131 @@ let busy=false;
 let curMode=null, storyTurn=0;
 let chatTopicNow="";  // the AI's latest topic for this chat (always sanitized); "" when there isn't a good one
 
-function parseReply(txt){
-  let obj=null;
-  try{ obj=JSON.parse(txt); }catch(e){
-    const m=txt.match(/\{[\s\S]*\}/);
-    if(m){ try{ obj=JSON.parse(m[0]); }catch(e2){} }
+/* ---- reading the AI's reply ----
+   The reply should be JSON, but it can come back cut off (too long), wrapped in ```json fences, with extra words around it,
+   or with curly quotes. parseReply() tries each fix in turn. The child never sees or hears field names or JSON:
+   when no words can be found, Melody says a gentle line instead and the raw reply goes to console.warn only. */
+const FIELD_NAME_RE=/["'\u201C\u201D]?\b(say|choices|mood|kindness|paint|topic)\b["'\u201C\u201D]?\s*:/i;
+const REPLY_MOODS=["happy","excited","silly","kind","thinking"];
+const TANGLED_LINE="Hee hee, my words got tangled! Can you say that again?";
+const PAINTING_LINE="Hee hee! I'm painting it for you right now!";
+const smartToPlain = t => t.replace(/[\u201C\u201D\u201E\u201F\u2033]/g,'"');
+function tryJSON(t){
+  if(!t) return null;
+  try{ const o=JSON.parse(t); return (o && typeof o==="object" && !Array.isArray(o)) ? o : null; }catch(e){ return null; }
+}
+// The inside of a ```json ... ``` block. An opening fence with no closing one (a cut-off reply) is removed too.
+function stripFences(t){
+  const m=/```[a-z]*\s*([\s\S]*?)\s*```/i.exec(t);
+  if(m) return m[1].trim();
+  return t.replace(/^[\s\S]*?```[a-z]*\s*/i,"").trim();
+}
+// The first complete {...} block, skipping braces inside strings. null when there isn't one.
+function firstObject(t){
+  const s=t.indexOf("{"); if(s<0) return null;
+  let depth=0, inStr=false, esc=false;
+  for(let i=s;i<t.length;i++){
+    const ch=t[i];
+    if(inStr){ if(esc) esc=false; else if(ch==="\\") esc=true; else if(ch==='"') inStr=false; continue; }
+    if(ch==='"') inStr=true;
+    else if(ch==="{") depth++;
+    else if(ch==="}" && --depth===0) return t.slice(s,i+1);
   }
-  if(!obj||typeof obj.say!=="string") obj={say: txt.replace(/[{}"]/g,"").slice(0,300), choices:[]};
-  if(!Array.isArray(obj.choices)) obj.choices=[];
-  obj.choices=obj.choices.filter(c=>typeof c==="string"&&c.trim()).slice(0,3);
-  return obj;
+  return null;
+}
+// Read one JSON string starting just after its opening quote. cut is true when the closing quote never came.
+const STR_ESC={n:"\n",t:"\t",r:"",b:"",f:"","/":"/","\\":"\\",'"':'"'};
+function readStr(t,i){
+  let out="";
+  while(i<t.length){
+    const ch=t[i];
+    if(ch==='"') return {text:out, cut:false, end:i+1};
+    if(ch==="\\"){
+      const n=t[i+1];
+      if(n===undefined) break;
+      if(n==="u"){ const h=t.slice(i+2,i+6); if(/^[0-9a-fA-F]{4}$/.test(h)){ out+=String.fromCharCode(parseInt(h,16)); i+=6; continue; } break; }
+      out+= (n in STR_ESC) ? STR_ESC[n] : n; i+=2; continue;
+    }
+    out+=ch; i++;
+  }
+  return {text:out, cut:true, end:t.length};
+}
+function fieldStr(t,name){
+  const m=new RegExp('"'+name+'"\\s*:\\s*"').exec(t);
+  return m ? readStr(t, m.index+m[0].length) : null;
+}
+// Only the choices that arrived whole.
+function fieldChoices(t){
+  const m=/"choices"\s*:\s*\[/.exec(t); if(!m) return [];
+  const out=[]; let i=m.index+m[0].length;
+  while(i<t.length){
+    while(i<t.length && /[\s,]/.test(t[i])) i++;
+    if(t[i]!=='"') break;
+    const s=readStr(t,i+1); if(s.cut) break;
+    out.push(s.text); i=s.end;
+  }
+  return out;
+}
+// A field written without proper quotes, like  say: Hee hee!, mood: happy  — read up to the next field name.
+function looseField(t,name){
+  const m=new RegExp("[\"'\\u201C\\u201D]?\\b"+name+"\\b[\"'\\u201C\\u201D]?\\s*:\\s*","i").exec(t); if(!m) return null;
+  let rest=t.slice(m.index+m[0].length);
+  const stop=/[,;\s]*["'\u201C\u201D]?\b(say|choices|mood|kindness|paint|topic)\b["'\u201C\u201D]?\s*:/i.exec(rest);
+  if(stop) rest=rest.slice(0,stop.index);
+  rest=rest.replace(/[{}\[\]"\u201C\u201D`]/g,"").replace(/\s+/g," ").trim().replace(/,$/,"").trim();
+  return rest ? {text:rest, cut:!stop} : null;
+}
+// Words that were cut off end at their last complete sentence, when there is one.
+function trimToSentence(s){
+  s=String(s).trim();
+  let cut=-1; for(let i=0;i<s.length;i++) if(".!?\u2026".includes(s[i])) cut=i;
+  return cut>=0 ? s.slice(0,cut+1).trim() : s;
+}
+// Pull out each field by itself from cut-off or broken JSON.
+function salvageReply(t){
+  const o={};
+  const say=fieldStr(t,"say") || looseField(t,"say");
+  if(say) o.say = say.cut ? trimToSentence(say.text) : say.text;
+  o.choices=fieldChoices(t);
+  const md=/["']?\bmood\b["']?\s*:\s*["']?([a-z]+)/i.exec(t); if(md) o.mood=md[1];
+  const kd=/["']?\bkindness\b["']?\s*:\s*["']?(true|false)/i.exec(t); if(kd) o.kindness=kd[1].toLowerCase()==="true";
+  const p=fieldStr(t,"paint") || looseField(t,"paint");
+  if(p){ o.paint=p.text; o.paintCut=p.cut; }
+  const tp=fieldStr(t,"topic"); if(tp && !tp.cut) o.topic=tp.text;
+  return o;
+}
+// No braces, brackets or code fences ever reach the bubble.
+const cleanWords = s => typeof s==="string" ? s.replace(/```[a-z]*/gi,"").replace(/[{}\[\]]/g,"").replace(/\s+/g," ").trim() : "";
+function finishReply(o, raw, repaired){
+  let say=cleanWords(o.say);
+  if(FIELD_NAME_RE.test(say) || !/[\p{L}\p{N}]/u.test(say)) say="";
+  let paint=cleanWords(o.paint);
+  if(FIELD_NAME_RE.test(paint)) paint="";
+  if(paint && o.paintCut && paint.split(" ").length<4) paint=""; // too little of a cut-off picture to paint
+  let choices=(Array.isArray(o.choices) ? o.choices : [])
+    .filter(c=>typeof c==="string" && !FIELD_NAME_RE.test(c)).map(c=>cleanWords(c.replace(/"/g,""))).filter(Boolean).slice(0,3);
+  if(!say){
+    console.warn("Melody's reply had no words to show:", raw);
+    say = paint ? PAINTING_LINE : TANGLED_LINE;
+    if(!paint) choices=[];
+  }else if(repaired) console.warn("Melody's reply was repaired:", raw);
+  const m=String(o.mood||"").toLowerCase();
+  const out={say, choices, mood: REPLY_MOODS.includes(m) ? m : undefined, kindness: o.kindness===true || o.kindness==="true"};
+  if(paint) out.paint=paint;
+  if(typeof o.topic==="string") out.topic=o.topic;
+  return out;
+}
+function parseReply(txt){
+  const raw=String(txt||""), t=raw.trim();
+  const fenced=stripFences(t), plainQ=smartToPlain(fenced);
+  // 1 plain JSON, 2 without ``` fences, 3 the first {...} block, then the same with curly quotes made straight
+  for(const c of [t, fenced, firstObject(fenced), plainQ, firstObject(plainQ)]){
+    const o=tryJSON(c); if(o) return finishReply(o, raw, c!==t);
+  }
+  // 4 cut-off or broken JSON: pull out each field by itself
+  if(/[{}\[\]]|```/.test(t) || FIELD_NAME_RE.test(t)) return finishReply(salvageReply(plainQ), raw, true);
+  // Plain words with nothing JSON-like in them are Melody's words.
+  return finishReply({say: t.replace(/^["\u201C]+|["\u201D]+$/g,"").slice(0,300)}, raw, false);
 }
 
 // Which model to use for a request. If the grown-up's chosen model was rejected earlier
@@ -1507,7 +1622,7 @@ async function grokChat(){
       const pres=await fetch(GROK_PROXY,{
         method:"POST",
         headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({messages:[{role:"system",content:systemPrompt()}, ...history], max_tokens:400, temperature:0.9}),
+        body:JSON.stringify({messages:[{role:"system",content:systemPrompt()}, ...history], max_tokens:700, temperature:0.9}),
         signal:ctl.signal
       });
       if(pres.ok){
@@ -1527,7 +1642,7 @@ async function openRouterChat(){
   const post = model => fetch("https://openrouter.ai/api/v1/chat/completions",{
     method:"POST",
     headers:{"Authorization":"Bearer "+S.key,"Content-Type":"application/json","X-Title":"Melody's Magical World"},
-    body:JSON.stringify({model, max_tokens:400, temperature:0.9,
+    body:JSON.stringify({model, max_tokens:700, temperature:0.9,
       messages:[{role:"system",content:systemPrompt()}, ...history]})
   });
   let model=chatModel();
