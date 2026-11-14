@@ -6,7 +6,7 @@
 <title>Melody's Magical World</title>
 <meta name="apple-mobile-web-app-title" content="Nelly">
 <meta name="theme-color" content="#f7c6e3">
-<meta name="app-version" content="2026-11-14.4">
+<meta name="app-version" content="2026-11-14.5">
 <link rel="apple-touch-icon" href="images/icon/icon-180.png">
 <link rel="icon" type="image/png" sizes="32x32" href="images/icon/icon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="images/icon/icon-192.png">
@@ -1458,8 +1458,11 @@ Pictures:
 - If the child asks you to draw, paint, or make a picture, add a "paint" field: a short, kind, G-rated description of the picture in plain English for an artist (no names of real people, brands, or famous cartoon characters). Otherwise leave "paint" out.
 - When you include a paint field, your 'say' must only happily confirm you are painting it now. Do not ask any question, and leave 'choices' empty.
 
+Topic:
+- "topic": the most interesting real subject of this whole conversation so far, as a short, natural phrase a 6-year-old would love to hear, 2 to 5 words, written so it fits after "Want to keep chatting about ..." (for example "the rainbow bridge", "Pippa's 42 siblings", "your puppy drawing"). Use "" when there is no good subject yet. Never use Melody's name or renaming, settings, greetings, goodbyes, yes/no answers, games that already ended, or anything sad, scary, or personal (names, school, address).
+
 Reply ONLY with JSON, no other text:
-{"say": "what you say out loud", "choices": ["up to 3 short options, each starting with one emoji, 1 to 4 words"], "mood": "happy" | "excited" | "silly" | "kind" | "thinking", "kindness": true or false (true only if the child said or did something kind), "paint": "optional picture description"}`;
+{"say": "what you say out loud", "choices": ["up to 3 short options, each starting with one emoji, 1 to 4 words"], "mood": "happy" | "excited" | "silly" | "kind" | "thinking", "kindness": true or false (true only if the child said or did something kind), "paint": "optional picture description", "topic": "optional short topic phrase"}`;
 }
 
 const STORY_LEN = 8;
@@ -1474,6 +1477,7 @@ const MODE_PROMPTS = {
 let history=[];  // {role, content}
 let busy=false;
 let curMode=null, storyTurn=0;
+let chatTopicNow="";  // the AI's latest topic for this chat (always sanitized); "" when there isn't a good one
 
 function parseReply(txt){
   let obj=null;
@@ -1564,7 +1568,9 @@ async function callChat(userText, raw){
     }
   }
   history.push({role:"assistant", content:txt});
-  return parseReply(String(txt));
+  const obj=parseReply(String(txt));
+  if(typeof obj.topic==="string") chatTopicNow=cleanTopic(obj.topic);
+  return obj;
 }
 
 /* ================= saved story ================= */
@@ -1573,7 +1579,7 @@ function clearStory(){ store.set("story",null); }
 function savedStory(){ const s=store.get("story",null); return (s && Array.isArray(s.history) && s.history.length) ? s : null; }
 
 /* ================= saved chat (resume the last chat) =================
-   localStorage "nelly.chat" = {history (last 18), mode, storyTurn, at}. Saved after each finished reply, dropped after 7 days. */
+   localStorage "nelly.chat" = {history (last 18), mode, storyTurn, at, topic}. Saved after each finished reply, dropped after 7 days. */
 const CHAT_MAX_AGE=7*24*60*60*1000;
 const CHAT_MODES=["talk","story","play","paint"];
 // The child's own words in a history message: story labels are removed, and the app's [button prompts] don't count.
@@ -1584,7 +1590,7 @@ function childWords(content){
 const hasChildWords = h => h.some(m=>m.role==="user" && childWords(m.content));
 function saveChat(at){
   if(!hasChildWords(history)) return; // nothing the child said yet, so nothing to come back to
-  store.set("chat",{history:history.slice(-18), mode:curMode, storyTurn, at});
+  store.set("chat",{history:history.slice(-18), mode:curMode, storyTurn, at, topic:cleanTopic(chatTopicNow)});
 }
 function clearChat(){ store.set("chat",null); }
 function savedChat(){
@@ -1592,32 +1598,20 @@ function savedChat(){
   if(!c) return null;
   const h=Array.isArray(c.history) ? c.history.filter(m=>m && (m.role==="user"||m.role==="assistant") && typeof m.content==="string") : [];
   if(!h.length || typeof c.at!=="number" || Date.now()-c.at>CHAT_MAX_AGE || !hasChildWords(h)){ clearChat(); return null; }
-  return {history:h.slice(-18), mode:CHAT_MODES.includes(c.mode)?c.mode:"talk", storyTurn:cleanCount(c.storyTurn), at:c.at};
+  return {history:h.slice(-18), mode:CHAT_MODES.includes(c.mode)?c.mode:"talk", storyTurn:cleanCount(c.storyTurn), at:c.at, topic:cleanTopic(c.topic)};
 }
-// A short, gentle topic from the child's last message (about 5 words), or "" when there isn't a good one.
+// Safety net for every chat topic (the AI names it in its "topic" field). Returns the topic, or "" when it isn't a good one.
 const TOPIC_SKIP=/\b(kill\w*|die|dies|died|dead|death|blood\w*|guns?|knife|knives|weapons?|sex\w*|kiss\w*|naked|hate|stupid|dumb|idiot|shut up|drugs?|beer|wine|scary|address|phone|password|school)\b/i;
-const TOPIC_LEADS=["can we talk about","could we talk about","let's talk about","lets talk about","i want to talk about","i wanna talk about",
-  "can you tell me about","tell me a story about","tell me about","talk about","i want to know about","do you know about","what about","how about","i really like","i really love","i like","i love"];
-const TOPIC_SWAP={i:"you",me:"you",my:"your",mine:"yours",myself:"yourself","i'm":"you're",im:"you're","i've":"you've","i'll":"you'll",your:"my",yours:"mine",yourself:"myself"};
-function chatTopic(h){
-  let t="";
-  for(let i=h.length-1;i>=0 && !t;i--) if(h[i].role==="user") t=childWords(h[i].content);
-  if(!t || TOPIC_SKIP.test(t)) return "";
-  t=t.replace(/\p{Extended_Pictographic}|️|‍/gu," ").replace(/[’]/g,"'")
-     .replace(/[^\p{L}\s'\-]/gu," ").replace(/\s+/g," ").trim().toLowerCase(); // no digits or punctuation
-  const bn=botName().toLowerCase();
-  for(let again=true; again;){
-    again=false;
-    for(const p of ["um","uh","so","and","okay","ok","hey","hi","please",bn,...TOPIC_LEADS]){
-      if(t===p){ t=""; break; }
-      if(t.startsWith(p+" ")){ t=t.slice(p.length+1).trim(); again=true; break; }
-    }
-  }
-  let w=t.split(" ").filter(Boolean).map(x=>TOPIC_SWAP[x]||x).slice(0,5);
-  while(w.length && /^(and|the|a|an|to|of|with|or|but|so|is|are|his|her|their|your|my|our|its|in|on|at|for)$/.test(w[w.length-1])) w.pop();
-  const out=w.join(" ");
-  if(out.length<2 || /^(yes|no|yeah|yep|nope|sure|maybe|hello|bye|you|me|that|this|it)$/.test(out)) return "";
-  return out;
+const TOPIC_BLOCK=/\b(name|names|rename|call you|nelly|melody|settings|password|school)\b/i;
+function cleanTopic(t){
+  if(typeof t!=="string") return "";
+  t=t.replace(/[\u2018\u2019]/g,"'").replace(/\s+/g," ").trim();
+  if(!t || t.length>40 || t.split(" ").length>6) return "";
+  if(!/^[\p{L}\p{N} '\-]+$/u.test(t)) return "";
+  if(TOPIC_SKIP.test(t) || TOPIC_BLOCK.test(t)) return "";
+  const kid=String(S.name||"").trim().toLowerCase().replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  if(kid && new RegExp("(^|[^\\p{L}\\p{N}])"+kid+"(?![\\p{L}\\p{N}])","u").test(t.toLowerCase())) return ""; // the child's own name
+  return t;
 }
 
 function picsLeftToday(){
@@ -1793,18 +1787,22 @@ function showMode(){
   $("modeChip").firstElementChild.textContent=e;
 }
 function goHome(greet=true){
-  history=[]; curMode=null; showMode(); renderChoices([]); showTyping(false);
+  history=[]; chatTopicNow=""; curMode=null; showMode(); renderChoices([]); showTyping(false);
   convo.classList.add("hide"); homeBtns.classList.remove("hide");
   stopSpeech();
   if(greet) homeGreet();
 }
 /* ---- "Want to keep chatting about ___?" ----
    Shown when the app opens or comes back home, if a saved chat exists and is newer than any saved story.
-   The saved-story offer lives on the Stories button, so the two never show at once. Each saved chat is offered once per visit. */
+   The saved-story offer lives on the Stories button, so the two never show at once. Each saved chat is offered once per visit.
+   Only offered when the saved chat is from today (device local time) and has a good topic; otherwise the normal home greeting
+   shows, as with no saved chat. A saved chat from an earlier day is cleared. The saved story is not affected. */
 const YES_CHAT="💖 Yes!", NEW_THING="✨ Something new";
 let offeredAt=0;
 function chatOffer(){
-  const c=savedChat(); if(!c || c.at===offeredAt) return null;
+  const c=savedChat(); if(!c) return null;
+  if(new Date(c.at).toDateString()!==new Date().toDateString()){ clearChat(); return null; } // a new day starts fresh
+  if(!c.topic || c.at===offeredAt) return null;
   const s=savedStory(); if(s && (+s.at||0)>=c.at) return null;
   return c;
 }
@@ -1812,10 +1810,10 @@ function homeGreet(){ const c=chatOffer(); if(c) offerChat(c); else say(homeLine
 function offerChat(c, lead, onShow){
   offeredAt=c.at;
   homeBtns.classList.add("hide"); convo.classList.remove("hide");
-  history=[]; curMode="talk"; storyTurn=0; showMode(); renderChoices([]); showTyping(false);
-  const topic=chatTopic(c.history);
-  const q=topic ? `Want to keep chatting about ${topic}?` : "Want to keep chatting where we left off?";
-  say((lead?lead+" ":"")+q, {onShow:()=>{
+  history=[]; chatTopicNow=""; curMode="talk"; storyTurn=0; showMode(); renderChoices([]); showTyping(false);
+  const topic=cleanTopic(c.topic);
+  if(!topic){ goHome(false); say(homeLine()); return; } // safety net: chatOffer() already skips chats without a good topic
+  say((lead?lead+" ":"")+`Want to keep chatting about ${topic}?`, {onShow:()=>{
     onShow && onShow();
     renderChoices([YES_CHAT, NEW_THING], ch=>{ if(ch===YES_CHAT) resumeChat(); else somethingNew(); });
   }});
@@ -1824,13 +1822,13 @@ function resumeChat(){
   const c=savedChat();
   if(!c){ goHome(false); say(homeLine()); return; }
   homeBtns.classList.add("hide"); convo.classList.remove("hide");
-  history=c.history.slice(-18); curMode=c.mode; storyTurn=c.storyTurn; showMode();
+  history=c.history.slice(-18); chatTopicNow=c.topic; curMode=c.mode; storyTurn=c.storyTurn; showMode();
   offeredAt=c.at;
   send(curMode==="story" ? MODE_PROMPTS.storyResume : MODE_PROMPTS.chatResume, {silent:true, raw:true});
 }
 function somethingNew(){ clearChat(); goHome(false); say(homeLine()); }
 const KEEP_GOING="📖 Keep going", NEW_STORY="✨ New story";
-function newStory(){ clearStory(); history=[]; storyTurn=0; send(MODE_PROMPTS.story, {silent:true, raw:true}); }
+function newStory(){ clearStory(); history=[]; chatTopicNow=""; storyTurn=0; send(MODE_PROMPTS.story, {silent:true, raw:true}); }
 function resumeStory(){
   const s=savedStory(); if(!s){ newStory(); return; }
   history=s.history.slice(-18); storyTurn=+s.turn||0;
@@ -1838,7 +1836,7 @@ function resumeStory(){
 }
 function startMode(mode){
   tap(); homeBtns.classList.add("hide"); convo.classList.remove("hide");
-  history=[]; curMode=mode; storyTurn=0; showMode(); renderChoices([]);
+  history=[]; chatTopicNow=""; curMode=mode; storyTurn=0; showMode(); renderChoices([]);
   if(mode==="talk"){
     say(bedtime ? "Let's have a cozy little talk. Tap the microphone and tell me anything." : "Yay! Tap the mic and talk to me!",
       {onShow:()=>{ mood("excited"); sparkle(6); }});
