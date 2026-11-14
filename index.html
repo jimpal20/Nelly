@@ -6,7 +6,7 @@
 <title>Melody's Magical World</title>
 <meta name="apple-mobile-web-app-title" content="Nelly">
 <meta name="theme-color" content="#f7c6e3">
-<meta name="app-version" content="2026-11-14.3">
+<meta name="app-version" content="2026-11-14.4">
 <link rel="apple-touch-icon" href="images/icon/icon-180.png">
 <link rel="icon" type="image/png" sizes="32x32" href="images/icon/icon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="images/icon/icon-192.png">
@@ -886,7 +886,7 @@ const DEFAULTS = {
 };
 // Chat goes to Grok (xAI) through this small server proxy. OpenRouter is used for chat only when a grown-up
 // "plugs it in" (S.chatPlug), and then S.chatPrimary says which one goes first.
-const GROK_PROXY = "https://suqdxohnuxryufljkjao.supabase.co/functions/v1/nelly-chat";
+const GROK_PROXY = "https://suqdxohnuxryufljkjao.supabase.co/functions/v1/melody-chat";
 const store = {
   get(k, d){ try{ const v = localStorage.getItem("nelly."+k); return v===null ? d : JSON.parse(v); }catch(e){ return d; } },
   set(k, v){ try{ localStorage.setItem("nelly."+k, JSON.stringify(v)); }catch(e){} }
